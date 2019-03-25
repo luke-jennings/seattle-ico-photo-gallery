@@ -1,4 +1,4 @@
-# seattle-ico-photo-gallery
+# Seattle ICO Photo Gallery
 A single-page app version of the Seattle ICO photos page, built with the React JavaScript library.
 
 ## Create React App
