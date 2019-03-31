@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { FormEvent, ChangeEvent } from 'react';
 
+import { IFilterValues } from './IFilterValues';
 import { ISelectOption } from './ISelectOption';
 
 const tripTypesOptions: ISelectOption[] = [
@@ -181,35 +182,26 @@ const teamsOptions: ISelectOption[] = [
 ];
 
 interface IFilterProps {
+  values: IFilterValues;
+  onSubmit: () => void;
+  onTripTypeChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+  onTeamChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-interface IFilterState {
-  selectedTeam: number,
-  selectedTripType: number
+interface IFilterState extends IFilterValues {
 }
 
 class Filter extends React.Component<IFilterProps, IFilterState> {
   constructor(props: IFilterProps) {
     super(props);
-    this.state = {selectedTeam: 0, selectedTripType: 0};
 
-    this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
-    this.handleTeamChange = this.handleTeamChange.bind(this);
+    this.state = {tripTypeId: 0, teamId: 0};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleTeamChange(event: any) {
-    this.setState({ selectedTeam: Number(event.target.value) });
-  }
-
-  handleTripTypeChange(event: any){
-    this.setState({ selectedTripType: Number(event.target.value) });
-  }
-
-  handleSubmit(event: any) {
+  handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log('Selected Team is: ' + this.state.selectedTeam);
-    console.log('Selected Trip Type is: ' + this.state.selectedTripType)
+    this.props.onSubmit();
   }
 
   render() {
@@ -225,7 +217,7 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
       
               <div className="form-group col-12 mb-1 col-sm-6 px-sm-0 col-md-4 col-lg-3 col-xl-2">
                   <label htmlFor="tripTypes" className="small">Trip Type:</label>
-                  <select name="tripTypes" className="form-control" value={this.state.selectedTripType} onChange={this.handleTripTypeChange}>
+                  <select name="tripTypes" className="form-control" value={this.props.values.tripTypeId} onChange={this.props.onTripTypeChange}>
                     {tripTypesOptions.map(tt => (
                         <option key={tt.value} value={tt.value}>{tt.text}</option>
                     ))}
@@ -234,7 +226,7 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
 
               <div className="form-group col-12 mb-3 col-sm-4 pt-sm-2 px-sm-0 col-md-3 px-lg-4 col-xl-2">
                   <label htmlFor="teams" className="small">Teams:</label>
-                  <select name="teams" className="form-control" value={this.state.selectedTeam} onChange={this.handleTeamChange}>
+                  <select name="teams" className="form-control" value={this.props.values.teamId} onChange={this.props.onTeamChange}>
                     {teamsOptions.map(t => (
                         <option key={t.value} value={t.value}>{t.text}</option>
                     ))}
@@ -242,7 +234,7 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
               </div>
       
               <div className="form-group col-12 mb-0 col-sm-2 pt-sm-2 px-sm-0 col-lg-1">
-                  <button type="submit" className="btn btn-primary">Search</button>
+                  <button id="btnSubmit" type="submit" className="btn btn-primary">Search</button>
               </div>
       
             </form>
