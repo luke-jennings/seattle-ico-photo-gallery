@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import Filter from './Filter'
 
-import { IFilterValues } from './IFilterValues';
+import { IFilterValues } from './interfaces/IFilterValues';
 
 interface IGalleryProps {
 }

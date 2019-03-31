@@ -1,7 +1,8 @@
 import React, { FormEvent, ChangeEvent } from 'react';
 
-import { IFilterValues } from './IFilterValues';
-import { ISelectOption } from './ISelectOption';
+import { IFilterValues } from './interfaces/IFilterValues';
+import { ISelectOption } from './interfaces/ISelectOption';
+import Select from './Select';
 
 const tripTypesOptions: ISelectOption[] = [
 	{
@@ -216,21 +217,11 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
             <form className="form-inline justify-content-center" onSubmit={this.handleSubmit}>
       
               <div className="form-group col-12 mb-1 col-sm-6 px-sm-0 col-md-4 col-lg-3 col-xl-2">
-                  <label htmlFor="tripTypes" className="small">Trip Type:</label>
-                  <select name="tripTypes" className="form-control" value={this.props.values.tripTypeId} onChange={this.props.onTripTypeChange}>
-                    {tripTypesOptions.map(tt => (
-                        <option key={tt.value} value={tt.value}>{tt.text}</option>
-                    ))}
-                  </select>
+                  <Select labelText="Trip Type" selectName="tripTypes" selectedValue={this.props.values.tripTypeId} options={tripTypesOptions} onChange={this.props.onTripTypeChange}  />
               </div>
 
               <div className="form-group col-12 mb-3 col-sm-4 pt-sm-2 px-sm-0 col-md-3 px-lg-4 col-xl-2">
-                  <label htmlFor="teams" className="small">Teams:</label>
-                  <select name="teams" className="form-control" value={this.props.values.teamId} onChange={this.props.onTeamChange}>
-                    {teamsOptions.map(t => (
-                        <option key={t.value} value={t.value}>{t.text}</option>
-                    ))}
-                  </select>
+                  <Select labelText="Teams" selectName="teams" selectedValue={this.props.values.teamId} options={teamsOptions} onChange={this.props.onTeamChange}  />
               </div>
       
               <div className="form-group col-12 mb-0 col-sm-2 pt-sm-2 px-sm-0 col-lg-1">
