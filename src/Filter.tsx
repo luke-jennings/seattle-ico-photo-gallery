@@ -1,16 +1,7 @@
 import React, { FormEvent, ChangeEvent } from 'react';
+import { IFilterProps } from './interfaces/IFilterProps';
 
-import { IFilterValues } from './interfaces/IFilterValues';
-import { IFilterOptions } from './interfaces/IFilterOptions';
 import Select from './Select';
-
-interface IFilterProps {
-  values: IFilterValues;
-  options: IFilterOptions;
-  onSubmit: () => void;
-  onTripTypeChange: (event: ChangeEvent<HTMLSelectElement>) => void;
-  onTeamChange: (event: ChangeEvent<HTMLSelectElement>) => void;
-}
 
 interface IFilterState {
   isLoading: boolean;

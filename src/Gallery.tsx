@@ -25,7 +25,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
     }
 
-    handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>){
+    handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
         this.setState({ tripTypeId: Number(event.target.value) });
     }
     
