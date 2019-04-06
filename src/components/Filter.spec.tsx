@@ -1,7 +1,7 @@
 import React from 'react';
-import Filter from './Filter';
+import Filter from '../components/Filter';
 import { render, fireEvent } from 'react-testing-library'
-import { IFilterProps } from './interfaces/IFilterProps';
+import { IFilterProps } from '../interfaces/IFilterProps';
 
 describe("The photos filter", () => {
 

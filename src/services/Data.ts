@@ -179,7 +179,7 @@ const teamsOptions: ISelectOption[] = [
   } 
 ];
 
-export class Api {
+export class Data {
 
     public GetFilterOptions(): IFilterOptions {
         return { tripTypeOptions: tripTypesOptions, teamOptions: teamsOptions }

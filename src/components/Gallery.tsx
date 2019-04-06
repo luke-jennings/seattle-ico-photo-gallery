@@ -1,9 +1,9 @@
 import React, { ChangeEvent } from 'react';
 import Filter from './Filter'
 
-import { IFilterValues } from './interfaces/IFilterValues';
-import { IFilterOptions } from './interfaces/IFilterOptions';
-import { Api } from './services/Api';
+import { IFilterValues } from '../interfaces/IFilterValues';
+import { IFilterOptions } from '../interfaces/IFilterOptions';
+import { Data } from '../services/Data';
 
 interface IGalleryProps {
 }
@@ -39,8 +39,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     }
 
     async componentDidMount() {
-        let api = new Api();
-        this.filterOptions = await new Promise((resolve) => setTimeout(resolve, 1000, api.GetFilterOptions()));
+        let data = new Data();
+        this.filterOptions = await new Promise((resolve) => setTimeout(resolve, 1000, data.GetFilterOptions()));
         this.setState({ isLoading: false })
     }
 

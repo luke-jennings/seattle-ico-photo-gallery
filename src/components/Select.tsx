@@ -1,14 +1,6 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 
-import { ISelectOption } from './interfaces/ISelectOption';
-
-interface ISelectProps {
-    labelText: string;
-    selectName: string;
-    options: ISelectOption[];
-    selectedValue: number;
-    onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
-}
+import { ISelectProps } from '../interfaces/ISelectProps';
 
 class Select extends React.Component<ISelectProps> {
     constructor(props: ISelectProps) {

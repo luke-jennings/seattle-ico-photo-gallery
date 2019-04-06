@@ -1,5 +1,6 @@
-import React, { FormEvent, ChangeEvent } from 'react';
-import { IFilterProps } from './interfaces/IFilterProps';
+import React, { FormEvent } from 'react';
+
+import { IFilterProps } from '../interfaces/IFilterProps';
 
 import Select from './Select';
 
