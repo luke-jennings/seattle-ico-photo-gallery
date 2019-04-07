@@ -18,6 +18,7 @@ interface IGalleryState extends IFilterValues {
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     filterOptions: IFilterOptions;
+    filterOptionsSelected: IFilterValues;
     photos: IPhoto[];
     columns: number;
     rows: number;
@@ -25,7 +26,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     constructor(props: IGalleryProps) {
         super(props);
-        this.state = {tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' }, isLoading: true };
+        this.state = {tripType: { value: 17, text: 'Whitewater Rafting' }, team: { value: 24, text: 'South Shore' }, isLoading: true };
+        this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
         this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
         this.handleTeamChange = this.handleTeamChange.bind(this);
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
@@ -50,28 +52,31 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.setState({ team: teamSelected });
     }
 
-    updateStateFromFilter() {
+    async updateStateFromFilter() {
         console.log('Selected Trip Type is: ' + this.state.tripType.text + ' (' + this.state.tripType.value + ')');
         console.log('Selected Team is: ' + this.state.team.text + ' (' + this.state.team.value + ')');
+        this.setState({ isLoading: true });
+        let data = new Data();
+        this.photos = await data.GetPhotos(this.state.tripType.value, this.state.team.value);
+        this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
+        this.setState({ isLoading: false });
     }
 
     async componentDidMount() {
         let data = new Data();
-        this.filterOptions = await new Promise((resolve) => setTimeout(resolve, 1000, data.GetFilterOptions()));
-        this.photos = data.GetPhotos();
+        this.filterOptions = await data.GetFilterOptions();
+        this.photos = await data.GetPhotos(this.state.tripType.value, this.state.team.value);
         this.rows = Math.ceil((this.photos.length / this.columns));
-        let matrix: number[][] =[];
         let row;
         for(var i=0;i<this.rows;i++){
           row=[];
           for(var j=0;j<this.columns;j++){
             let index = this.columns * i + j;
-            row.push(index) // ${i}${j} index = ${index < this.photos.length ? index : -1 }
+            row.push(index)
           }
-          matrix.push(row);
+          this.data.push(row);
         }
-        this.data = matrix;
-        this.setState({ isLoading: false })
+        this.setState({ isLoading: false });
     }
 
     render() {
@@ -92,7 +97,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
                     <div className="container">
 
-                        <p className="w-100 text-center mb-5">{ this.photos.length } photos of type <em>{ this.state.tripType.text }</em> and team <em>{ this.state.team.text }</em>.</p>
+                        <p className="w-100 text-center mb-5">{ this.photos.length } photos of type <em>{ this.filterOptionsSelected.tripType.text }</em> and team <em>{ this.filterOptionsSelected.team.text }</em>.</p>
                         {
                             this.data.map((row, index) => (
                             <div key={`row${row[0]}`} className="row justify-content-center mb-4">
