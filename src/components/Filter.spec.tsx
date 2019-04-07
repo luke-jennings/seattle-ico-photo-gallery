@@ -11,7 +11,7 @@ describe("The photos filter", () => {
     const onSubmitHandler = jest.fn();
 
     const filterProps: IFilterProps = {
-        values: { tripTypeId: 0, teamId: 0 },
+        values: { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } },
         options: { tripTypeOptions: [], teamOptions: [] },
         onSubmit: onSubmitHandler,
         onTripTypeChange: onTripTypeChangeHandler,

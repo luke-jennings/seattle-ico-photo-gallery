@@ -28,11 +28,11 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
         <form className="form-inline justify-content-center" onSubmit={this.handleSubmit}>
   
           <div className="form-group col-12 mb-1 col-sm-6 px-sm-0 col-md-4 col-lg-3 col-xl-2">
-              <Select labelText="Trip Type" selectName="tripTypes" selectedValue={this.props.values.tripTypeId} options={this.props.options.tripTypeOptions} onChange={this.props.onTripTypeChange}  />
+              <Select labelText="Trip Type" selectName="tripTypes" selectedValue={this.props.values.tripType.value} options={this.props.options.tripTypeOptions} onChange={this.props.onTripTypeChange}  />
           </div>
 
           <div className="form-group col-12 mb-3 col-sm-4 pt-sm-2 px-sm-0 col-md-3 px-lg-4 col-xl-2">
-              <Select labelText="Teams" selectName="teams" selectedValue={this.props.values.teamId} options={this.props.options.teamOptions} onChange={this.props.onTeamChange}  />
+              <Select labelText="Teams" selectName="teams" selectedValue={this.props.values.team.value} options={this.props.options.teamOptions} onChange={this.props.onTeamChange}  />
           </div>
   
           <div className="form-group col-12 mb-0 col-sm-2 pt-sm-2 px-sm-0 col-lg-1">

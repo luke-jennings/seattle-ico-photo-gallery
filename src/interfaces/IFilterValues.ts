@@ -1,4 +1,6 @@
+import { ISelectOption } from './ISelectOption';
+
 export interface IFilterValues {
-    tripTypeId: number,
-    teamId: number
+    tripType: ISelectOption,
+    team: ISelectOption
 }
