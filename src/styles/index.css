@@ -12,3 +12,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+ul.pagination li.page-item {
+  cursor: pointer;
+}
+
+ul.pagination li.page-item.disabled {
+  cursor: default;
+}
