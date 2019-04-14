@@ -12,8 +12,8 @@ export class Data {
 				.then(response => {
 					filterOptions = response.data;
 				})
-				.catch(err => {
-					console.log(err);
+				.catch(error => {
+					console.log(error.response);
 					return null;
 				});
 				
@@ -28,8 +28,9 @@ export class Data {
 			.then(response => {
 				photos = response.data;
 			})
-			.catch(err => {
-				console.log(err);
+			.catch(error => {
+				const errorMessage: string = 'GetPhotos returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
+				console.log(errorMessage);
 				return null;
 			});
 

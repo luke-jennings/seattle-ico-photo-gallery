@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import { Data } from './Data';
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { IPhoto } from '../interfaces/IPhoto';
@@ -701,7 +702,7 @@ describe("The Data service class", () => {
 		const axiosResponsePromise = Promise.resolve({ data: filterOptions } as AxiosResponse);
 		const mock = jest.spyOn(axios, 'get');
     	mock.mockReturnValueOnce(axiosResponsePromise);
-		var sut = new Data();
+		const sut = new Data();
 
 		const result = await sut.GetFilterOptions();
 
@@ -709,17 +710,36 @@ describe("The Data service class", () => {
 		expect(result).toBe(filterOptions);
     });
 
-    it("When Photos is called with trip type Whitewater Rafting and team South Shore selected it should return 39 photos.", async () => {
+    it("When Photos is called with trip type Whitewater Rafting (17) and team South Shore (24) selected it should return 39 photos.", async () => {
 
-		const axiosResponsePromise = Promise.resolve({ data: photos } as AxiosResponse);
-		const mock = jest.spyOn(axios, 'get');
-    	mock.mockReturnValueOnce(axiosResponsePromise);
-		var sut = new Data();
+		let axiosMockAdapter = new MockAdapter(axios);
+        axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/photos?tripTypeId=17&teamId=24').reply(200, photos);
+
+		const axiosSpy = jest.spyOn(axios, 'get');
+		const sut = new Data();
 
 		const result = await sut.GetPhotos(17, 24);
 
-		expect(mock).toHaveBeenCalled();
+		expect(axiosSpy).toHaveBeenCalled();
 		expect(result).toBe(photos);
+		expect(result.length).toBe(39);
+	});
+
+    it("When Photos is called with trip type Geocache (18) and team All (0) selected it should log error to console and return 0 photos.", async () => {
+
+		let axiosMockAdapter = new MockAdapter(axios);
+        axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/photos?tripTypeId=18&teamId=0').reply(404);
+
+		const axiosSpy = jest.spyOn(axios, 'get');
+		const sut = new Data();
+
+		const consoleSpy = jest.spyOn( console, 'log' ); 
+
+		const result = await sut.GetPhotos(18, 0);
+
+		expect(axiosSpy).toHaveBeenCalled();
+		expect(consoleSpy).toHaveBeenCalled();
+		expect(result).toEqual([]);
     });
 
 });
