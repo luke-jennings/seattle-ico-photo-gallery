@@ -55,4 +55,4 @@ describe("The photos filter", () => {
         expect(onSubmitHandler).toHaveBeenCalledTimes(1);
     });
 
-})
+});

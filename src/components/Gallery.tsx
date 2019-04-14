@@ -121,7 +121,7 @@ class Gallery extends React.Component<{}, IGalleryState> {
                             forcePage={this.state.selectedPage}
                         />
 
-                        <PhotoGrid page={this.state.selectedPage} pageSize={this.pageSize} photos={this.state.photos} columns={4} />
+                        <PhotoGrid page={this.state.selectedPage} pageSize={this.pageSize} photos={this.state.photos} />
 
                     </div>
                 </>

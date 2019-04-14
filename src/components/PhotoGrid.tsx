@@ -6,7 +6,6 @@ import { IPhoto } from '../interfaces/IPhoto';
 interface IPhotoGridProps {
     page: number;
     pageSize: number;
-    columns: number;
     photos: IPhoto[];
 }
 
@@ -16,6 +15,8 @@ interface IPhotoGridState {
 }
 
 class PhotoGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
+
+    readonly columns: number = 4;
 
     constructor(props: IPhotoGridProps) {
         super(props);
@@ -37,13 +38,13 @@ class PhotoGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
             pageOfPhotos.push(this.props.photos[i]);
         }
 
-        let rows: number = Math.ceil((pageOfPhotos.length / this.props.columns));
+        let rows: number = Math.ceil((pageOfPhotos.length / this.columns));
         let row;
         let grid: number[][] = [];
         for (let i=0; i < rows; i++) {
           row=[];
-          for (let j=0; j < this.props.columns; j++){
-            let index = this.props.columns * i + j + (pageNumber * this.props.pageSize);
+          for (let j=0; j < this.columns; j++){
+            let index = this.columns * i + j + (pageNumber * this.props.pageSize);
             row.push(index)
           }
           grid.push(row);
