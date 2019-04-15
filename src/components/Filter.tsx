@@ -27,15 +27,15 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
     
         <form className="form-inline justify-content-center" onSubmit={this.handleSubmit}>
   
-          <div className="form-group col-12 mb-1 col-sm-6 px-sm-0 col-md-4 col-lg-3 col-xl-2">
+          <div className="form-group text-left col-12 mb-1 col-sm-6 px-sm-2 col-md-4 col-lg-3 pl-xl-4 pr-xl-3">
               <Select labelText="Trip Type" selectName="tripTypes" selectedValue={this.props.values.tripType.value} options={this.props.options.tripTypeOptions} onChange={this.props.onTripTypeChange}  />
           </div>
 
-          <div className="form-group col-12 mb-3 col-sm-4 pt-sm-2 px-sm-0 col-md-3 col-lg-2 ml-xl-3 pl-xl-3">
+          <div className="form-group text-left col-12 mb-3 col-sm-4 pt-sm-2 px-sm-2 col-md-3 col-lg-2 mr-lg-3 mx-xl-0 pl-xl-0 pr-xl-5">
               <Select labelText="Teams" selectName="teams" selectedValue={this.props.values.team.value} options={this.props.options.teamOptions} onChange={this.props.onTeamChange}  />
           </div>
   
-          <div className="form-group col-12 mb-0 col-sm-2 pt-sm-2 px-sm-0 col-lg-1">
+          <div className="form-group text-left col-12 mb-3 mb-sm-0 col-sm-2 pt-sm-2 px-sm-0 col-lg-1">
               <button id="btnSubmit" type="submit" className="btn btn-primary">Search</button>
           </div>
   

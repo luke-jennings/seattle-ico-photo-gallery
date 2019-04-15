@@ -13,10 +13,34 @@ code {
     monospace;
 }
 
+form .btn-primary {
+  background-color: #6a813b;
+  border-color: #6a813b;
+}
+
+form .btn-primary:hover {
+  background-color: #576a30;
+  border-color: #576a30;
+}
+
 ul.pagination li.page-item {
   cursor: pointer;
 }
 
 ul.pagination li.page-item.disabled {
   cursor: default;
+}
+
+ul.pagination li.page-item .page-link {
+  color: #6a813b;
+}
+
+ul.pagination li.page-item.active .page-link {
+  background-color: #6a813b;
+  border-color: #6a813b;
+  color: #fff;
+}
+
+div.photo-thumbnail img {
+  border: 1px solid #7e7e7e;
 }
