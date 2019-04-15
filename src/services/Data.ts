@@ -13,7 +13,8 @@ export class Data {
 					filterOptions = response.data;
 				})
 				.catch(error => {
-					console.log(error.response);
+					const errorMessage: string = 'GetFilterOptions returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
+					console.log(errorMessage);
 					return null;
 				});
 				
