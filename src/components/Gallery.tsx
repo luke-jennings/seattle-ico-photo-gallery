@@ -1,10 +1,12 @@
 import React, { ChangeEvent } from 'react';
+
 import Filter from './Filter'
 import PhotoGrid from './PhotoGrid';
 import FilterMessage from './FilterMessage';
 
 import ReactPaginate from 'react-paginate';
 
+import { IGalleryProps } from '../interfaces/IGalleryProps';
 import { IFilterValues } from '../interfaces/IFilterValues';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
 import { Data } from '../services/Data';
@@ -16,9 +18,10 @@ interface IGalleryState extends IFilterValues {
     pageCount: number;
     selectedPage: number;
     photos: IPhoto[];
+    isInvalidRoute: boolean;
 }
 
-class Gallery extends React.Component<{}, IGalleryState> {
+class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     filterOptions: IFilterOptions;
     // filterOptionSelected is a property that duplicates the IFilterValues in state, but this is done so that updating the state of a
@@ -27,14 +30,15 @@ class Gallery extends React.Component<{}, IGalleryState> {
     
     readonly pageSize: number = 12;
 
-    constructor(props: {}) {
+    constructor(props: IGalleryProps) {
         super(props);
-        this.state = {tripType: { value: 17, text: 'Whitewater Rafting' }, team: { value: 24, text: 'South Shore' }, isLoading: true, pageCount: 0, selectedPage: 0, photos: [] };
-        this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
+        
         this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
         this.handleTeamChange = this.handleTeamChange.bind(this);
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
+        this.filterOptionsSelected = { tripType: {} as ISelectOption, team: {} as ISelectOption }
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
+        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [] };
     }
 
     handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
@@ -52,38 +56,114 @@ class Gallery extends React.Component<{}, IGalleryState> {
     }
 
     async updateStateFromFilter() {
-        console.log('Selected Trip Type is: ' + this.state.tripType.text + ' (' + this.state.tripType.value + ')');
-        console.log('Selected Team is: ' + this.state.team.text + ' (' + this.state.team.value + ')');
+        
         this.setState({ isLoading: true });
-        await this.getPhotos();
+        const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
+        const totalPages = this.calculateTotalPages(photosFromFilter.length);
         this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
-        this.setState({ selectedPage: 0, isLoading: false });
+        this.updateRoute(this.state.tripType.value, this.state.team.value, 0);
+        this.setState({ photos: photosFromFilter, pageCount: totalPages, selectedPage: 0, isLoading: false });
+    }
+
+    updateRoute(tripTypeId: number, teamId: number, pageNumber: number) {
+        const tripTypeRoute: string = this.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
+        const teamRoute: string = this.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
+        this.props.history.push('/' + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1));
+    }
+
+    getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterValues | undefined {
+
+        if (tripTypeRouteName === undefined && teamRouteName === undefined) {
+            return { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } };
+        }
+
+        if (tripTypeRouteName === undefined || teamRouteName === undefined) {
+            return undefined;
+        }
+
+        const tripTypeSelectOption: ISelectOption = this.filterOptions.tripTypeOptions.filter(tto => tto.routeName.toLowerCase() === tripTypeRouteName.toLowerCase())[0];
+        const teamSelectOption: ISelectOption = this.filterOptions.teamOptions.filter(to => to.routeName.toLowerCase() == teamRouteName.toLowerCase())[0];
+
+        if (tripTypeSelectOption !== undefined && teamSelectOption !== undefined) {
+            return { tripType: tripTypeSelectOption, team: teamSelectOption };
+        }
+
+        return undefined;
     }
 
     handlePageClick = (data: { selected: number }) => {
+        
+        this.updateRoute(this.state.tripType.value, this.state.team.value, data.selected);
         this.setState({ selectedPage: data.selected })
-    };
+    }
 
-    async getPhotos() {
+    calculateTotalPages(numberOfPhotos: number): number {
+
+        return Math.ceil(numberOfPhotos/this.pageSize)
+    }
+
+    async getPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {
+
         let data = new Data();
-        const photos = await data.GetPhotos(this.state.tripType.value, this.state.team.value);
-        const totalPages = Math.ceil(photos.length/this.pageSize);
-        this.setState({ pageCount: totalPages, photos: photos });
+        const photos = await data.GetPhotos(tripTypeId, teamId);
+        
+        return photos;
     }
 
     async componentDidMount() {
+        
+        this.setState({ isLoading: true, isInvalidRoute: false });
+
         let data = new Data();
         this.filterOptions = await data.GetFilterOptions();
-        await this.getPhotos();
-        this.setState({ isLoading: false });
+
+        const filterValuesFromRoute: IFilterValues | undefined = this.getFilterValuesFromRoute(this.props.match.params.tripTypeName, this.props.match.params.teamName);
+
+        if (filterValuesFromRoute === undefined) {
+            this.setState({ isInvalidRoute: true })
+            return;
+        }
+
+        this.filterOptionsSelected = { tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team }
+
+        const photosFromRouteValues = await this.getPhotos(filterValuesFromRoute.tripType.value, filterValuesFromRoute.team.value);
+        
+        const totalPages = this.calculateTotalPages(photosFromRouteValues.length);
+
+        const pageFromRouteValues: number = Number(this.props.match.params.pageNumber);
+        let page: number;
+
+        if (Number.isNaN(pageFromRouteValues)) {
+            page = 0;
+        }
+        else if (pageFromRouteValues > totalPages || pageFromRouteValues < 1) {
+            this.setState({ isInvalidRoute: true })
+            return;
+        }
+        else {
+            page = pageFromRouteValues - 1;
+        }
+
+        this.setState({ tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, selectedPage: page, photos: photosFromRouteValues });
     }
 
     render() {
+        
+        if (this.state.isInvalidRoute === true) {
+            return (
+                <div className="App container mb-2">
+                    <div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>
+                </div>);
+        }
+
         if (this.state.isLoading) {
-            return (<div className="row"><h3 className="mx-auto">Loading...</h3></div>);
+            return (
+                <div className="App container mb-2">
+                    <div className="row"><h2 className="mx-auto">Loading...</h2></div>
+                </div>);
         } else {
             return (
-                <>
+                <div className="App container mb-2">
                     <div className="row">
                         <Filter
                             values={{ tripType: this.state.tripType, team: this.state.team}}
@@ -115,6 +195,7 @@ class Gallery extends React.Component<{}, IGalleryState> {
                             nextLinkClassName={'page-link'}
                             disabledClassName={'disabled'}
                             onPageChange={this.handlePageClick}
+                            disableInitialCallback={true}
                             initialPage={0}
                             containerClassName={'pagination pagination-sm justify-content-center mb-4'}
                             activeClassName={'active'}
@@ -124,7 +205,7 @@ class Gallery extends React.Component<{}, IGalleryState> {
                         <PhotoGrid page={this.state.selectedPage} pageSize={this.pageSize} photos={this.state.photos} />
 
                     </div>
-                </>
+                </div>
             );
         }
     }

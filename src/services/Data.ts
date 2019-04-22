@@ -8,17 +8,17 @@ export class Data {
 
 			let filterOptions: IFilterOptions = { tripTypeOptions: [], teamOptions: [] };
 
-				await axios.get<IFilterOptions>('https://volunteers.seattleico.org/api/photosfilteroptions')
-				.then(response => {
-					filterOptions = response.data;
-				})
-				.catch(error => {
-					const errorMessage: string = 'GetFilterOptions returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
-					console.log(errorMessage);
-					return null;
-				});
-				
-        return filterOptions;
+			await axios.get<IFilterOptions>('https://volunteers.seattleico.org/api/photosfilteroptions')
+			.then(response => {
+				filterOptions = response.data;
+			})
+			.catch(error => {
+				const errorMessage: string = 'GetFilterOptions returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
+				console.log(errorMessage);
+				return null;
+			});
+			
+			return filterOptions;
 		}
 		
 		public async GetPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {

@@ -13,6 +13,10 @@ code {
     monospace;
 }
 
+h2 {
+  color: #335600;
+}
+
 form .btn-primary {
   background-color: #6a813b;
   border-color: #6a813b;

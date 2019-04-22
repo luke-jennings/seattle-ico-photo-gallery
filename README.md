@@ -1,5 +1,5 @@
 # Seattle ICO Photo Gallery
-A single-page app version of the Seattle ICO photos page, built with the React JavaScript library.
+A single-page app version of the Seattle ICO photos page (https://volunteers.seattleico.org/what-we-do/photos), using with the React (https://reactjs.org) library, written with Typescript (https://www.typescriptlang.org/), and tested with Jest (https://jestjs.io/).
 
 ## Create React App
 
