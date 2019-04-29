@@ -1,188 +1,267 @@
-import { ISelectOption } from '../interfaces/ISelectOption';
+import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
 import { IPhoto } from '../interfaces/IPhoto';
 
-export const tripTypesOptionsTestData: ISelectOption[] = [
+export const tripTypesOptionsTestData: ISelectOptionRoute[] = [
 	{
-		text: "All",
-		value: 0
-	}, 
+		"text": "All",
+		"value": 0,
+		"routeName": "trip-types-all"
+	},
 	{
-		text: "Backpacking",
-		value: 20
-	}, 
+		"text": "Backpacking",
+		"value": 20,
+		"routeName": "backpacking"
+	},
 	{
-		text: "Beach Walk",
-		value: 22
-	}, 
+		"text": "Beach Walk",
+		"value": 22,
+		"routeName": "beach-walk"
+	},
 	{
-		text: "Bicycling",
-		value: 2
-	}, 
+		"text": "Bicycling",
+		"value": 2,
+		"routeName": "bicycling"
+	},
 	{
-		text: "Bird Watching",
-		value: 3
-	}, 
+		"text": "Bird Watching",
+		"value": 3,
+		"routeName": "bird-watching"
+	},
 	{
-		text: "Canoeing",
-		value: 4
-	}, 
+		"text": "Canoeing",
+		"value": 4,
+		"routeName": "canoeing"
+	},
 	{
-		text: "Car Camping",
-		value: 5
-	}, 
+		"text": "Car Camping",
+		"value": 5,
+		"routeName": "car-camping"
+	},
 	{
-		text: "Community Service",
-		value: 16
-	}, 
+		"text": "Caving",
+		"value": 27,
+		"routeName": "caving"
+	},
 	{
-		text: "Corn Maze",
-		value: 21
-	}, 
+		"text": "Climbing",
+		"value": 28,
+		"routeName": "climbing"
+	},
 	{
-		text: "Earth Day",
-		value: 23
-	}, 
+		"text": "Community Service",
+		"value": 16,
+		"routeName": "community-service"
+	},
 	{
-		text: "Educational",
-		value: 6
-	}, 
+		"text": "Corn Maze",
+		"value": 21,
+		"routeName": "corn-maze"
+	},
 	{
-		text: "Farm Visit",
-		value: 7
-	}, 
+		"text": "Earth Day",
+		"value": 23,
+		"routeName": "earth-day"
+	},
 	{
-		text: "Fishing / Shellfishing",
-		value: 26
-	}, 
+		"text": "Educational",
+		"value": 6,
+		"routeName": "educational"
+	},
 	{
-		text: "Geocache",
-		value: 18
-	}, 
+		"text": "Farm Visit",
+		"value": 7,
+		"routeName": "farm-visit"
+	},
 	{
-		text: "Hiking",
-		value: 8
-	}, 
+		"text": "Fishing / Shellfishing",
+		"value": 26,
+		"routeName": "fishing-shellfishing"
+	},
 	{
-		text: "Horseback Riding",
-		value: 19
-	}, 
+		"text": "Geocache",
+		"value": 18,
+		"routeName": "geocache"
+	},
 	{
-		text: "Kayaking",
-		value: 10
-	}, 
+		"text": "Hiking",
+		"value": 8,
+		"routeName": "hiking"
+	},
 	{
-		text: "Other",
-		value: 1
-	}, 
+		"text": "Horseback Riding",
+		"value": 19,
+		"routeName": "horseback-riding"
+	},
 	{
-		text: "Sailing",
-		value: 9
-	}, 
+		"text": "Kayaking",
+		"value": 10,
+		"routeName": "kayaking"
+	},
 	{
-		text: "Skiing / Snowboarding",
-		value: 12
-	}, 
+		"text": "Other",
+		"value": 1,
+		"routeName": "other"
+	},
 	{
-		text: "Skiing- X-country",
-		value: 11
-	}, 
+		"text": "Sailing",
+		"value": 9,
+		"routeName": "sailing"
+	},
 	{
-		text: "Snow Camping",
-		value: 15
-	}, 
+		"text": "Skiing / Snowboarding",
+		"value": 12,
+		"routeName": "skiing-snowboarding"
+	},
 	{
-		text: "Snow Shoeing",
-		value: 14
-	}, 
+		"text": "Skiing- X-country",
+		"value": 11,
+		"routeName": "skiing-x-country"
+	},
 	{
-		text: "Snow Sledding",
-		value: 13
-	}, 
+		"text": "Snow Camping",
+		"value": 15,
+		"routeName": "snow-camping"
+	},
 	{
-		text: "Surfing",
-		value: 25
-	}, 
+		"text": "Snow Shoeing",
+		"value": 14,
+		"routeName": "snow-shoeing"
+	},
 	{
-		text: "Tree Planting",
-		value: 24
-	}, 
+		"text": "Snow Sledding",
+		"value": 13,
+		"routeName": "snow-sledding"
+	},
 	{
-		text: "Whitewater Rafting",
-		value: 17
-	} 
+		"text": "Surfing",
+		"value": 25,
+		"routeName": "surfing"
+	},
+	{
+		"text": "Tree Planting",
+		"value": 24,
+		"routeName": "tree-planting"
+	},
+	{
+		"text": "Whitewater Rafting",
+		"value": 17,
+		"routeName": "whitewater-rafting"
+	}
 ];
 
-export const teamsOptionsTestData: ISelectOption[] = [
-  {
-    text: "All",
-    value: 0
-  },
-  {
-    text: "Cleveland",
-    value: 18
-  },
-  {
-    text: "EYES",
-    value: 4
-  }, 
-  {
-    text: "Franklin",
-    value: 5
-  }, 
-  {
-    text: "Gatzert",
-    value: 14
-  }, 
-  {
-    text: "Hale",
-    value: 6
-  }, 
-  {
-    text: "Hamilton",
-    value: 7
-  }, 
-  {
-    text: "Madrona",
-    value: 9
-  }, 
-  {
-    text: "Mercer",
-    value: 10
-  },
-  {
-    text: "PSKS",
-    value: 16
-  }, 
-  {
-    text: "Rainier Beach",
-    value: 19
-  }, 
-  {
-    text: "Showalter",
-    value: 20
-  }, 
-  {
-    text: "South Shore",
-    value: 24
-  }, 
-  {
-    text: "Stevens",
-    value: 12
-  }, 
-  {
-    text: "Tukwila",
-    value: 17
-  }, 
-  {
-    text: "Washington",
-    value: 21
-  } 
+export const teamsOptionsTestData: ISelectOptionRoute[] = [
+	{
+		"text": "All",
+		"value": 0,
+		"routeName": "teams-all"
+	},
+	{
+		"text": "AAA",
+		"value": 2,
+		"routeName": "aaa"
+	},
+	{
+		"text": "AKS",
+		"value": 15,
+		"routeName": "aks"
+	},
+	{
+		"text": "Austin",
+		"value": 13,
+		"routeName": "austin"
+	},
+	{
+		"text": "Cleveland",
+		"value": 18,
+		"routeName": "cleveland"
+	},
+	{
+		"text": "El Centro",
+		"value": 3,
+		"routeName": "el-centro"
+	},
+	{
+		"text": "EYES",
+		"value": 4,
+		"routeName": "eyes"
+	},
+	{
+		"text": "Franklin",
+		"value": 5,
+		"routeName": "franklin"
+	},
+	{
+		"text": "Gatzert",
+		"value": 14,
+		"routeName": "gatzert"
+	},
+	{
+		"text": "Hale",
+		"value": 6,
+		"routeName": "hale"
+	},
+	{
+		"text": "Hamilton",
+		"value": 7,
+		"routeName": "hamilton"
+	},
+	{
+		"text": "Madrona",
+		"value": 9,
+		"routeName": "madrona"
+	},
+	{
+		"text": "Mercer",
+		"value": 10,
+		"routeName": "mercer"
+	},
+	{
+		"text": "PATH",
+		"value": 11,
+		"routeName": "path"
+	},
+	{
+		"text": "PSKS",
+		"value": 16,
+		"routeName": "psks"
+	},
+	{
+		"text": "Rainier Beach",
+		"value": 19,
+		"routeName": "rainier-beach"
+	},
+	{
+		"text": "Showalter",
+		"value": 20,
+		"routeName": "showalter"
+	},
+	{
+		"text": "South Shore",
+		"value": 24,
+		"routeName": "south-shore"
+	},
+	{
+		"text": "Stevens",
+		"value": 12,
+		"routeName": "stevens"
+	},
+	{
+		"text": "Tukwila",
+		"value": 17,
+		"routeName": "tukwila"
+	},
+	{
+		"text": "Washington",
+		"value": 21,
+		"routeName": "washington"
+	}
 ];
 
 export const photosTestData: IPhoto[] = [
 	{
 			"id": 1935,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -196,6 +275,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1936,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -209,6 +289,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1937,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -222,6 +303,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1938,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -235,6 +317,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1939,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -248,6 +331,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1940,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-07-17T00:00:00",
@@ -261,6 +345,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1941,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -274,6 +359,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1942,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -287,6 +373,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1943,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -300,6 +387,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1944,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -313,6 +401,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1945,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -326,6 +415,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1946,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -339,6 +429,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1947,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -352,6 +443,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1948,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -365,6 +457,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1949,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -378,6 +471,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1950,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -391,6 +485,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1951,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -404,6 +499,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1952,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -417,6 +513,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1953,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -430,6 +527,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1954,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -443,6 +541,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1955,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -456,6 +555,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1956,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -469,6 +569,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1957,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -482,6 +583,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1958,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -495,6 +597,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1959,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -508,6 +611,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1960,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-17T00:00:00",
@@ -521,6 +625,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1961,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -534,6 +639,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1962,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -547,6 +653,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1963,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -560,6 +667,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1964,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -573,6 +681,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1965,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -586,6 +695,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1966,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -599,6 +709,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1967,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -612,6 +723,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1968,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -625,6 +737,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1969,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2018-11-18T00:00:00",
@@ -638,6 +751,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1970,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -651,6 +765,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1971,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -664,6 +779,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1972,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",
@@ -677,6 +793,7 @@ export const photosTestData: IPhoto[] = [
 	{
 			"id": 1973,
 			"tripReportId": 857,
+			"tripReportRoute": "south-shore-hiking-camping-and-whitewater-rafting-in-chelan-county-857",
 			"destination": "Hiking, camping, and whitewater rafting in Chelan County",
 			"team": "South Shore",
 			"date": "2017-06-18T00:00:00",

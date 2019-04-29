@@ -13,7 +13,7 @@ code {
     monospace;
 }
 
-h2 {
+h2, h3 {
   color: #335600;
 }
 
@@ -45,6 +45,10 @@ ul.pagination li.page-item.active .page-link {
   color: #fff;
 }
 
-div.photo-thumbnail img {
+div.photo-thumbnail a {
+  cursor: pointer;
+}
+
+div.photo-thumbnail img, img.photo-slide {
   border: 1px solid #7e7e7e;
 }

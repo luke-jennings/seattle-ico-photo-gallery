@@ -1,5 +1,5 @@
-import React from 'react';
-import Photo from './Photo';
+import React, { MouseEvent } from 'react';
+import Thumbnail from './Thumbnail';
 
 import { IPhoto } from '../interfaces/IPhoto';
 
@@ -7,6 +7,7 @@ interface IPhotoGridProps {
     page: number;
     pageSize: number;
     photos: IPhoto[];
+    onPageChange: (event: MouseEvent<HTMLAnchorElement>) => void
 }
 
 interface IPhotoGridState {
@@ -14,7 +15,7 @@ interface IPhotoGridState {
     photoGrid: number[][];
 }
 
-class PhotoGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
+class ThumbnailGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
 
     readonly columns: number = 4;
 
@@ -64,7 +65,7 @@ class PhotoGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
                     {
                         this.state.photoGrid.map((row, index) => (
                             <div key={`row${row[0]}`} className="row justify-content-center mb-4">
-                                {row.map((photoIndex) => photoIndex < this.props.photos.length ? <Photo photo={this.props.photos[photoIndex]} key={photoIndex} /> : <div key={photoIndex} className="col-6 col-sm-6 col-md-3 col-lg-2 mb-3">&#160;</div>)}
+                                {row.map((photoIndex) => photoIndex < this.props.photos.length ? <Thumbnail photo={this.props.photos[photoIndex]} key={photoIndex} onClick={this.props.onPageChange} /> : <div key={photoIndex} className="col-6 col-sm-6 col-md-3 col-lg-2 mb-3">&#160;</div>)}
                             </div>
                         ))
                     }
@@ -76,4 +77,4 @@ class PhotoGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
     }
 }
 
-export default PhotoGrid;
+export default ThumbnailGrid;

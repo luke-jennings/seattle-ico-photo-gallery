@@ -1,25 +1,18 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, MouseEvent } from 'react';
 
 import Filter from './Filter'
-import PhotoGrid from './PhotoGrid';
+import ThumbnailGrid from './ThumbnailGrid';
 import FilterMessage from './FilterMessage';
 
 import ReactPaginate from 'react-paginate';
 
 import { IGalleryProps } from '../interfaces/IGalleryProps';
+import { IGalleryState } from '../interfaces/IGalleryState';
 import { IFilterValues } from '../interfaces/IFilterValues';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
 import { Data } from '../services/Data';
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { IPhoto } from '../interfaces/IPhoto';
-
-interface IGalleryState extends IFilterValues {
-    isLoading: boolean;
-    pageCount: number;
-    selectedPage: number;
-    photos: IPhoto[];
-    isInvalidRoute: boolean;
-}
 
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
@@ -61,14 +54,14 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
         const totalPages = this.calculateTotalPages(photosFromFilter.length);
         this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
-        this.updateRoute(this.state.tripType.value, this.state.team.value, 0);
+        this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
         this.setState({ photos: photosFromFilter, pageCount: totalPages, selectedPage: 0, isLoading: false });
     }
 
-    updateRoute(tripTypeId: number, teamId: number, pageNumber: number) {
+    updateGalleryRoute(tripTypeId: number, teamId: number, pageNumber: number) {
         const tripTypeRoute: string = this.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
         const teamRoute: string = this.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
-        this.props.history.push('/' + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1));
+        this.props.history.push('/what-we-do/photos/' + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1));
     }
 
     getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterValues | undefined {
@@ -93,8 +86,21 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     handlePageClick = (data: { selected: number }) => {
         
-        this.updateRoute(this.state.tripType.value, this.state.team.value, data.selected);
+        this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, data.selected);
         this.setState({ selectedPage: data.selected })
+    }
+
+    handleThumbnailClick = (event: MouseEvent<HTMLAnchorElement>) => {
+        
+        const photoId: number = Number(event.currentTarget.id);
+
+        const photo: IPhoto = this.state.photos.filter(p => p.id === photoId)[0];
+        
+        const photos: IPhoto[] = this.state.photos.filter(p => p.tripReportId === photo.tripReportId);
+
+        const page: number = photos.indexOf(photo) + 1;
+
+        this.props.history.push('/what-we-do/photo/' + photo.id + '/' + photo.tripReportRoute + '/' + page);
     }
 
     calculateTotalPages(numberOfPhotos: number): number {
@@ -109,7 +115,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         
         return photos;
     }
-
+    
     async componentDidMount() {
         
         this.setState({ isLoading: true, isInvalidRoute: false });
@@ -202,7 +208,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                             forcePage={this.state.selectedPage}
                         />
 
-                        <PhotoGrid page={this.state.selectedPage} pageSize={this.pageSize} photos={this.state.photos} />
+                        <ThumbnailGrid page={this.state.selectedPage} pageSize={this.pageSize} photos={this.state.photos} onPageChange={this.handleThumbnailClick} />
 
                     </div>
                 </div>

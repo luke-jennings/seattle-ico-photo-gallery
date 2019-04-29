@@ -71,6 +71,38 @@ describe("The Data service class", () => {
 			expect(axiosSpy).toHaveBeenCalled();
 			expect(consoleSpy).toHaveBeenCalled();
 			expect(result).toEqual([]);
+		});
+
+    it("When get slideshow photos is called with South Shore's Whitewater rafting trip report id 857 it should return 39 photos.", async () => {
+
+			let axiosMockAdapter = new MockAdapter(axios);
+			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/tripReportSlides/857').reply(200, photosTestData);
+
+			const axiosSpy = jest.spyOn(axios, 'get');
+			const sut = new Data();
+
+			const result = await sut.GetSlideshow(857);
+
+			expect(axiosSpy).toHaveBeenCalled();
+			expect(result).toBe(photosTestData);
+			expect(result.length).toBe(39);
+		});
+
+    it("When get slideshow photos is called with trip id 0 it should log error to console and return 0 photos.", async () => {
+
+			let axiosMockAdapter = new MockAdapter(axios);
+			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/tripReportSlides/0').reply(404);
+
+			const axiosSpy = jest.spyOn(axios, 'get');
+			const sut = new Data();
+
+			const consoleSpy = jest.spyOn( console, 'log' ); 
+
+			const result = await sut.GetSlideshow(0);
+
+			expect(axiosSpy).toHaveBeenCalled();
+			expect(consoleSpy).toHaveBeenCalled();
+			expect(result).toEqual([]);
     });
 
 });
