@@ -8,7 +8,7 @@ export class Data {
 
 		let filterOptions: IFilterOptions = { tripTypeOptions: [], teamOptions: [] };
 
-		await axios.get<IFilterOptions>('https://volunteers.seattleico.org/api/photosfilteroptions')
+		await axios.get<IFilterOptions>(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photosfilteroptions`)
 		.then(response => {
 			filterOptions = response.data;
 		})
@@ -25,7 +25,7 @@ export class Data {
 
 		let photos: IPhoto[] = [];
 
-		await axios.get<IPhoto[]>(`https://volunteers.seattleico.org/api/photos?tripTypeId=${tripTypeId}&teamId=${teamId}`)
+		await axios.get<IPhoto[]>(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photos?tripTypeId=${tripTypeId}&teamId=${teamId}`)
 		.then(response => {
 			photos = response.data;
 		})
@@ -42,7 +42,7 @@ export class Data {
 
 		let photos: IPhoto[] = [];
 
-		await axios.get<IPhoto[]>(`https://volunteers.seattleico.org/api/tripReportSlides/${tripReportId}`)
+		await axios.get<IPhoto[]>(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/tripReportSlides/${tripReportId}`)
 		.then(response => {
 			photos = response.data;
 		})

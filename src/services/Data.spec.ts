@@ -11,7 +11,7 @@ describe("The Data service class", () => {
     it("When GetFilterOptions is called it should return all filter options.", async () => {
 
 			let axiosMockAdapter = new MockAdapter(axios);
-			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/photosfilteroptions').reply(200, filterOptions);
+			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photosfilteroptions`).reply(200, filterOptions);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
 			const sut = new Data();
@@ -27,7 +27,7 @@ describe("The Data service class", () => {
 			const expectedFilterOptions: IFilterOptions = { teamOptions: [], tripTypeOptions: [] };
 
 			let axiosMockAdapter = new MockAdapter(axios);
-			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/photosfilteroptions').reply(500);
+			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photosfilteroptions`).reply(500);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
 			const sut = new Data();
@@ -44,7 +44,7 @@ describe("The Data service class", () => {
     it("When Photos is called with trip type Whitewater Rafting (17) and team South Shore (24) selected it should return 39 photos.", async () => {
 
 			let axiosMockAdapter = new MockAdapter(axios);
-			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/photos?tripTypeId=17&teamId=24').reply(200, photosTestData);
+			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photos?tripTypeId=17&teamId=24`).reply(200, photosTestData);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
 			const sut = new Data();
@@ -59,7 +59,7 @@ describe("The Data service class", () => {
     it("When Photos is called with trip type Geocache (18) and team All (0) selected it should log error to console and return 0 photos.", async () => {
 
 			let axiosMockAdapter = new MockAdapter(axios);
-			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/photos?tripTypeId=18&teamId=0').reply(404);
+			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photos?tripTypeId=18&teamId=0`).reply(404);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
 			const sut = new Data();
@@ -76,7 +76,7 @@ describe("The Data service class", () => {
     it("When get slideshow photos is called with South Shore's Whitewater rafting trip report id 857 it should return 39 photos.", async () => {
 
 			let axiosMockAdapter = new MockAdapter(axios);
-			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/tripReportSlides/857').reply(200, photosTestData);
+			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/tripReportSlides/857`).reply(200, photosTestData);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
 			const sut = new Data();
@@ -91,7 +91,7 @@ describe("The Data service class", () => {
     it("When get slideshow photos is called with trip id 0 it should log error to console and return 0 photos.", async () => {
 
 			let axiosMockAdapter = new MockAdapter(axios);
-			axiosMockAdapter.onGet('https://volunteers.seattleico.org/api/tripReportSlides/0').reply(404);
+			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/tripReportSlides/0`).reply(404);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
 			const sut = new Data();

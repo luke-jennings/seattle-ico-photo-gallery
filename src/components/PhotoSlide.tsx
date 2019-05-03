@@ -7,7 +7,7 @@ interface IPhotoSlideProps {
 
 const PhotoSlide: FunctionComponent<IPhotoSlideProps> = ({photo}) => {
 
-    return <img src={ 'https://volunteers.seattleico.org:443' + photo.image } alt={ photo.caption } title={ photo.caption } className="rounded mx-auto photo-slide img-fluid d-block" />
+    return <img src={ process.env.REACT_APP_PROTOCOL_HOSTNAME + photo.image } alt={ photo.caption } title={ photo.caption } className="rounded mx-auto photo-slide img-fluid d-block" />
 }
 
 export default PhotoSlide;
