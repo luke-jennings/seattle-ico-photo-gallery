@@ -22,6 +22,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     filterOptionsSelected: IFilterValues;
     
     readonly pageSize: number = 12;
+    
 
     constructor(props: IGalleryProps) {
         super(props);
@@ -61,7 +62,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     updateGalleryRoute(tripTypeId: number, teamId: number, pageNumber: number) {
         const tripTypeRoute: string = this.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
         const teamRoute: string = this.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
-        this.props.history.push('/what-we-do/photos/' + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1));
+        this.props.history.push(process.env.REACT_APP_GALLERY_ROOT_PATH + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1));
     }
 
     getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterValues | undefined {
@@ -100,7 +101,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
         const page: number = photos.indexOf(photo) + 1;
 
-        this.props.history.push('/what-we-do/photo/' + photo.id + '/' + photo.tripReportRoute + '/' + page);
+        // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
+        this.props.history.push((process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '') + photo.id + '/' + photo.tripReportRoute + '/' + page);
     }
 
     calculateTotalPages(numberOfPhotos: number): number {
@@ -114,6 +116,38 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         const photos = await data.GetPhotos(tripTypeId, teamId);
         
         return photos;
+    }
+
+    /**
+     * When the user clicks the browser's back button, update the gallery page number in the state.
+     * 
+     * @param prevProps The Gallery props that have been extended with RouteComponentProps.
+     */
+    componentDidUpdate(prevProps: IGalleryProps, prevState: IGalleryState) {
+        
+        const locationChanged: boolean = this.props.location !== prevProps.location;
+        const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
+        const pageValue = this.props.location.pathname.slice(lastSlashIndex);
+        const pageNumber = Number(pageValue);
+
+        console.log("prevState", prevState);
+
+        if (locationChanged) {
+
+            if (this.props.location.pathname === process.env.REACT_APP_GALLERY_ROOT_PATH && pageValue.length == 0) {
+
+                this.setState({ selectedPage: 0 });
+            }
+            else if (!Number.isNaN(pageNumber) && Number.isInteger(pageNumber)) {
+
+                const selectedPageFromUrl = Number(pageNumber) - 1;
+
+                // Only update the state if there is a discrepency between the state & url page numbers.
+                if (this.state.selectedPage !== selectedPageFromUrl){
+                    this.setState({ selectedPage: selectedPageFromUrl })
+                }
+            }
+        }
     }
     
     async componentDidMount() {
@@ -140,7 +174,12 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         let page: number;
 
         if (Number.isNaN(pageFromRouteValues)) {
-            page = 0;
+            if (this.props.location.pathname === process.env.REACT_APP_GALLERY_ROOT_PATH) {
+                page = 0;
+            } else {
+                this.setState({ isInvalidRoute: true })
+                return;
+            }
         }
         else if (pageFromRouteValues > totalPages || pageFromRouteValues < 1) {
             this.setState({ isInvalidRoute: true })

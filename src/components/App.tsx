@@ -18,10 +18,10 @@ class App extends Component {
         <div className="App container mb-2">
           <p className="text-uppercase">Prototype of Seattle ICO's photos page as a React + Typescript web app.</p>
           <Switch>
-            <Route path="/what-we-do/photos/" exact component={Gallery} />
-            <Route path="/what-we-do/photos/:tripTypeName/:teamName/:pageNumber?" component={Gallery} />
-            <Route path="/what-we-do/photo/:photoId/:tripReportDescription/:pageNumber?" component={Slideshow} />
-            <Redirect from="/" to="/what-we-do/photos/" exact />
+            <Route path={process.env.REACT_APP_GALLERY_ROOT_PATH} exact component={Gallery} />
+            <Route path={process.env.REACT_APP_GALLERY_ROOT_PATH + ":tripTypeName/:teamName/:pageNumber?"} component={Gallery} />
+            <Route path={process.env.REACT_APP_SLIDESHOW_ROOT_PATH + ":photoId/:tripReportDescription/:pageNumber?"} component={Slideshow} />
+            <Redirect from="/" to={process.env.REACT_APP_GALLERY_ROOT_PATH || ""} exact />
             <Route component={NotFound} />
           </Switch>
         </div>

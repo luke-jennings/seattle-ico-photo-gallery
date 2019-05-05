@@ -29,7 +29,9 @@ class Slideshow extends React.Component<ISlideshowProps, IPhotosPaginateState> {
     }
 
     updateRoute(pageNumber: number) {
-        this.props.history.push('/what-we-do/photo/' + this.state.photos[pageNumber].id + '/' + this.state.photos[pageNumber].tripReportRoute + '/' + (pageNumber + 1));
+
+        // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
+        this.props.history.push((process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '') + this.state.photos[pageNumber].id + '/' + this.state.photos[pageNumber].tripReportRoute + '/' + (pageNumber + 1));
     }
 
     handlePageClick = (data: { selected: number }) => {
@@ -59,6 +61,32 @@ class Slideshow extends React.Component<ISlideshowProps, IPhotosPaginateState> {
         }
 
         return { photoId, tripReportId, pageNumber };
+    }
+
+    /**
+     * When the user clicks the browser's back button, update the slideshow page number in the state.
+     * 
+     * @param prevProps The Slideshow props that have been extended with RouteComponentProps.
+     */
+    componentDidUpdate(prevProps: ISlideshowProps) {
+        
+        const locationChanged: boolean = this.props.location !== prevProps.location;
+        const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
+        const pageValue = this.props.location.pathname.slice(lastSlashIndex);
+        const pageNumber = Number(pageValue);
+
+        if (locationChanged) {
+
+            if (!Number.isNaN(pageNumber) && pageValue.length > 0 && Number.isInteger(pageNumber)) {
+
+                const selectedPageFromUrl = Number(pageNumber) - 1;
+
+                // Only update the state if there is a discrepency between the state & url page numbers.
+                if (this.state.selectedPage !== selectedPageFromUrl) {
+                    this.setState({ selectedPage: selectedPageFromUrl })
+                }
+            }
+        }
     }
 
     async componentDidMount() {
