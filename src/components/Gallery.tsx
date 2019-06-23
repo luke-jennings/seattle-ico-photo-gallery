@@ -14,6 +14,10 @@ import { Data } from '../services/Data';
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { IPhoto } from '../interfaces/IPhoto';
 
+import { AppState } from '../store/ConfigureStore';
+import { connect } from "react-redux";
+import { searchClicked, pagingClicked, filterClicked } from '../store/Actions';
+
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     filterOptions: IFilterOptions;
@@ -25,8 +29,9 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     
 
     constructor(props: IGalleryProps) {
-        super(props);
         
+        super(props);
+
         this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
         this.handleTeamChange = this.handleTeamChange.bind(this);
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
@@ -50,13 +55,13 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     }
 
     async updateStateFromFilter() {
-        
         this.setState({ isLoading: true });
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
         const totalPages = this.calculateTotalPages(photosFromFilter.length);
         this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
         this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
         this.setState({ photos: photosFromFilter, pageCount: totalPages, selectedPage: 0, isLoading: false });
+        this.props.searchClicked(this.state);
     }
 
     updateGalleryRoute(tripTypeId: number, teamId: number, pageNumber: number) {
@@ -88,7 +93,12 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     handlePageClick = (data: { selected: number }) => {
         
         this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, data.selected);
-        this.setState({ selectedPage: data.selected })
+
+        this.setState({ selectedPage: data.selected }, () => {
+            // Set state is asynchronous, so wait for state mutation to complete
+            // and use setState's callback function to update the redux store
+            this.props.pagingClicked(this.state);
+        });
     }
 
     handleThumbnailClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -124,13 +134,11 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
      * @param prevProps The Gallery props that have been extended with RouteComponentProps.
      */
     componentDidUpdate(prevProps: IGalleryProps, prevState: IGalleryState) {
-        
+
         const locationChanged: boolean = this.props.location !== prevProps.location;
         const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
         const pageValue = this.props.location.pathname.slice(lastSlashIndex);
         const pageNumber = Number(pageValue);
-
-        console.log("prevState", prevState);
 
         if (locationChanged) {
 
@@ -190,6 +198,9 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         }
 
         this.setState({ tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, selectedPage: page, photos: photosFromRouteValues });
+        
+        this.props.searchClicked(this.state);
+        this.props.filterClicked(this.state);
     }
 
     render() {
@@ -256,4 +267,13 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     }
 }
 
-export default Gallery;
+const mapStateToProps = (state: AppState) => ({
+    photosMeta: state
+});
+
+const mapDispatchToProps = { searchClicked, pagingClicked, filterClicked }
+
+export default connect (
+    mapStateToProps,
+    mapDispatchToProps
+) (Gallery);
