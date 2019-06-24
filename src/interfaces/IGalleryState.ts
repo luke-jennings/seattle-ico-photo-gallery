@@ -1,5 +1,5 @@
-import { IFilterValues } from './IFilterValues';
-import { IPhotosPaginateState } from './IPhotosPaginateState';
+import { ISlideshowState } from './ISlideshowState';
+import { IFilterState } from './IFilterState';
 
-export interface IGalleryState extends IPhotosPaginateState, IFilterValues {
+export interface IGalleryState extends IFilterState, ISlideshowState {
 }

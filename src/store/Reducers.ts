@@ -1,22 +1,52 @@
-import { CLICK_SEARCH, CLICK_PAGING, CLICK_PHOTO, ClickActionTypes, ClickFilterActionTypes } from './Types';
+import { CLICK_SEARCH, CLICK_PAGING, CLICK_PHOTO, ClickActionTypes, ClickFilterActionTypes, ClickMetaDataActionTypes } from './Types';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { IFilterState } from '../interfaces/IFilterState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
-import { IFilterValues } from '../interfaces/IFilterValues';
 import { ISelectOption } from '../interfaces/ISelectOption';
-import { stat } from 'fs';
-  
-const initialState: IPhotosPaginateState = {
-                        isLoading: true,
-                        isInvalidRoute: false,
-                        pageCount: 0,
-                        selectedPage: 0,
-                        photos: []
-                    };
+import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 
-const initialFilterState: IFilterValues = {
+const initialMetaDataState: IMetaDataState = {
+    isInvalidRoute: false,
+    isLoading: true,
+    photosDisplayType: PhotosDisplayType.Thumbnails,
+    route: '/'
+};
+
+const initialPhotosState: IPhotosPaginateState = {
+    pageCount: 0,
+    selectedPage: 0,
+    photos: []
+};
+
+const initialFilterState: IFilterState = {
     tripType: {} as ISelectOption, team: {} as ISelectOption
 }
 
-export function photosMetaReducer(state = initialState, action: ClickActionTypes): IPhotosPaginateState {
+export function metaDataReducer(state = initialMetaDataState, action: ClickMetaDataActionTypes): IMetaDataState {
+
+    switch (action.type) {
+        case CLICK_SEARCH:
+        {
+            const { route } = action.payload;
+            return {
+                ...state,
+                route: route
+            };
+        }
+        case CLICK_PAGING:
+        {
+            const { route } = action.payload;
+            return {
+                ...state,
+                route: route
+            };
+        }
+        default:
+            return state;
+    }
+}
+
+export function photosReducer(state = initialPhotosState, action: ClickActionTypes): IPhotosPaginateState {
 
     switch (action.type) {
         case CLICK_SEARCH:
@@ -24,7 +54,6 @@ export function photosMetaReducer(state = initialState, action: ClickActionTypes
             const { pageCount, selectedPage, photos } = action.payload;
             return {
                 ...state,
-                isLoading: false,
                 pageCount: pageCount,
                 selectedPage: selectedPage,
                 photos: photos
@@ -53,7 +82,7 @@ export function photosMetaReducer(state = initialState, action: ClickActionTypes
     }
 }
 
-export function filtersReducer(state = initialFilterState, action: ClickFilterActionTypes): IFilterValues {
+export function filtersReducer(state = initialFilterState, action: ClickFilterActionTypes): IFilterState {
     
     switch (action.type) {
 

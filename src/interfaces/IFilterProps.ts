@@ -1,9 +1,9 @@
 import { ChangeEvent } from 'react';
-import { IFilterValues } from './IFilterValues';
+import { IFilterState } from './IFilterState';
 import { IFilterOptions } from './IFilterOptions';
 
 export interface IFilterProps {
-    values: IFilterValues;
+    values: IFilterState;
     options: IFilterOptions;
     onSubmit: () => void;
     onTripTypeChange: (event: ChangeEvent<HTMLSelectElement>) => void;

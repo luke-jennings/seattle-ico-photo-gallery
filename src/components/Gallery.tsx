@@ -8,7 +8,7 @@ import ReactPaginate from 'react-paginate';
 
 import { IGalleryProps } from '../interfaces/IGalleryProps';
 import { IGalleryState } from '../interfaces/IGalleryState';
-import { IFilterValues } from '../interfaces/IFilterValues';
+import { IFilterState } from '../interfaces/IFilterState';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
 import { Data } from '../services/Data';
 import { ISelectOption } from '../interfaces/ISelectOption';
@@ -16,14 +16,15 @@ import { IPhoto } from '../interfaces/IPhoto';
 
 import { AppState } from '../store/ConfigureStore';
 import { connect } from "react-redux";
-import { searchClicked, pagingClicked, filterClicked } from '../store/Actions';
+import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
+import { searchClicked, pagingClicked, filterClicked, filterClickedUpdateMetaData, pagingClickedUpdateMetaData } from '../store/Actions';
 
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     filterOptions: IFilterOptions;
     // filterOptionSelected is a property that duplicates the IFilterValues in state, but this is done so that updating the state of a
     // filter does not automatically update the filter message (which should not be updated until the user clicks the Search button)
-    filterOptionsSelected: IFilterValues;
+    filterOptionsSelected: IFilterState;
     
     readonly pageSize: number = 12;
     
@@ -37,7 +38,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
         this.filterOptionsSelected = { tripType: {} as ISelectOption, team: {} as ISelectOption }
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
-        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [] };
+        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
     }
 
     handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
@@ -59,18 +60,24 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
         const totalPages = this.calculateTotalPages(photosFromFilter.length);
         this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
-        this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
-        this.setState({ photos: photosFromFilter, pageCount: totalPages, selectedPage: 0, isLoading: false });
-        this.props.searchClicked(this.state);
+        let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
+        this.setState({ photos: photosFromFilter, pageCount: totalPages, selectedPage: 0, isLoading: false, route: route }, () => {
+            // Set state is asynchronous, so wait for state mutation to complete
+            // and use setState's callback function to update the redux store
+            this.props.searchClicked(this.state);
+            this.props.filterClickedUpdateMetaData(this.state);
+        });
     }
 
-    updateGalleryRoute(tripTypeId: number, teamId: number, pageNumber: number) {
+    updateGalleryRoute(tripTypeId: number, teamId: number, pageNumber: number): string {
         const tripTypeRoute: string = this.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
         const teamRoute: string = this.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
-        this.props.history.push(process.env.REACT_APP_GALLERY_ROOT_PATH + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1));
+        let route: string = process.env.REACT_APP_GALLERY_ROOT_PATH + tripTypeRoute + '/' + teamRoute + '/' + (pageNumber + 1);
+        this.props.history.push(route);
+        return route;
     }
 
-    getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterValues | undefined {
+    getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterState | undefined {
 
         if (tripTypeRouteName === undefined && teamRouteName === undefined) {
             return { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } };
@@ -92,12 +99,13 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     handlePageClick = (data: { selected: number }) => {
         
-        this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, data.selected);
+        let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, data.selected);
 
-        this.setState({ selectedPage: data.selected }, () => {
+        this.setState({ selectedPage: data.selected, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
             this.props.pagingClicked(this.state);
+            this.props.pagingClickedUpdateMetaData(this.state);
         });
     }
 
@@ -165,7 +173,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         let data = new Data();
         this.filterOptions = await data.GetFilterOptions();
 
-        const filterValuesFromRoute: IFilterValues | undefined = this.getFilterValuesFromRoute(this.props.match.params.tripTypeName, this.props.match.params.teamName);
+        const filterValuesFromRoute: IFilterState | undefined = this.getFilterValuesFromRoute(this.props.match.params.tripTypeName, this.props.match.params.teamName);
 
         if (filterValuesFromRoute === undefined) {
             this.setState({ isInvalidRoute: true })
@@ -197,10 +205,15 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
             page = pageFromRouteValues - 1;
         }
 
-        this.setState({ tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, selectedPage: page, photos: photosFromRouteValues });
-        
-        this.props.searchClicked(this.state);
-        this.props.filterClicked(this.state);
+        let route:string = this.updateGalleryRoute(filterValuesFromRoute.tripType.value, filterValuesFromRoute.team.value, page);
+
+        this.setState({ tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, selectedPage: page, photos: photosFromRouteValues, route: route }, () => {
+            // Set state is asynchronous, so wait for state mutation to complete
+            // and use setState's callback function to update the redux store
+            this.props.searchClicked(this.state);
+            this.props.filterClicked(this.state);
+            this.props.filterClickedUpdateMetaData(this.state);
+        });
     }
 
     render() {
@@ -271,7 +284,7 @@ const mapStateToProps = (state: AppState) => ({
     photosMeta: state
 });
 
-const mapDispatchToProps = { searchClicked, pagingClicked, filterClicked }
+const mapDispatchToProps = { searchClicked, pagingClicked, filterClicked, filterClickedUpdateMetaData, pagingClickedUpdateMetaData }
 
 export default connect (
     mapStateToProps,

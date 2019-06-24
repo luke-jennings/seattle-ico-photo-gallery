@@ -1,5 +1,6 @@
+import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
-import { IFilterValues } from '../interfaces/IFilterValues';
+import { IFilterState } from '../interfaces/IFilterState';
 
 export const CLICK_SEARCH = "CLICK_SEARCH"; // The user clicked the filter search button
 
@@ -24,9 +25,21 @@ interface ClickPhotoAction {
 
 interface ClickSearchFilterAction {
     type: typeof CLICK_SEARCH;
-    payload: IFilterValues;
+    payload: IFilterState;
+}
+
+interface ClickSearchMetaDataAction {
+    type: typeof CLICK_SEARCH;
+    payload: IMetaDataState;
+}
+
+interface ClickPagingMetaDataAction {
+    type: typeof CLICK_PAGING;
+    payload: IMetaDataState;
 }
 
 export type ClickActionTypes = ClickSearchAction | ClickPagingAction | ClickPhotoAction;
 
 export type ClickFilterActionTypes = ClickSearchFilterAction;
+
+export type ClickMetaDataActionTypes = ClickSearchMetaDataAction | ClickPagingMetaDataAction;

@@ -1,6 +1,6 @@
 import { ISelectOption } from './ISelectOption';
 
-export interface IFilterValues {
+export interface IFilterState {
     tripType: ISelectOption,
     team: ISelectOption
 }

@@ -5,9 +5,10 @@ import moment from 'moment';
 import PhotoSlide from './PhotoSlide';
 
 import { ISlideshowProps } from '../interfaces/ISlideshowProps';
-import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState'
+import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
 import { IPhoto } from '../interfaces/IPhoto';
+import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 import { Data } from '../services/Data';
 
 interface ISlideshowValues {
@@ -16,7 +17,7 @@ interface ISlideshowValues {
     pageNumber: number;
 }
 
-class Slideshow extends React.Component<ISlideshowProps, IPhotosPaginateState> {
+class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     
     constructor(props: ISlideshowProps) {
       super(props);
@@ -25,7 +26,7 @@ class Slideshow extends React.Component<ISlideshowProps, IPhotosPaginateState> {
       this.handlePageClick = this.handlePageClick.bind(this);
       this.getSlideshowValuesFromRoute = this.getSlideshowValuesFromRoute.bind(this);
 
-      this.state = { isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [] };
+      this.state = { isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
     }
 
     updateRoute(pageNumber: number) {
