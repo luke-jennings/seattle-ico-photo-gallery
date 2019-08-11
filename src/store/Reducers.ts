@@ -1,4 +1,5 @@
-import { CHANGE_FILTER, CLICK_SEARCH, CLICK_PAGING, CLICK_THUMBNAIL, LOAD_GALLERY_FROM_ROUTE, MetaDataActionTypes, FilterActionTypes, PhotosActionTypes } from './Types';
+import { MetaDataActionTypes, FilterActionTypes, PhotosActionTypes } from './Types';
+import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IFilterState } from '../interfaces/IFilterState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
@@ -27,7 +28,7 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
     console.log("metaDataReducer state & action", state, action);
 
     switch (action.type) {
-        case LOAD_GALLERY_FROM_ROUTE:
+        case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
             const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
             return {
@@ -38,7 +39,7 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
                 route: route
             }
         }
-        case CLICK_SEARCH:
+        case ReduxActionType.CLICK_SEARCH:
         {
             const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
             return {
@@ -49,7 +50,7 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
                 route: route
             };
         }
-        case CLICK_PAGING:
+        case ReduxActionType.CLICK_PAGING:
         {
             const { route } = action.payload;
             return {
@@ -67,7 +68,7 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
     console.log("photosReducer state & action", state, action);
 
     switch (action.type) {
-        case LOAD_GALLERY_FROM_ROUTE:
+        case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
             const { pageCount, selectedPage, photos } = action.payload;
             return {
@@ -77,7 +78,7 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
                 photos: photos
             }
         }
-        case CLICK_SEARCH:
+        case ReduxActionType.CLICK_SEARCH:
         {
             const { pageCount, selectedPage, photos } = action.payload;
             return {
@@ -87,7 +88,7 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
                 photos: photos
             };
         }
-        case CLICK_PAGING:
+        case ReduxActionType.CLICK_PAGING:
         {
             const { selectedPage } = action.payload;
             return {
@@ -95,7 +96,7 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
                 selectedPage: selectedPage
             };
         }
-        case CLICK_THUMBNAIL:
+        case ReduxActionType.CLICK_THUMBNAIL:
         {
             const { pageCount, selectedPage, photos } = action.payload;
             return {
@@ -116,7 +117,7 @@ export function filtersReducer(state = initialFilterState, action: FilterActionT
     
     switch (action.type) {
 
-        case LOAD_GALLERY_FROM_ROUTE:
+        case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
             const { tripType, team } = action.payload;
             return {
@@ -126,7 +127,7 @@ export function filtersReducer(state = initialFilterState, action: FilterActionT
             }
         }
 
-        case CHANGE_FILTER:
+        case ReduxActionType.CHANGE_FILTER:
         {
             const { tripType, team } = action.payload;
             return {
