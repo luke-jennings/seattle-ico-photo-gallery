@@ -17,7 +17,8 @@ import { IPhoto } from '../interfaces/IPhoto';
 import { AppState } from '../store/ConfigureStore';
 import { connect } from "react-redux";
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
-import { searchClicked, pagingClicked, filterClicked, filterClickedUpdateMetaData, pagingClickedUpdateMetaData } from '../store/Actions';
+import { searchClicked, pagingClicked, filterChanged, galleryLoaded } from '../store/Actions';
+import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
 
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
@@ -38,21 +39,27 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
         this.filterOptionsSelected = { tripType: {} as ISelectOption, team: {} as ISelectOption }
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
-        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
+        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
     }
 
     handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
 
         let tripTypeSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
 
-        this.setState({ tripType: tripTypeSelected });
+        this.setState({ tripType: tripTypeSelected }, () => {
+            
+            this.props.filterChanged({ team: this.state.team, tripType: this.state.tripType })
+        });
     }
     
     handleTeamChange(event: ChangeEvent<HTMLSelectElement>) {
 
         let teamSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
 
-        this.setState({ team: teamSelected });
+        this.setState({ team: teamSelected }, () => {
+
+            this.props.filterChanged({ team: this.state.team, tripType: this.state.tripType })
+        });
     }
 
     async updateStateFromFilter() {
@@ -64,8 +71,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.setState({ photos: photosFromFilter, pageCount: totalPages, selectedPage: 0, isLoading: false, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
+
             this.props.searchClicked(this.state);
-            this.props.filterClickedUpdateMetaData(this.state);
         });
     }
 
@@ -87,8 +94,13 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
             return undefined;
         }
 
-        const tripTypeSelectOption: ISelectOption = this.filterOptions.tripTypeOptions.filter(tto => tto.routeName.toLowerCase() === tripTypeRouteName.toLowerCase())[0];
-        const teamSelectOption: ISelectOption = this.filterOptions.teamOptions.filter(to => to.routeName.toLowerCase() == teamRouteName.toLowerCase())[0];
+        const tripTypeSelectOptionRoute: ISelectOptionRoute = this.filterOptions.tripTypeOptions.filter(tto => tto.routeName.toLowerCase() === tripTypeRouteName.toLowerCase())[0];
+        const teamSelectOptionRoute: ISelectOptionRoute = this.filterOptions.teamOptions.filter(to => to.routeName.toLowerCase() == teamRouteName.toLowerCase())[0];
+
+        // Destructure the tripTypeSelectOptionRoute to remove the routeName.
+        let { routeName, ...tripTypeSelectOption } = tripTypeSelectOptionRoute
+        // Unfortunately can't use destructuring again since can't declare the variable routeName again, so have to get the properties by assignment.
+        let teamSelectOption: ISelectOption = { value: teamSelectOptionRoute.value, text: teamSelectOptionRoute.text }
 
         if (tripTypeSelectOption !== undefined && teamSelectOption !== undefined) {
             return { tripType: tripTypeSelectOption, team: teamSelectOption };
@@ -104,8 +116,9 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.setState({ selectedPage: data.selected, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
+
+            //this.props.pagingClicked(this.state);
             this.props.pagingClicked(this.state);
-            this.props.pagingClickedUpdateMetaData(this.state);
         });
     }
 
@@ -207,12 +220,11 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
         let route:string = this.updateGalleryRoute(filterValuesFromRoute.tripType.value, filterValuesFromRoute.team.value, page);
 
-        this.setState({ tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, selectedPage: page, photos: photosFromRouteValues, route: route }, () => {
+        this.setState({ tripType: (filterValuesFromRoute.tripType), team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, selectedPage: page, photos: photosFromRouteValues, photosDisplayType: PhotosDisplayType.Thumbnails, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
-            this.props.searchClicked(this.state);
-            this.props.filterClicked(this.state);
-            this.props.filterClickedUpdateMetaData(this.state);
+
+            this.props.galleryLoaded(this.state);
         });
     }
 
@@ -284,7 +296,7 @@ const mapStateToProps = (state: AppState) => ({
     photosMeta: state
 });
 
-const mapDispatchToProps = { searchClicked, pagingClicked, filterClicked, filterClickedUpdateMetaData, pagingClickedUpdateMetaData }
+const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded }
 
 export default connect (
     mapStateToProps,

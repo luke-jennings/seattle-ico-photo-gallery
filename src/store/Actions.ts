@@ -1,46 +1,40 @@
-import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { IGalleryState } from '../interfaces/IGalleryState';
+import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IFilterState } from '../interfaces/IFilterState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
-import { CLICK_SEARCH, CLICK_PAGING, CLICK_PHOTO } from './Types';
+import { LOAD_GALLERY_FROM_ROUTE, CHANGE_FILTER, CLICK_SEARCH, CLICK_PAGING, CLICK_THUMBNAIL } from './Types';
 
-export function searchClicked(paginatedState: IPhotosPaginateState) {
+export function galleryLoaded(galleryState: IGalleryState) {
     return {
-        type: CLICK_SEARCH,
-        payload: paginatedState
-      };
+        type: LOAD_GALLERY_FROM_ROUTE,
+        payload: galleryState
+    };
 }
 
-export function pagingClicked(paginatedState: IPhotosPaginateState) {
+export function searchClicked(slideshowState: ISlideshowState) {
+    return {
+        type: CLICK_SEARCH,
+        payload: slideshowState
+    };
+}
+
+export function pagingClicked(slideshowState: ISlideshowState) {
     return {
         type: CLICK_PAGING,
-        payload: paginatedState
-    }
+        payload: slideshowState
+    };
 }
 
 export function photoClicked(paginatedState: IPhotosPaginateState) {
     return {
-        type: CLICK_PHOTO,
+        type: CLICK_THUMBNAIL,
         payload: paginatedState
-    }
+    };
 }
 
-export function filterClicked(filterValues: IFilterState) {
+export function filterChanged(filterValues: IFilterState) {
     return {
-        type: CLICK_SEARCH,
+        type: CHANGE_FILTER,
         payload: filterValues
-    }
-}
-
-export function filterClickedUpdateMetaData(metaDataValues: IMetaDataState) {
-    return {
-        type: CLICK_SEARCH,
-        payload: metaDataValues
-    }
-}
-
-export function pagingClickedUpdateMetaData(metaDataValues: IMetaDataState) {
-    return {
-        type: CLICK_PAGING,
-        payload: metaDataValues
-    }
+    };
 }
