@@ -15,7 +15,7 @@ const initialMetaDataState: IMetaDataState = {
 
 const initialPhotosState: IPhotosPaginateState = {
     pageCount: 0,
-    selectedPage: 0,
+    pageIndex: 0,
     photos: []
 };
 
@@ -29,6 +29,17 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
 
     switch (action.type) {
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
+        {
+            const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
+            return {
+                ...state,
+                isInvalidRoute: isInvalidRoute,
+                isLoading: isLoading,
+                photosDisplayType: photosDisplayType,
+                route: route
+            }
+        }
+        case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
             const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
             return {
@@ -70,39 +81,49 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
     switch (action.type) {
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
-            const { pageCount, selectedPage, photos } = action.payload;
+            const { pageCount, pageIndex, photos } = action.payload;
             return {
                 ...state,
                 pageCount: pageCount,
-                selectedPage: selectedPage,
+                pageIndex: pageIndex,
+                photos: photos
+            }
+        }
+        case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
+        {
+            const { pageCount, pageIndex, photos } = action.payload;
+            return {
+                ...state,
+                pageCount: pageCount,
+                pageIndex: pageIndex,
                 photos: photos
             }
         }
         case ReduxActionType.CLICK_SEARCH:
         {
-            const { pageCount, selectedPage, photos } = action.payload;
+            const { pageCount, pageIndex, photos } = action.payload;
             return {
                 ...state,
                 pageCount: pageCount,
-                selectedPage: selectedPage,
+                pageIndex: pageIndex,
                 photos: photos
             };
         }
         case ReduxActionType.CLICK_PAGING:
         {
-            const { selectedPage } = action.payload;
+            const { pageIndex } = action.payload;
             return {
                 ...state,
-                selectedPage: selectedPage
+                pageIndex: pageIndex
             };
         }
         case ReduxActionType.CLICK_THUMBNAIL:
         {
-            const { pageCount, selectedPage, photos } = action.payload;
+            const { pageCount, pageIndex, photos } = action.payload;
             return {
                 ...state,
                 pageCount: pageCount,
-                selectedPage: selectedPage,
+                pageIndex: pageIndex,
                 photos: photos
             };
         }
@@ -124,6 +145,14 @@ export function filtersReducer(state = initialFilterState, action: FilterActionT
                 ...state,
                 tripType: tripType,
                 team: team
+            }
+        }
+
+        case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
+        {
+            return {
+                tripType: {} as ISelectOption,
+                team: {} as ISelectOption
             }
         }
 

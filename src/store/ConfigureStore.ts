@@ -32,12 +32,13 @@ const initialMetaDataState: IMetaDataState = {
 };
 
 const initialFilterState: IFilterState = {
-    tripType: {} as ISelectOption, team: {} as ISelectOption
+    tripType: {} as ISelectOption,
+    team: {} as ISelectOption
 };
 
 const initialPhotosState: IPhotosPaginateState = {
     pageCount: 0,
-    selectedPage: 0,
+    pageIndex: 0,
     photos: []
 };
 

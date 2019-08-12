@@ -4,18 +4,18 @@ import moment from 'moment';
 
 import PhotoSlide from './PhotoSlide';
 
+import { connect } from "react-redux";
+import { AppState } from '../store/ConfigureStore';
+import { slideshowLoaded, pagingClicked } from '../store/Actions';
 import { ISlideshowProps } from '../interfaces/ISlideshowProps';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
+import { ISlideshowValues } from '../interfaces/ISlideshowValues';
 import { IPhoto } from '../interfaces/IPhoto';
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 import { Data } from '../services/Data';
-
-interface ISlideshowValues {
-    photoId: number;
-    tripReportId: number;
-    pageNumber: number;
-}
+import { IGalleryState } from '../interfaces/IGalleryState';
+import { ISelectOption } from '../interfaces/ISelectOption';
 
 class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     
@@ -25,27 +25,48 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
       this.updateRoute = this.updateRoute.bind(this);
       this.handlePageClick = this.handlePageClick.bind(this);
       this.getSlideshowValuesFromRoute = this.getSlideshowValuesFromRoute.bind(this);
+      this.getRoute = this.getRoute.bind(this);
 
-      this.state = { isLoading: true, isInvalidRoute: false, pageCount: 0, selectedPage: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
+      this.state = { isLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
     }
 
-    updateRoute(pageNumber: number) {
+    updateRoute(pageIndex: number): string  {
+
+        let route: string = this.getRoute(pageIndex, this.state.photos);
+
+        this.props.history.push(route);
+
+        return route;
+    }
+
+    getRoute(pageIndex: number, photos: IPhoto[]): string {
 
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
-        this.props.history.push((process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '') + this.state.photos[pageNumber].id + '/' + this.state.photos[pageNumber].tripReportRoute + '/' + (pageNumber + 1));
+        let rootPath: string = (process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '');
+        let photoId: number = photos[pageIndex].id;
+        let seoTrRoute: string = photos[pageIndex].tripReportRoute;
+        let pageNumber: number = pageIndex + 1;
+
+        let route: string = `${rootPath}${photoId}/${seoTrRoute}/${pageNumber}`;
+
+        return route;
     }
 
     handlePageClick = (data: { selected: number }) => {
         
-        this.updateRoute(data.selected);
-        this.setState({ selectedPage: data.selected })
+        let route: string = this.updateRoute(data.selected);
+        this.setState({ pageIndex: data.selected, route: route }, () => {
+
+            this.props.pagingClicked(this.state);
+        });
     }
 
     getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
 
         let pageNumber: number = Number(slideshowRouteValues.pageNumber);
 
-        if (slideshowRouteValues.photoId === undefined || slideshowRouteValues.tripReportDescription === undefined
+        if (slideshowRouteValues.photoId === undefined
+            || slideshowRouteValues.tripReportDescription === undefined
             || (slideshowRouteValues.pageNumber !== undefined && Number.isNaN(pageNumber))) {
             return undefined;
         }
@@ -83,8 +104,8 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
                 const selectedPageFromUrl = Number(pageNumber) - 1;
 
                 // Only update the state if there is a discrepency between the state & url page numbers.
-                if (this.state.selectedPage !== selectedPageFromUrl) {
-                    this.setState({ selectedPage: selectedPageFromUrl })
+                if (this.state.pageIndex !== selectedPageFromUrl) {
+                    this.setState({ pageIndex: selectedPageFromUrl })
                 }
             }
         }
@@ -105,17 +126,24 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         const photos: IPhoto[] = await data.GetSlideshow(slideshowValuesFromRoute.tripReportId);
 
         const photosCount: number = photos.length;
-        let page: number;
+        let pageIndex: number;
 
         if (slideshowValuesFromRoute.pageNumber > photosCount || slideshowValuesFromRoute.pageNumber < 1) {
             this.setState({ isInvalidRoute: true })
             return;
         }
         else {
-            page = slideshowValuesFromRoute.pageNumber - 1;
+            pageIndex = slideshowValuesFromRoute.pageNumber - 1;
         }
 
-        this.setState({ isLoading: false, pageCount: photosCount, selectedPage: page, photos, isInvalidRoute: false });
+        let route: string = this.getRoute(pageIndex, photos);
+
+        this.setState({ isLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
+
+            let stateWithFilterReset: IGalleryState = { ...this.state, tripType: {} as ISelectOption, team: {} as ISelectOption }
+            
+            this.props.slideshowLoaded(stateWithFilterReset);
+        });
     }
 
     render() {
@@ -133,11 +161,11 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
                     <div className="mx-auto px-2 col-12 col-lg-9 px-lg-5 col-xl-8">
 
-                        <h3 className="mb-3">{this.state.photos[this.state.selectedPage].team}'s Outing to {this.state.photos[this.state.selectedPage].destination}</h3>
+                        <h3 className="mb-3">{this.state.photos[this.state.pageIndex].team}'s Outing to {this.state.photos[this.state.pageIndex].destination}</h3>
 
-                        <p className="w-100 mb-1 text-left">{ moment(this.state.photos[this.state.selectedPage].date).format('dddd, MMMM D, YYYY') }</p>
-                        <p className="w-100 mb-1 text-left">Photo { this.state.selectedPage + 1 } of { this.state.photos.length }</p>
-                        <p className="w-100 mb-2 text-left">{ this.state.photos[this.state.selectedPage].caption }</p>
+                        <p className="w-100 mb-1 text-left">{ moment(this.state.photos[this.state.pageIndex].date).format('dddd, MMMM D, YYYY') }</p>
+                        <p className="w-100 mb-1 text-left">Photo { this.state.pageIndex + 1 } of { this.state.photos.length }</p>
+                        <p className="w-100 mb-2 text-left">{ this.state.photos[this.state.pageIndex].caption }</p>
 
                         <br />
 
@@ -162,10 +190,10 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
                             initialPage={0}
                             containerClassName={'pagination pagination-sm justify-content-center mb-4'}
                             activeClassName={'active'}
-                            forcePage={this.state.selectedPage}
+                            forcePage={this.state.pageIndex}
                         />
 
-                        <PhotoSlide photo={this.state.photos[this.state.selectedPage]} />
+                        <PhotoSlide photo={this.state.photos[this.state.pageIndex]} />
 
                     </div>
 
@@ -175,4 +203,13 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     }
 }
 
-export default Slideshow;
+const mapStateToProps = (state: AppState) => ({
+    photosMeta: state
+});
+
+const mapDispatchToProps = { slideshowLoaded, pagingClicked }
+
+export default connect (
+    mapStateToProps,
+    mapDispatchToProps
+) (Slideshow);

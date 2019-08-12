@@ -3,34 +3,40 @@ import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
 import { IFilterState } from '../interfaces/IFilterState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IGalleryState } from '../interfaces/IGalleryState';
+import { IReduxAction } from '../interfaces/IReduxAction';
 
-interface LoadFromRouteGalleryAction {
+interface LoadGalleryFromRouteAction extends IReduxAction {
     type: typeof ReduxActionType.LOAD_GALLERY_FROM_ROUTE;
     payload: IGalleryState;
 }
 
-interface ChangeFilterAction {
+interface LoadSlideshowFromRouteAction extends IReduxAction {
+    type: typeof ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE;
+    payload: ISlideshowState;
+}
+
+interface ChangeFilterAction extends IReduxAction {
     type: typeof ReduxActionType.CHANGE_FILTER;
     payload: IFilterState;
 }
 
-interface ClickSearchAction {
+interface ClickSearchAction extends IReduxAction {
     type: typeof ReduxActionType.CLICK_SEARCH;
     payload: ISlideshowState;
 }
 
-interface ClickPagingAction {
+interface ClickPagingAction extends IReduxAction {
     type: typeof ReduxActionType.CLICK_PAGING;
     payload: ISlideshowState;
 }
 
-interface ClickPhotoAction {
+interface ClickPhotoAction extends IReduxAction {
     type: typeof ReduxActionType.CLICK_THUMBNAIL;
     payload: IPhotosPaginateState;
 }
 
-export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadFromRouteGalleryAction;
+export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
 
-export type FilterActionTypes = ChangeFilterAction | LoadFromRouteGalleryAction;
+export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
 
-export type PhotosActionTypes = ClickPhotoAction | ClickPagingAction | ClickSearchAction | LoadFromRouteGalleryAction;
+export type PhotosActionTypes = ClickPhotoAction | ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;

@@ -11,6 +11,13 @@ export function galleryLoaded(galleryState: IGalleryState) {
     };
 }
 
+export function filterChanged(filterValues: IFilterState) {
+    return {
+        type: ReduxActionType.CHANGE_FILTER,
+        payload: filterValues
+    };
+}
+
 export function searchClicked(slideshowState: ISlideshowState) {
     return {
         type: ReduxActionType.CLICK_SEARCH,
@@ -32,9 +39,9 @@ export function photoClicked(paginatedState: IPhotosPaginateState) {
     };
 }
 
-export function filterChanged(filterValues: IFilterState) {
+export function slideshowLoaded(slideshowState: ISlideshowState){
     return {
-        type: ReduxActionType.CHANGE_FILTER,
-        payload: filterValues
-    };
+        type: ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE,
+        payload: slideshowState
+    }
 }
