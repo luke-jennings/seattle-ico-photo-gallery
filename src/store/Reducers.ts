@@ -1,7 +1,7 @@
 import { MetaDataActionTypes, FilterActionTypes, PhotosActionTypes } from './Types';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IFilterState } from '../interfaces/IFilterState';
+import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
@@ -19,7 +19,7 @@ const initialPhotosState: IPhotosPaginateState = {
     photos: []
 };
 
-const initialFilterState: IFilterState = {
+const initialFilterState: IFiltersSelectedState = {
     tripType: {} as ISelectOption, team: {} as ISelectOption
 }
 
@@ -132,7 +132,7 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
     }
 }
 
-export function filtersReducer(state = initialFilterState, action: FilterActionTypes): IFilterState {
+export function filtersReducer(state = initialFilterState, action: FilterActionTypes): IFiltersSelectedState {
     
     console.log("filtersReducer state & action", state, action);
     

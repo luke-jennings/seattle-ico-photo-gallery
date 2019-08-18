@@ -8,7 +8,7 @@ import ReactPaginate from 'react-paginate';
 
 import { IGalleryProps } from '../interfaces/IGalleryProps';
 import { IGalleryState } from '../interfaces/IGalleryState';
-import { IFilterState } from '../interfaces/IFilterState';
+import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
 import { Data } from '../services/Data';
 import { ISelectOption } from '../interfaces/ISelectOption';
@@ -25,7 +25,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     filterOptions: IFilterOptions;
     // filterOptionSelected is a property that duplicates the IFilterValues in state, but this is done so that updating the state of a
     // filter does not automatically update the filter message (which should not be updated until the user clicks the Search button)
-    filterOptionsSelected: IFilterState;
+    filterOptionsSelected: IFiltersSelectedState;
     
     readonly pageSize: number = 12;
     
@@ -84,7 +84,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         return route;
     }
 
-    getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterState | undefined {
+    getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFiltersSelectedState | undefined {
 
         if (tripTypeRouteName === undefined && teamRouteName === undefined) {
             return { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } };
@@ -186,7 +186,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         let data = new Data();
         this.filterOptions = await data.GetFilterOptions();
 
-        const filterValuesFromRoute: IFilterState | undefined = this.getFilterValuesFromRoute(this.props.match.params.tripTypeName, this.props.match.params.teamName);
+        const filterValuesFromRoute: IFiltersSelectedState | undefined = this.getFilterValuesFromRoute(this.props.match.params.tripTypeName, this.props.match.params.teamName);
 
         if (filterValuesFromRoute === undefined) {
             this.setState({ isInvalidRoute: true })

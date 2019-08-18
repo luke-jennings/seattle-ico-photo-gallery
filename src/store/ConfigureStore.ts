@@ -5,7 +5,7 @@ import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
 
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IFilterState } from "../interfaces/IFilterState";
+import { IFiltersSelectedState } from "../interfaces/IFiltersSelectedState";
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 
 const rootReducer = combineReducers({
@@ -31,7 +31,7 @@ const initialMetaDataState: IMetaDataState = {
     route: '/'
 };
 
-const initialFilterState: IFilterState = {
+const initialFilterState: IFiltersSelectedState = {
     tripType: {} as ISelectOption,
     team: {} as ISelectOption
 };

@@ -1,6 +1,5 @@
-import { ISelectOption } from './ISelectOption';
+import { IFiltersSelectedState } from './IFiltersSelectedState'
 
-export interface IFilterState {
-    tripType: ISelectOption,
-    team: ISelectOption
+export interface IFilterState extends IFiltersSelectedState {
+    areFiltersLoading: boolean;
 }

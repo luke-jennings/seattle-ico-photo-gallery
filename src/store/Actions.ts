@@ -1,6 +1,6 @@
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
-import { IFilterState } from '../interfaces/IFilterState';
+import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 
@@ -11,7 +11,7 @@ export function galleryLoaded(galleryState: IGalleryState) {
     };
 }
 
-export function filterChanged(filterValues: IFilterState) {
+export function filterChanged(filterValues: IFiltersSelectedState) {
     return {
         type: ReduxActionType.CHANGE_FILTER,
         payload: filterValues

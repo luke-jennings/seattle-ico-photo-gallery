@@ -1,12 +1,9 @@
 import React, { FormEvent } from 'react';
 
 import { IFilterProps } from '../interfaces/IFilterProps';
+import { IFilterState } from '../interfaces/IFilterState';
 
 import Select from './Select';
-
-interface IFilterState {
-  isLoading: boolean;
-}
 
 class Filter extends React.Component<IFilterProps, IFilterState> {
   constructor(props: IFilterProps) {
