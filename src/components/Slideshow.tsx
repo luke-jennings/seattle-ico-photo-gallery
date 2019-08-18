@@ -27,7 +27,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
       this.getSlideshowValuesFromRoute = this.getSlideshowValuesFromRoute.bind(this);
       this.getRoute = this.getRoute.bind(this);
 
-      this.state = { isLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
+      this.state = { arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
     }
 
     updateRoute(pageIndex: number): string  {
@@ -113,7 +113,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
     async componentDidMount() {
         
-        this.setState({ isLoading: true, isInvalidRoute: false });
+        this.setState({ arePhotosLoading: true, isInvalidRoute: false });
 
         const slideshowValuesFromRoute: ISlideshowValues | undefined = this.getSlideshowValuesFromRoute(this.props.match.params);
 
@@ -138,7 +138,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
         let route: string = this.getRoute(pageIndex, photos);
 
-        this.setState({ isLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
+        this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
 
             let stateWithFilterReset: IGalleryState = { ...this.state, tripType: {} as ISelectOption, team: {} as ISelectOption }
             
@@ -152,7 +152,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
             return (<div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>);
         }
 
-        if (this.state.isLoading) {
+        if (this.state.arePhotosLoading) {
             return (<div className="row"><h2 className="mx-auto">Loading...</h2></div>);
         } else {
             return (

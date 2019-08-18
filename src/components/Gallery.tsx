@@ -39,7 +39,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
         this.filterOptionsSelected = { tripType: {} as ISelectOption, team: {} as ISelectOption }
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
-        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, isLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
+        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
     }
 
     handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
@@ -63,12 +63,12 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     }
 
     async updateStateFromFilter() {
-        this.setState({ isLoading: true });
+        this.setState({ arePhotosLoading: true });
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
         const totalPages = this.calculateTotalPages(photosFromFilter.length);
         this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
         let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
-        this.setState({ photos: photosFromFilter, pageCount: totalPages, pageIndex: 0, isLoading: false, route: route }, () => {
+        this.setState({ photos: photosFromFilter, pageCount: totalPages, pageIndex: 0, arePhotosLoading: false, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
 
@@ -181,7 +181,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     
     async componentDidMount() {
         
-        this.setState({ isLoading: true, isInvalidRoute: false });
+        this.setState({ arePhotosLoading: true, isInvalidRoute: false });
 
         let data = new Data();
         this.filterOptions = await data.GetFilterOptions();
@@ -194,6 +194,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         }
 
         this.filterOptionsSelected = { tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team }
+
+        this.setState({ tripType: (filterValuesFromRoute.tripType), team: filterValuesFromRoute.team });
 
         const photosFromRouteValues = await this.getPhotos(filterValuesFromRoute.tripType.value, filterValuesFromRoute.team.value);
         
@@ -220,7 +222,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
         let route:string = this.updateGalleryRoute(filterValuesFromRoute.tripType.value, filterValuesFromRoute.team.value, page);
 
-        this.setState({ tripType: (filterValuesFromRoute.tripType), team: filterValuesFromRoute.team, isLoading: false, pageCount: totalPages, pageIndex: page, photos: photosFromRouteValues, photosDisplayType: PhotosDisplayType.Thumbnails, route: route }, () => {
+        this.setState({ arePhotosLoading: false, pageCount: totalPages, pageIndex: page, photos: photosFromRouteValues, photosDisplayType: PhotosDisplayType.Thumbnails, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
 
@@ -231,20 +233,17 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     render() {
         
         if (this.state.isInvalidRoute === true) {
+
             return (
                 <div className="App container mb-2">
                     <div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>
                 </div>);
-        }
 
-        if (this.state.isLoading) {
-            return (
-                <div className="App container mb-2">
-                    <div className="row"><h2 className="mx-auto">Loading...</h2></div>
-                </div>);
         } else {
+
             return (
                 <div className="App container mb-2">
+
                     <div className="row">
                         <Filter
                             values={{ tripType: this.state.tripType, team: this.state.team}}
@@ -257,37 +256,42 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
                     <div className="container">
 
-                        <FilterMessage photosCount={this.state.photos.length} tripTypeName={ this.filterOptionsSelected.tripType.text } teamName={ this.filterOptionsSelected.team.text } />
+                        {this.state.arePhotosLoading ? 
+                        (<h2 className="mx-auto">Loading Photos...</h2>) :
+                        (<div>
+                                <FilterMessage photosCount={this.state.photos.length} tripTypeName={ this.filterOptionsSelected.tripType.text } teamName={ this.filterOptionsSelected.team.text } />
 
-                        <ReactPaginate
-                            pageCount={this.state.pageCount}
-                            pageRangeDisplayed={5}
-                            marginPagesDisplayed={3}
-                            previousLabel={'<<'}
-                            nextLabel={'>>'}
-                            breakLabel={'...'}
-                            breakClassName={'page-item'}
-                            breakLinkClassName={'page-link'}
-                            pageClassName={'page-item'}
-                            pageLinkClassName={'page-link'}
-                            previousClassName={'page-item'}
-                            previousLinkClassName={'page-link rounded-left'}
-                            nextClassName={'page-item rounded-right'}
-                            nextLinkClassName={'page-link'}
-                            disabledClassName={'disabled'}
-                            onPageChange={this.handlePageClick}
-                            disableInitialCallback={true}
-                            initialPage={0}
-                            containerClassName={'pagination pagination-sm justify-content-center mb-4'}
-                            activeClassName={'active'}
-                            forcePage={this.state.pageIndex}
-                        />
+                                <ReactPaginate
+                                    pageCount={this.state.pageCount}
+                                    pageRangeDisplayed={5}
+                                    marginPagesDisplayed={3}
+                                    previousLabel={'<<'}
+                                    nextLabel={'>>'}
+                                    breakLabel={'...'}
+                                    breakClassName={'page-item'}
+                                    breakLinkClassName={'page-link'}
+                                    pageClassName={'page-item'}
+                                    pageLinkClassName={'page-link'}
+                                    previousClassName={'page-item'}
+                                    previousLinkClassName={'page-link rounded-left'}
+                                    nextClassName={'page-item rounded-right'}
+                                    nextLinkClassName={'page-link'}
+                                    disabledClassName={'disabled'}
+                                    onPageChange={this.handlePageClick}
+                                    disableInitialCallback={true}
+                                    initialPage={0}
+                                    containerClassName={'pagination pagination-sm justify-content-center mb-4'}
+                                    activeClassName={'active'}
+                                    forcePage={this.state.pageIndex}
+                                />
 
-                        <ThumbnailGrid page={this.state.pageIndex} pageSize={this.pageSize} photos={this.state.photos} onPageChange={this.handleThumbnailClick} />
-
+                                <ThumbnailGrid page={this.state.pageIndex} pageSize={this.pageSize} photos={this.state.photos} onPageChange={this.handleThumbnailClick} />
+                        </div>)}
                     </div>
+
                 </div>
             );
+
         }
     }
 }

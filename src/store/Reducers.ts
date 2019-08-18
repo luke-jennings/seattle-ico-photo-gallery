@@ -8,7 +8,7 @@ import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 
 const initialMetaDataState: IMetaDataState = {
     isInvalidRoute: false,
-    isLoading: true,
+    arePhotosLoading: true,
     photosDisplayType: PhotosDisplayType.Thumbnails,
     route: '/'
 };
@@ -30,33 +30,33 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
     switch (action.type) {
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
-            const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
+            const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
             return {
                 ...state,
                 isInvalidRoute: isInvalidRoute,
-                isLoading: isLoading,
+                arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
                 route: route
             }
         }
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
-            const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
+            const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
             return {
                 ...state,
                 isInvalidRoute: isInvalidRoute,
-                isLoading: isLoading,
+                arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
                 route: route
             }
         }
         case ReduxActionType.CLICK_SEARCH:
         {
-            const { isInvalidRoute, isLoading, photosDisplayType, route } = action.payload;
+            const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
             return {
                 ...state,
                 isInvalidRoute: isInvalidRoute,
-                isLoading: isLoading,
+                arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
                 route: route
             };

@@ -26,7 +26,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const initialMetaDataState: IMetaDataState = {
     isInvalidRoute: false,
-    isLoading: true,
+    arePhotosLoading: true,
     photosDisplayType: PhotosDisplayType.Thumbnails,
     route: '/'
 };
