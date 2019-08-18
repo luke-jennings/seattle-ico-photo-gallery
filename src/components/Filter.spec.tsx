@@ -12,7 +12,8 @@ describe("The photos filter", () => {
 
     const filterProps: IFilterProps = {
         values: { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } },
-        options: { tripTypeOptions: [], teamOptions: [] },
+        // Need to include at least one option for both trip types and teams or eles the tests will fail because only the loading message will be rendered.
+        options: { tripTypeOptions: [ {"text":"All","value":0,"routeName":"trip-types-all"} ], teamOptions: [ {"text":"All","value":0,"routeName":"teams-all"} ] },
         onSubmit: onSubmitHandler,
         onTripTypeChange: onTripTypeChangeHandler,
         onTeamChange: onTeamsChangeHandler 
