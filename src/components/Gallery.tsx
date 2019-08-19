@@ -2,7 +2,6 @@ import React, { ChangeEvent, MouseEvent } from 'react';
 
 import Filter from './Filter'
 import ThumbnailGrid from './ThumbnailGrid';
-import FilterMessage from './FilterMessage';
 
 import ReactPaginate from 'react-paginate';
 
@@ -23,9 +22,6 @@ import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
     filterOptions: IFilterOptions;
-    // filterOptionSelected is a property that duplicates the IFilterValues in state, but this is done so that updating the state of a
-    // filter does not automatically update the filter message (which should not be updated until the user clicks the Search button)
-    filterOptionsSelected: IFiltersSelectedState;
     
     readonly pageSize: number = 12;
     
@@ -37,9 +33,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
         this.handleTeamChange = this.handleTeamChange.bind(this);
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
-        this.filterOptionsSelected = { tripType: {} as ISelectOption, team: {} as ISelectOption }
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
-        this.state = {tripType: {} as ISelectOption, team: {} as ISelectOption, arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
+        this.state = { tripType: {} as ISelectOption, team: {} as ISelectOption, filterMessage: '', arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
     }
 
     handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
@@ -66,7 +61,6 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.setState({ arePhotosLoading: true });
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
         const totalPages = this.calculateTotalPages(photosFromFilter.length);
-        this.filterOptionsSelected = { tripType: this.state.tripType, team: this.state.team }
         let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
         this.setState({ photos: photosFromFilter, pageCount: totalPages, pageIndex: 0, arePhotosLoading: false, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
@@ -177,6 +171,12 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                 }
             }
         }
+
+        if (prevProps.photos !== this.props.photos) {
+
+            let message: string = `${ this.props.photos.length } photos of type ${ this.props.filterOptionsSelected.tripType.text } and team ${ this.props.filterOptionsSelected.team.text }.`;
+            this.setState({ filterMessage: message });
+        }
     }
     
     async componentDidMount() {
@@ -192,8 +192,6 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
             this.setState({ isInvalidRoute: true })
             return;
         }
-
-        this.filterOptionsSelected = { tripType: filterValuesFromRoute.tripType, team: filterValuesFromRoute.team }
 
         this.setState({ tripType: (filterValuesFromRoute.tripType), team: filterValuesFromRoute.team });
 
@@ -259,7 +257,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                         {this.state.arePhotosLoading ? 
                         (<h2 className="mx-auto">Loading Photos...</h2>) :
                         (<div>
-                                <FilterMessage photosCount={this.state.photos.length} tripTypeName={ this.filterOptionsSelected.tripType.text } teamName={ this.filterOptionsSelected.team.text } />
+                                <p className="w-100 text-center mb-3">{ this.state.filterMessage }</p>
 
                                 <ReactPaginate
                                     pageCount={this.state.pageCount}
@@ -297,7 +295,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-    photosMeta: state
+    photos: state.photos.photos,
+    filterOptionsSelected: { tripType: state.filter.tripType, team: state.filter.team }
 });
 
 const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded }
