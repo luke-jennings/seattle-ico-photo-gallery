@@ -34,7 +34,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.handleTeamChange = this.handleTeamChange.bind(this);
         this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
-        this.state = { tripType: {} as ISelectOption, team: {} as ISelectOption, filterMessage: '', arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
+        this.state = { tripType: {} as ISelectOption, team: {} as ISelectOption, arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
     }
 
     handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
@@ -171,12 +171,6 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                 }
             }
         }
-
-        if (prevProps.photos !== this.props.photos) {
-
-            let message: string = `${ this.props.photos.length } photos of type ${ this.props.filterOptionsSelected.tripType.text } and team ${ this.props.filterOptionsSelected.team.text }.`;
-            this.setState({ filterMessage: message });
-        }
     }
     
     async componentDidMount() {
@@ -257,7 +251,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                         {this.state.arePhotosLoading ? 
                         (<h2 className="mx-auto">Loading Photos...</h2>) :
                         (<div>
-                                <p className="w-100 text-center mb-3">{ this.state.filterMessage }</p>
+                                <p className="w-100 text-center mb-3">{ this.props.filterMessage }</p>
 
                                 <ReactPaginate
                                     pageCount={this.state.pageCount}
@@ -296,7 +290,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
 const mapStateToProps = (state: AppState) => ({
     photos: state.photos.photos,
-    filterOptionsSelected: { tripType: state.filter.tripType, team: state.filter.team }
+    filterOptionsSelected: { tripType: state.filter.tripType, team: state.filter.team },
+    filterMessage: state.filter.message
 });
 
 const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded }

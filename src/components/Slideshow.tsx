@@ -140,7 +140,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
         this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
 
-            let stateWithFilterReset: IGalleryState = { ...this.state, filterMessage: '', tripType: {} as ISelectOption, team: {} as ISelectOption }
+            let stateWithFilterReset: IGalleryState = { ...this.state, tripType: {} as ISelectOption, team: {} as ISelectOption }
             
             this.props.slideshowLoaded(stateWithFilterReset);
         });

@@ -1,10 +1,11 @@
 import { MetaDataActionTypes, FilterActionTypes, PhotosActionTypes } from './Types';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
+import { IFilterState } from '../interfaces/IFilterState';
 import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
+import { IGalleryState } from '../interfaces/IGalleryState';
 
 const initialMetaDataState: IMetaDataState = {
     isInvalidRoute: false,
@@ -19,8 +20,10 @@ const initialPhotosState: IPhotosPaginateState = {
     photos: []
 };
 
-const initialFilterState: IFiltersSelectedState = {
-    tripType: {} as ISelectOption, team: {} as ISelectOption
+const initialFilterState: IFilterState = {
+    tripType: {} as ISelectOption,
+    team: {} as ISelectOption,
+    message: ''
 }
 
 export function metaDataReducer(state = initialMetaDataState, action: MetaDataActionTypes): IMetaDataState {
@@ -132,7 +135,19 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
     }
 }
 
-export function filtersReducer(state = initialFilterState, action: FilterActionTypes): IFiltersSelectedState {
+/**
+ * The message to be displayed that summarizes the number of photos for the selected filter criteria.
+ * 
+ * @param galleryState The IGalleryState which will have the required properties of photos, tripType, and Team needed to generate the message.
+ */
+function getFilterMessage(galleryState: IGalleryState){
+
+    let message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
+
+    return message;
+}
+
+export function filtersReducer(state = initialFilterState, action: FilterActionTypes): IFilterState {
     
     console.log("filtersReducer state & action", state, action);
     
@@ -144,16 +159,23 @@ export function filtersReducer(state = initialFilterState, action: FilterActionT
             return {
                 ...state,
                 tripType: tripType,
-                team: team
+                team: team,
+                message: getFilterMessage(action.payload)
             }
         }
 
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
+            return initialFilterState;
+        }
+
+        case ReduxActionType.CLICK_SEARCH:
+        {
+            
             return {
-                tripType: {} as ISelectOption,
-                team: {} as ISelectOption
-            }
+                ...state,
+                message: getFilterMessage(action.payload)
+            };
         }
 
         case ReduxActionType.CHANGE_FILTER:

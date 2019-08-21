@@ -22,7 +22,7 @@ interface ChangeFilterAction extends IReduxAction {
 
 interface ClickSearchAction extends IReduxAction {
     type: typeof ReduxActionType.CLICK_SEARCH;
-    payload: ISlideshowState;
+    payload: IGalleryState;
 }
 
 interface ClickPagingAction extends IReduxAction {
@@ -37,6 +37,6 @@ interface ClickPhotoAction extends IReduxAction {
 
 export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
 
-export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
+export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickSearchAction;
 
 export type PhotosActionTypes = ClickPhotoAction | ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;

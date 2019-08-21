@@ -11,4 +11,5 @@ export interface IGalleryProps extends RouteComponentProps<TGalleryProps> {
     pagingClicked: typeof pagingClicked;
     photos: IPhoto[];
     filterOptionsSelected: IFiltersSelectedState;
+    filterMessage: string;
 }

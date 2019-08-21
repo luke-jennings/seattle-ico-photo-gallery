@@ -18,10 +18,10 @@ export function filterChanged(filterValues: IFiltersSelectedState) {
     };
 }
 
-export function searchClicked(slideshowState: ISlideshowState) {
+export function searchClicked(galleryState: IGalleryState) {
     return {
         type: ReduxActionType.CLICK_SEARCH,
-        payload: slideshowState
+        payload: galleryState
     };
 }
 
