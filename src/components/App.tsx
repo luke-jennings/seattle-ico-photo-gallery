@@ -19,7 +19,7 @@ const history = createBrowserHistory();
  */
 class App extends Component {
 
-  render() {
+  public render() {
     return (
       <Provider store={store}>
         <Router history={history}>

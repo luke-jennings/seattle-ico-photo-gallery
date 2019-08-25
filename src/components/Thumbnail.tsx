@@ -5,7 +5,7 @@ import moment from 'moment';
 
 class Thumbnail extends React.Component<IThumbnailProps> {
     
-    constructor(props: IThumbnailProps) {
+    public constructor(props: IThumbnailProps) {
       super(props);
     }
 

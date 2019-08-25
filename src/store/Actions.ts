@@ -1,7 +1,7 @@
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
-import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
+import { IPagesState } from '../interfaces/IPagesState';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 
 export function galleryLoaded(galleryState: IGalleryState) {
@@ -32,7 +32,7 @@ export function pagingClicked(slideshowState: ISlideshowState) {
     };
 }
 
-export function photoClicked(paginatedState: IPhotosPaginateState) {
+export function photoClicked(paginatedState: IPagesState) {
     return {
         type: ReduxActionType.CLICK_THUMBNAIL,
         payload: paginatedState

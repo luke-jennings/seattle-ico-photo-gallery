@@ -30,7 +30,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
       this.state = { arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
     }
 
-    updateRoute(pageIndex: number): string  {
+    private updateRoute(pageIndex: number): string  {
 
         let route: string = this.getRoute(pageIndex, this.state.photos);
 
@@ -39,7 +39,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         return route;
     }
 
-    getRoute(pageIndex: number, photos: IPhoto[]): string {
+    private getRoute(pageIndex: number, photos: IPhoto[]): string {
 
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         let rootPath: string = (process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '');
@@ -52,7 +52,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         return route;
     }
 
-    handlePageClick = (data: { selected: number }) => {
+    private handlePageClick = (data: { selected: number }) => {
         
         let route: string = this.updateRoute(data.selected);
         this.setState({ pageIndex: data.selected, route: route }, () => {
@@ -61,7 +61,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         });
     }
 
-    getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
+    private getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
 
         let pageNumber: number = Number(slideshowRouteValues.pageNumber);
 
@@ -90,7 +90,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
      * 
      * @param prevProps The Slideshow props that have been extended with RouteComponentProps.
      */
-    componentDidUpdate(prevProps: ISlideshowProps) {
+    public componentDidUpdate(prevProps: ISlideshowProps) {
         
         const locationChanged: boolean = this.props.location !== prevProps.location;
         const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
@@ -111,7 +111,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         }
     }
 
-    async componentDidMount() {
+    public async componentDidMount() {
         
         this.setState({ arePhotosLoading: true, isInvalidRoute: false });
 
@@ -146,7 +146,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         });
     }
 
-    render() {
+    public render() {
         
         if (this.state.isInvalidRoute === true) {
             return (<div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>);

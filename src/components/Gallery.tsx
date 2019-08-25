@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEvent } from 'react';
+import React, { FormEvent, ChangeEvent, MouseEvent } from 'react';
 
 import Filter from './Filter'
 import ThumbnailGrid from './ThumbnailGrid';
@@ -25,19 +25,18 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     
     readonly pageSize: number = 12;
     
-
-    constructor(props: IGalleryProps) {
+    public constructor(props: IGalleryProps) {
         
         super(props);
 
         this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
         this.handleTeamChange = this.handleTeamChange.bind(this);
-        this.updateStateFromFilter = this.updateStateFromFilter.bind(this);
+        this.handleSearchClicked = this.handleSearchClicked.bind(this);
         this.filterOptions = { tripTypeOptions: [], teamOptions: [] };
         this.state = { tripType: {} as ISelectOption, team: {} as ISelectOption, arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.NotSet };
     }
 
-    handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
+    private handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
 
         let tripTypeSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
 
@@ -47,7 +46,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         });
     }
     
-    handleTeamChange(event: ChangeEvent<HTMLSelectElement>) {
+    private handleTeamChange(event: ChangeEvent<HTMLSelectElement>) {
 
         let teamSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
 
@@ -57,10 +56,13 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         });
     }
 
-    async updateStateFromFilter() {
+    private async handleSearchClicked(event: FormEvent<HTMLFormElement>) {
+
+        event.preventDefault();
+
         this.setState({ arePhotosLoading: true });
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
-        const totalPages = this.calculateTotalPages(photosFromFilter.length);
+        const totalPages = this.calculateTotalPages(photosFromFilter.length, this.pageSize);
         let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
         this.setState({ photos: photosFromFilter, pageCount: totalPages, pageIndex: 0, arePhotosLoading: false, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
@@ -70,7 +72,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         });
     }
 
-    updateGalleryRoute(tripTypeId: number, teamId: number, pageIndex: number): string {
+    private updateGalleryRoute(tripTypeId: number, teamId: number, pageIndex: number): string {
         const tripTypeRoute: string = this.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
         const teamRoute: string = this.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
         let route: string = process.env.REACT_APP_GALLERY_ROOT_PATH + tripTypeRoute + '/' + teamRoute + '/' + (pageIndex + 1);
@@ -78,7 +80,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         return route;
     }
 
-    getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFiltersSelectedState | undefined {
+    private getFilterValuesFromRoute(tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFiltersSelectedState | undefined {
 
         if (tripTypeRouteName === undefined && teamRouteName === undefined) {
             return { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } };
@@ -103,7 +105,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         return undefined;
     }
 
-    handlePageClick = (data: { selected: number }) => {
+    private handlePageClick = (data: { selected: number }) => {
         
         let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, data.selected);
 
@@ -116,7 +118,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         });
     }
 
-    handleThumbnailClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    private handleThumbnailClick = (event: MouseEvent<HTMLAnchorElement>) => {
         
         const photoId: number = Number(event.currentTarget.id);
 
@@ -130,12 +132,12 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.props.history.push((process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '') + photo.id + '/' + photo.tripReportRoute + '/' + page);
     }
 
-    calculateTotalPages(numberOfPhotos: number): number {
+    private calculateTotalPages(numberOfPhotos: number, pageSize: number): number {
 
         return Math.ceil(numberOfPhotos/this.pageSize)
     }
 
-    async getPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {
+    private async getPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {
 
         let data = new Data();
         const photos = await data.GetPhotos(tripTypeId, teamId);
@@ -148,7 +150,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
      * 
      * @param prevProps The Gallery props that have been extended with RouteComponentProps.
      */
-    componentDidUpdate(prevProps: IGalleryProps, prevState: IGalleryState) {
+    public componentDidUpdate(prevProps: IGalleryProps, prevState: IGalleryState) {
 
         const locationChanged: boolean = this.props.location !== prevProps.location;
         const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
@@ -173,7 +175,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         }
     }
     
-    async componentDidMount() {
+    public async componentDidMount() {
         
         this.setState({ arePhotosLoading: true, isInvalidRoute: false });
 
@@ -191,7 +193,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
         const photosFromRouteValues = await this.getPhotos(filterValuesFromRoute.tripType.value, filterValuesFromRoute.team.value);
         
-        const totalPages = this.calculateTotalPages(photosFromRouteValues.length);
+        const totalPages = this.calculateTotalPages(photosFromRouteValues.length, this.pageSize);
 
         const pageFromRouteValues: number = Number(this.props.match.params.pageNumber);
         let page: number;
@@ -217,7 +219,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         this.setState({ arePhotosLoading: false, pageCount: totalPages, pageIndex: page, photos: photosFromRouteValues, photosDisplayType: PhotosDisplayType.Thumbnails, route: route }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
-
+            
             this.props.galleryLoaded(this.state);
         });
     }
@@ -242,7 +244,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                             options = {this.filterOptions}
                             onTripTypeChange={this.handleTripTypeChange}
                             onTeamChange={this.handleTeamChange}
-                            onSubmit={this.updateStateFromFilter}
+                            onSubmit={this.handleSearchClicked}
                             />
                     </div>
 
@@ -251,7 +253,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
                         {this.state.arePhotosLoading ? 
                         (<h2 className="mx-auto">Loading Photos...</h2>) :
                         (<div>
-                                <p className="w-100 text-center mb-3">{ this.props.filterMessage }</p>
+                                <p className="w-100 text-center mb-3">{ this.props.filter.message }</p>
 
                                 <ReactPaginate
                                     pageCount={this.state.pageCount}
@@ -289,9 +291,9 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-    photos: state.photos.photos,
-    filterOptionsSelected: { tripType: state.filter.tripType, team: state.filter.team },
-    filterMessage: state.filter.message
+    metaData: state.metaData,
+    filter: state.filter,
+    photos: state.pages
 });
 
 const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded }

@@ -1,9 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { IPhoto } from '../interfaces/IPhoto';
-
-interface IPhotoSlideProps {
-    photo: IPhoto;
-}
+import { IPhotoSlideProps } from '../interfaces/IPhotoSlideProps';
 
 const PhotoSlide: FunctionComponent<IPhotoSlideProps> = ({photo}) => {
 

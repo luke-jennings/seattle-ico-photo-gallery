@@ -1,6 +1,6 @@
 import { IPhoto } from './IPhoto';
 
-export interface IPhotosPaginateState {
+export interface IPagesState {
     pageCount: number;
     pageIndex: number;
     photos: IPhoto[];

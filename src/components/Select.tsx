@@ -3,7 +3,8 @@ import React from 'react';
 import { ISelectProps } from '../interfaces/ISelectProps';
 
 class Select extends React.Component<ISelectProps> {
-    constructor(props: ISelectProps) {
+
+    public constructor(props: ISelectProps) {
       super(props);
     }
 

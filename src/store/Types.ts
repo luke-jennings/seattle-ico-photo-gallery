@@ -1,5 +1,5 @@
 import { ReduxActionType } from '../enumerations/ReduxActionType';
-import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
+import { IPagesState } from '../interfaces/IPagesState';
 import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IGalleryState } from '../interfaces/IGalleryState';
@@ -32,7 +32,7 @@ interface ClickPagingAction extends IReduxAction {
 
 interface ClickPhotoAction extends IReduxAction {
     type: typeof ReduxActionType.CLICK_THUMBNAIL;
-    payload: IPhotosPaginateState;
+    payload: IPagesState;
 }
 
 export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;

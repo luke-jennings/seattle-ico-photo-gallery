@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import { metaDataReducer, filtersReducer, photosReducer } from './Reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
+import { IPagesState } from '../interfaces/IPagesState';
 
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
@@ -11,7 +11,7 @@ import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 const rootReducer = combineReducers({
     metaData: metaDataReducer,
     filter: filtersReducer,
-    photos: photosReducer
+    pages: photosReducer
 });
   
 declare global {
@@ -37,7 +37,7 @@ const initialFilterState: IFilterState = {
     message: ''
 };
 
-const initialPhotosState: IPhotosPaginateState = {
+const initialPagesState: IPagesState = {
     pageCount: 0,
     pageIndex: 0,
     photos: []
@@ -49,7 +49,7 @@ export default function configureStore() {
 
     const store = createStore(
         rootReducer,
-        { metaData: initialMetaDataState, filter: initialFilterState, photos: initialPhotosState  },
+        { metaData: initialMetaDataState, filter: initialFilterState, pages: initialPagesState  },
         composeEnhancers()
     );
 

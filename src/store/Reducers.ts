@@ -2,7 +2,7 @@ import { MetaDataActionTypes, FilterActionTypes, PhotosActionTypes } from './Typ
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IFilterState } from '../interfaces/IFilterState';
-import { IPhotosPaginateState } from '../interfaces/IPhotosPaginateState';
+import { IPagesState } from '../interfaces/IPagesState';
 import { ISelectOption } from '../interfaces/ISelectOption';
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 import { IGalleryState } from '../interfaces/IGalleryState';
@@ -14,7 +14,7 @@ const initialMetaDataState: IMetaDataState = {
     route: '/'
 };
 
-const initialPhotosState: IPhotosPaginateState = {
+const initialPhotosState: IPagesState = {
     pageCount: 0,
     pageIndex: 0,
     photos: []
@@ -77,7 +77,7 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
     }
 }
 
-export function photosReducer(state = initialPhotosState, action: PhotosActionTypes): IPhotosPaginateState {
+export function photosReducer(state = initialPhotosState, action: PhotosActionTypes): IPagesState {
 
     console.log("photosReducer state & action", state, action);
 

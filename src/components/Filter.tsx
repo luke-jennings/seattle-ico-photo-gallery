@@ -6,17 +6,12 @@ import { IFilterState } from '../interfaces/IFilterState';
 import Select from './Select';
 
 class Filter extends React.Component<IFilterProps, IFilterState> {
+
   constructor(props: IFilterProps) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    this.props.onSubmit();
-  }
-
-  render() {
+  public render() {
     
     if (this.props.options.tripTypeOptions.length > 0 && this.props.options.teamOptions.length > 0) {
 
@@ -24,7 +19,7 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
       
           <div className="col-11 col-sm-12 mx-auto">
         
-            <form className="form-inline justify-content-center" onSubmit={this.handleSubmit}>
+            <form className="form-inline justify-content-center" onSubmit={this.props.onSubmit}>
       
               <div className="form-group text-left col-12 mb-1 col-sm-6 px-sm-2 col-md-4 col-lg-3 pl-xl-4 pr-xl-3">
                   <Select labelText="Trip Type" selectName="tripTypes" selectedValue={this.props.values.tripType.value} options={this.props.options.tripTypeOptions} onChange={this.props.onTripTypeChange}  />

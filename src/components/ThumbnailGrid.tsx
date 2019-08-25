@@ -1,36 +1,20 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import Thumbnail from './Thumbnail';
 
+import { IThumbnailGridProps } from '../interfaces/IThumbnailGridProps';
+import { IThumbnailGridState } from '../interfaces/IThumbnailGridState';
 import { IPhoto } from '../interfaces/IPhoto';
 
-interface IPhotoGridProps {
-    page: number;
-    pageSize: number;
-    photos: IPhoto[];
-    onPageChange: (event: MouseEvent<HTMLAnchorElement>) => void
-}
-
-interface IPhotoGridState {
-    page: number;
-    photoGrid: number[][];
-}
-
-class ThumbnailGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
+class ThumbnailGrid extends React.Component<IThumbnailGridProps, IThumbnailGridState> {
 
     readonly columns: number = 4;
 
-    constructor(props: IPhotoGridProps) {
+    public constructor(props: IThumbnailGridProps) {
         super(props);
         this.state = { page: props.page, photoGrid: [] };
     }
 
-    componentDidUpdate(prevProps: IPhotoGridProps) {
-        if ( prevProps.page !== this.props.page ){
-            this.getPageOfPhotos(this.props.page);
-        }
-    }
-
-    getPageOfPhotos(pageNumber: number) {
+    private getPageOfPhotos(pageNumber: number) {
 
         const startIndex = pageNumber * this.props.pageSize;
         let pageOfPhotos: IPhoto[] = [];
@@ -54,7 +38,13 @@ class ThumbnailGrid extends React.Component<IPhotoGridProps, IPhotoGridState> {
         this.setState({ photoGrid: grid });
     }
 
-    async componentDidMount() {
+    public componentDidUpdate(prevProps: IThumbnailGridProps) {
+        if ( prevProps.page !== this.props.page ){
+            this.getPageOfPhotos(this.props.page);
+        }
+    }
+
+    public async componentDidMount() {
         this.getPageOfPhotos(this.props.page);
     }
 
