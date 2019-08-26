@@ -1,6 +1,6 @@
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IPagesState } from '../interfaces/IPagesState';
-import { IFiltersSelectedState } from '../interfaces/IFiltersSelectedState';
+import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { IReduxAction } from '../interfaces/IReduxAction';
@@ -17,7 +17,7 @@ interface LoadSlideshowFromRouteAction extends IReduxAction {
 
 interface ChangeFilterAction extends IReduxAction {
     type: typeof ReduxActionType.CHANGE_FILTER;
-    payload: IFiltersSelectedState;
+    payload: IFilterSelectedOptionsState;
 }
 
 interface ClickSearchAction extends IReduxAction {

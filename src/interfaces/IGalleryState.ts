@@ -1,5 +1,5 @@
 import { ISlideshowState } from './ISlideshowState';
-import { IFiltersSelectedState } from './IFiltersSelectedState';
+import { IFilterState } from './IFilterState';
 
-export interface IGalleryState extends IFiltersSelectedState, ISlideshowState {
+export interface IGalleryState extends IFilterState, ISlideshowState {
 }

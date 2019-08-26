@@ -3,30 +3,10 @@ import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IFilterState } from '../interfaces/IFilterState';
 import { IPagesState } from '../interfaces/IPagesState';
-import { ISelectOption } from '../interfaces/ISelectOption';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 import { IGalleryState } from '../interfaces/IGalleryState';
+import { InitialState } from '../helpers/InitialState';
 
-const initialMetaDataState: IMetaDataState = {
-    isInvalidRoute: false,
-    arePhotosLoading: true,
-    photosDisplayType: PhotosDisplayType.Thumbnails,
-    route: '/'
-};
-
-const initialPhotosState: IPagesState = {
-    pageCount: 0,
-    pageIndex: 0,
-    photos: []
-};
-
-const initialFilterState: IFilterState = {
-    tripType: {} as ISelectOption,
-    team: {} as ISelectOption,
-    message: ''
-}
-
-export function metaDataReducer(state = initialMetaDataState, action: MetaDataActionTypes): IMetaDataState {
+export function metaDataReducer(state = InitialState.MetaData(), action: MetaDataActionTypes): IMetaDataState {
 
     console.log("metaDataReducer state & action", state, action);
 
@@ -77,16 +57,17 @@ export function metaDataReducer(state = initialMetaDataState, action: MetaDataAc
     }
 }
 
-export function photosReducer(state = initialPhotosState, action: PhotosActionTypes): IPagesState {
+export function pagesReducer(state = InitialState.Pages(), action: PhotosActionTypes): IPagesState {
 
-    console.log("photosReducer state & action", state, action);
+    console.log("pagesReducer state & action", state, action);
 
     switch (action.type) {
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
-            const { pageCount, pageIndex, photos } = action.payload;
+            const { pageSize, pageCount, pageIndex, photos } = action.payload;
             return {
                 ...state,
+                pageSize: pageSize,
                 pageCount: pageCount,
                 pageIndex: pageIndex,
                 photos: photos
@@ -94,9 +75,10 @@ export function photosReducer(state = initialPhotosState, action: PhotosActionTy
         }
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
-            const { pageCount, pageIndex, photos } = action.payload;
+            const { pageSize, pageCount, pageIndex, photos } = action.payload;
             return {
                 ...state,
+                pageSize: pageSize,
                 pageCount: pageCount,
                 pageIndex: pageIndex,
                 photos: photos
@@ -147,7 +129,7 @@ function getFilterMessage(galleryState: IGalleryState){
     return message;
 }
 
-export function filtersReducer(state = initialFilterState, action: FilterActionTypes): IFilterState {
+export function filtersReducer(state = InitialState.Filters(), action: FilterActionTypes): IFilterState {
     
     console.log("filtersReducer state & action", state, action);
     
@@ -155,9 +137,10 @@ export function filtersReducer(state = initialFilterState, action: FilterActionT
 
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
-            const { tripType, team } = action.payload;
+            const { filterOptions, tripType, team } = action.payload;
             return {
                 ...state,
+                filterOptions: filterOptions,
                 tripType: tripType,
                 team: team,
                 message: getFilterMessage(action.payload)
@@ -166,7 +149,7 @@ export function filtersReducer(state = initialFilterState, action: FilterActionT
 
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
-            return initialFilterState;
+            return InitialState.Filters();
         }
 
         case ReduxActionType.CLICK_SEARCH:

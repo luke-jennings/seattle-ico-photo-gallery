@@ -1,5 +1,7 @@
-import { IFiltersSelectedState } from './IFiltersSelectedState'
+import { IFilterSelectedOptionsState } from './IFilterSelectedOptionsState';
+import { IFilterOptions } from './IFilterOptions';
 
-export interface IFilterState extends IFiltersSelectedState {
+export interface IFilterState extends IFilterSelectedOptionsState {
+    filterOptions: IFilterOptions;
     message: string;
 }

@@ -12,10 +12,10 @@ import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
 import { ISlideshowValues } from '../interfaces/ISlideshowValues';
 import { IPhoto } from '../interfaces/IPhoto';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 import { Data } from '../services/Data';
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { ISelectOption } from '../interfaces/ISelectOption';
+import { InitialState } from '../helpers/InitialState';
 
 class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     
@@ -27,7 +27,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
       this.getSlideshowValuesFromRoute = this.getSlideshowValuesFromRoute.bind(this);
       this.getRoute = this.getRoute.bind(this);
 
-      this.state = { arePhotosLoading: true, isInvalidRoute: false, pageCount: 0, pageIndex: 0, photos: [], route: '', photosDisplayType: PhotosDisplayType.Slideshow };
+      this.state = InitialState.Slideshow();
     }
 
     private updateRoute(pageIndex: number): string  {
@@ -140,7 +140,9 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
         this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
 
-            let stateWithFilterReset: IGalleryState = { ...this.state, tripType: {} as ISelectOption, team: {} as ISelectOption }
+            let { filterOptions, tripType, team, message } = InitialState.Filters();
+
+            let stateWithFilterReset: IGalleryState = { ...this.state, filterOptions, tripType, team, message }
             
             this.props.slideshowLoaded(stateWithFilterReset);
         });
