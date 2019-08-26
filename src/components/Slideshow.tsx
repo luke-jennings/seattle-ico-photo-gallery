@@ -13,12 +13,12 @@ import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
 import { ISlideshowValues } from '../interfaces/ISlideshowValues';
 import { IPhoto } from '../interfaces/IPhoto';
 import { Data } from '../services/Data';
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { ISelectOption } from '../interfaces/ISelectOption';
 import { InitialState } from '../helpers/InitialState';
 
 class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     
+    private backLinkHref: string | undefined;
+
     constructor(props: ISlideshowProps) {
       super(props);
 
@@ -113,6 +113,13 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
     public async componentDidMount() {
         
+        // Capture the route from the Gallery before it gets changed to a Slideshow route
+        // So can use this for the back link.  If the user browsed here directly without
+        // linking from the Gallery this will be the initial state.
+        if (this.props.route !== InitialState.MetaData().route){
+            this.backLinkHref = this.props.route;
+        }
+
         this.setState({ arePhotosLoading: true, isInvalidRoute: false });
 
         const slideshowValuesFromRoute: ISlideshowValues | undefined = this.getSlideshowValuesFromRoute(this.props.match.params);
@@ -139,12 +146,8 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         let route: string = this.getRoute(pageIndex, photos);
 
         this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
-
-            let { filterOptions, tripType, team, message } = InitialState.Filters();
-
-            let stateWithFilterReset: IGalleryState = { ...this.state, filterOptions, tripType, team, message }
             
-            this.props.slideshowLoaded(stateWithFilterReset);
+            this.props.slideshowLoaded(this.state);
         });
     }
 
@@ -168,6 +171,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
                         <p className="w-100 mb-1 text-left">{ moment(this.state.photos[this.state.pageIndex].date).format('dddd, MMMM D, YYYY') }</p>
                         <p className="w-100 mb-1 text-left">Photo { this.state.pageIndex + 1 } of { this.state.photos.length }</p>
                         <p className="w-100 mb-2 text-left">{ this.state.photos[this.state.pageIndex].caption }</p>
+                        {(this.backLinkHref !== undefined) ? (<p className="w-100 mb-2 text-left"><a href={this.backLinkHref} className="back-link">&lt;&lt; Back</a></p>) : null }
 
                         <br />
 
@@ -206,7 +210,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-    photosMeta: state
+    route: state.metaData.route
 });
 
 const mapDispatchToProps = { slideshowLoaded, pagingClicked }

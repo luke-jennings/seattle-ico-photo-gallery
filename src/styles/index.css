@@ -52,3 +52,7 @@ div.photo-thumbnail a {
 div.photo-thumbnail img, img.photo-slide {
   border: 1px solid #7e7e7e;
 }
+
+a.back-link, a.back-link:hover {
+  color: #6a813b;
+}
