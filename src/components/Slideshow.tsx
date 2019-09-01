@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 import moment from 'moment';
+import * as toastr from 'toastr';
 
 import PhotoSlide from './PhotoSlide';
 
@@ -14,6 +15,7 @@ import { ISlideshowValues } from '../interfaces/ISlideshowValues';
 import { IPhoto } from '../interfaces/IPhoto';
 import { Data } from '../services/Data';
 import { InitialState } from '../helpers/InitialState';
+import { ErrorHelpers } from '../helpers/ErrorHelpers';
 
 class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     
@@ -130,7 +132,13 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         }
 
         let data = new Data();
-        const photos: IPhoto[] = await data.GetSlideshow(slideshowValuesFromRoute.tripReportId);
+        let photos: IPhoto[];
+        try {
+            photos = await data.GetSlideshow(slideshowValuesFromRoute.tripReportId);
+        } catch (error) {
+            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptions())
+            return;
+        }
 
         const photosCount: number = photos.length;
         let pageIndex: number;

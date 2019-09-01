@@ -14,7 +14,8 @@
     "@types/react-redux": "^7.0.9",
     "@types/react-router-dom": "^4.3.2",
     "@types/react-select": "^2.0.15",
-    "axios": "^0.18.0",
+    "@types/toastr": "^2.1.37",
+    "axios": "^0.18.1",
     "axios-mock-adapter": "^1.16.0",
     "bootstrap": "^4.3.1",
     "enzyme": "^3.9.0",
@@ -31,6 +32,7 @@
     "react-testing-library": "^6.0.3",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
+    "toastr": "^2.1.4",
     "typescript": "3.3.3333"
   },
   "scripts": {

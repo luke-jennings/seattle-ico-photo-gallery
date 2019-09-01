@@ -4,6 +4,7 @@ import Filter from './Filter'
 import ThumbnailGrid from './ThumbnailGrid';
 
 import ReactPaginate from 'react-paginate';
+import * as toastr from 'toastr';
 
 import { IGalleryProps } from '../interfaces/IGalleryProps';
 import { IGalleryState } from '../interfaces/IGalleryState';
@@ -20,6 +21,7 @@ import { searchClicked, pagingClicked, filterChanged, galleryLoaded } from '../s
 import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
 import { InitialState } from '../helpers/InitialState';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
+import { ErrorHelpers } from '../helpers/ErrorHelpers';
 
 class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
@@ -176,19 +178,41 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         
         this.setState({ arePhotosLoading: true, isInvalidRoute: false });
 
+        let filterOptions: IFilterOptions | null = null;
+
         let data = new Data();
-        let filterOptions: IFilterOptions = await data.GetFilterOptions();
+        try {
+            filterOptions = await data.GetFilterOptions();
+        }
+        catch(error) {
+            toastr.error('Sorry, there was an error retrieving the filter options.', '', ErrorHelpers.GetToastrOptions());
+        }
 
-        const filterSelectedOptionsFromRoute: IFilterSelectedOptionsState | undefined = this.getFilterSelectedOptionsFromRoute(filterOptions, this.props.match.params.tripTypeName, this.props.match.params.teamName);
+        let { tripType, team } = InitialState.Filters();
+        let filterSelectedOptionsFromRoute: IFilterSelectedOptionsState | undefined = { tripType, team };
 
-        if (filterSelectedOptionsFromRoute === undefined) {
-            this.setState({ isInvalidRoute: true })
+        if (filterOptions !== null && typeof filterOptions !== 'undefined') {
+
+            filterSelectedOptionsFromRoute = this.getFilterSelectedOptionsFromRoute(filterOptions, this.props.match.params.tripTypeName, this.props.match.params.teamName);
+
+            if (filterSelectedOptionsFromRoute === undefined) {
+                this.setState({ isInvalidRoute: true })
+                return;
+            }
+
+            this.setState({ filterOptions: filterOptions, tripType: (filterSelectedOptionsFromRoute.tripType), team: filterSelectedOptionsFromRoute.team });
+        } else {
+            toastr.error('Sorry, can\'t request photos without the filter options.', '', ErrorHelpers.GetToastrOptions());
             return;
         }
 
-        this.setState({ filterOptions: filterOptions, tripType: (filterSelectedOptionsFromRoute.tripType), team: filterSelectedOptionsFromRoute.team });
-
-        const photosFromRouteValues = await this.getPhotos(filterSelectedOptionsFromRoute.tripType.value, filterSelectedOptionsFromRoute.team.value);
+        let photosFromRouteValues: IPhoto[] = InitialState.Pages().photos;
+        try {
+            photosFromRouteValues = await this.getPhotos(filterSelectedOptionsFromRoute.tripType.value, filterSelectedOptionsFromRoute.team.value);
+        } catch(error) {
+            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptions());
+            return;
+        }
         
         const totalPages = GalleryHelpers.CalculateTotalPages(photosFromRouteValues.length, this.state.pageSize);
 
@@ -211,7 +235,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         else {
             pageIndex = pageFromRouteValues - 1;
         }
-
+        
         let route:string = this.updateGalleryRoute(filterSelectedOptionsFromRoute.tripType.value, filterSelectedOptionsFromRoute.team.value, pageIndex);
 
         this.setState({ arePhotosLoading: false, pageCount: totalPages, pageIndex: pageIndex, photos: photosFromRouteValues, photosDisplayType: PhotosDisplayType.Thumbnails, route: route }, () => {
