@@ -62,6 +62,10 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
         this.setState({ arePhotosLoading: true });
         const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
+        if (photosFromFilter !== null && photosFromFilter.length < 1) {
+            let message: string = `Sorry, there are not any photos for your search for type <em>${this.state.tripType.text}</em> and team <em>${this.state.team.text}</em>.`;
+            toastr.warning(message, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+        }
         const totalPages = GalleryHelpers.CalculateTotalPages(photosFromFilter.length, this.state.pageSize);
         let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
         this.setState({ photos: photosFromFilter, pageCount: totalPages, pageIndex: 0, arePhotosLoading: false, route: route }, () => {
@@ -139,8 +143,8 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
     private async getPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {
 
         let data = new Data();
-        const photos = await data.GetPhotos(tripTypeId, teamId);
-        
+        let photos: IPhoto[] = await data.GetPhotos(tripTypeId, teamId);
+
         return photos;
     }
 
@@ -185,7 +189,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
             filterOptions = await data.GetFilterOptions();
         }
         catch(error) {
-            toastr.error('Sorry, there was an error retrieving the filter options.', '', ErrorHelpers.GetToastrOptions());
+            toastr.error('Sorry, there was an error retrieving the filter options.', '', ErrorHelpers.GetToastrOptionsForPersistent());
         }
 
         let { tripType, team } = InitialState.Filters();
@@ -202,7 +206,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
 
             this.setState({ filterOptions: filterOptions, tripType: (filterSelectedOptionsFromRoute.tripType), team: filterSelectedOptionsFromRoute.team });
         } else {
-            toastr.error('Sorry, can\'t request photos without the filter options.', '', ErrorHelpers.GetToastrOptions());
+            toastr.error('Sorry, can\'t request photos without the filter options.', '', ErrorHelpers.GetToastrOptionsForPersistent());
             return;
         }
 
@@ -210,7 +214,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         try {
             photosFromRouteValues = await this.getPhotos(filterSelectedOptionsFromRoute.tripType.value, filterSelectedOptionsFromRoute.team.value);
         } catch(error) {
-            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptions());
+            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent());
             return;
         }
         

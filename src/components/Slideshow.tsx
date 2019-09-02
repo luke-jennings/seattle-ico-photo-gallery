@@ -136,7 +136,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         try {
             photos = await data.GetSlideshow(slideshowValuesFromRoute.tripReportId);
         } catch (error) {
-            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptions())
+            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent())
             return;
         }
 
