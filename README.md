@@ -1,5 +1,5 @@
 # Seattle ICO Photo Gallery
-A single-page app version of the [Seattle ICO photos page](https://volunteers.seattleico.org/what-we-do/photos), using with the [React](https://reactjs.org) library, written with [Typescript](https://www.typescriptlang.org/), using [Redux](https://react-redux.js.org/) for state managementd, and tested with [Jest](https://jestjs.io/).
+A single-page app version of the [Seattle ICO photos page](https://volunteers.seattleico.org/what-we-do/photos), using with the [React](https://reactjs.org) library, written with [Typescript](https://www.typescriptlang.org/), using [Redux](https://react-redux.js.org/) for state management, and tested with [Jest](https://jestjs.io/).
 
 It is still a work-in-progress, but you can see it live at: https://volunteers.seattleico.org/what-we-do/photos-beta.
 
