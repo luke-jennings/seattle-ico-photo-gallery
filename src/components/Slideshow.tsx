@@ -118,8 +118,13 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         // Capture the route from the Gallery before it gets changed to a Slideshow route
         // So can use this for the back link.  If the user browsed here directly without
         // linking from the Gallery this will be the initial state.
-        if (this.props.route !== InitialState.MetaData().route){
+        if (this.props.route !== InitialState.MetaData().route) {
             this.backLinkHref = this.props.route;
+            
+            // NOTE: If using HashRouter, then uncomment these three line and comment the line above.
+            // let indexOfHash: number = window.location.href.indexOf('#');
+            // let url: string = window.location.href.slice(0, indexOfHash + 1);
+            // this.backLinkHref = url + this.props.route;
         }
 
         this.setState({ arePhotosLoading: true, isInvalidRoute: false });

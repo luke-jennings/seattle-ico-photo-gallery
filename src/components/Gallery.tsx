@@ -264,7 +264,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
             return (
                 <div className="App container mb-2">
 
-                    <div className="row">
+                    <div className="row w-100">
                         <Filter
                             values={{ tripType: this.state.tripType, team: this.state.team}}
                             options = {this.state.filterOptions}

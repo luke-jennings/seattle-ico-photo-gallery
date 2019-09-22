@@ -47,13 +47,32 @@ describe("The photos filter", () => {
         expect(onTeamsChangeHandler).toHaveBeenCalledTimes(1);
     });
 
+    /**
+     * 
+     * NOTE: There is a known issue with jsdom that it will write errors to the console like: Error: Not implemented: HTMLFormElement.prototype.submit
+     * https://github.com/jsdom/jsdom/issues/1937
+     * https://github.com/jsdom/jsdom#unimplemented-parts-of-the-web-platform
+     * To supress this error being written to the console during the test can mock it temporarily:
+     * https://stackoverflow.com/questions/44596915/jest-mocking-console-error-tests-fails/49392163#49392163
+     */
     it("When clicked, the filter submit button should call the onSubmit onSubmit handler.", () => {
+
+        // Arrange
+        let originalConsoleError = console.error;
+        console.error = jest.fn();
 
         // Act
         fireEvent.click(getByText('Search'))
 
         // Assert
         expect(onSubmitHandler).toHaveBeenCalledTimes(1);
+        expect(console.error).toHaveBeenCalledTimes(1);
+
+        // You can see how supressing console.error works by uncommenting the console.log & console.error calls in the lines below.
+        // console.log('log still works');
+        // console.error('you cant see me');
+        console.error = originalConsoleError;
+        // console.error('now you can');
     });
 
 });

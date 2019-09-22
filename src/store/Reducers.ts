@@ -8,7 +8,8 @@ import { InitialState } from '../helpers/InitialState';
 
 export function metaDataReducer(state = InitialState.MetaData(), action: MetaDataActionTypes): IMetaDataState {
 
-    console.log("metaDataReducer state & action", state, action);
+    // Commented out to reduce number of messages being written to the console during tests.  Uncomment during development to see Reducers being called.
+    //console.log("metaDataReducer state & action", state, action);
 
     switch (action.type) {
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
@@ -59,7 +60,8 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
 
 export function pagesReducer(state = InitialState.Pages(), action: PhotosActionTypes): IPagesState {
 
-    console.log("pagesReducer state & action", state, action);
+    // Commented out to reduce number of messages being written to the console during tests.  Uncomment during development to see Reducers being called.
+    //console.log("pagesReducer state & action", state, action);
 
     switch (action.type) {
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
@@ -131,7 +133,8 @@ function getFilterMessage(galleryState: IGalleryState){
 
 export function filtersReducer(state = InitialState.Filters(), action: FilterActionTypes): IFilterState {
     
-    console.log("filtersReducer state & action", state, action);
+    // Commented out to reduce number of messages being written to the console during tests.  Uncomment during development to see Reducers being called.
+    //console.log("filtersReducer state & action", state, action);
     
     switch (action.type) {
 

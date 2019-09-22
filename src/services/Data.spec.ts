@@ -6,6 +6,23 @@ import { IFilterOptions } from '../interfaces/IFilterOptions';
 
 const filterOptions: IFilterOptions = { tripTypeOptions: tripTypesOptionsTestData, teamOptions: teamsOptionsTestData };
 
+let originalConsoleLog = console.log;
+
+beforeEach(() => {
+
+	// Supress console.log messages from being written to the test output.
+	console.log = jest.fn();
+	//console.log("Should NOT write to console.");
+});
+
+afterEach(() => {
+
+	// Restore console.log method
+	console.log = originalConsoleLog;
+	//console.log("Should write to console");
+});
+
+
 describe("The Data service class", () => {
 
     it("When GetFilterOptions is called it should return all filter options.", async () => {
