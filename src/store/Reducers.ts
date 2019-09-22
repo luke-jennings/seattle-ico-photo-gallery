@@ -53,6 +53,16 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 route: route
             };
         }
+        case ReduxActionType.CLICK_THUMBNAIL:
+        {
+            const { arePhotosLoading, photosDisplayType, route } = action.payload;
+            return {
+                ...state,
+                arePhotosLoading: arePhotosLoading,
+                photosDisplayType: photosDisplayType,
+                route: route
+            };
+        }
         default:
             return state;
     }
@@ -102,16 +112,6 @@ export function pagesReducer(state = InitialState.Pages(), action: PhotosActionT
             return {
                 ...state,
                 pageIndex: pageIndex
-            };
-        }
-        case ReduxActionType.CLICK_THUMBNAIL:
-        {
-            const { pageCount, pageIndex, photos } = action.payload;
-            return {
-                ...state,
-                pageCount: pageCount,
-                pageIndex: pageIndex,
-                photos: photos
             };
         }
         default:

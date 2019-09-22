@@ -1,9 +1,9 @@
 import { ReduxActionType } from '../enumerations/ReduxActionType';
-import { IPagesState } from '../interfaces/IPagesState';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { IReduxAction } from '../interfaces/IReduxAction';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
 
 interface LoadGalleryFromRouteAction extends IReduxAction {
     type: typeof ReduxActionType.LOAD_GALLERY_FROM_ROUTE;
@@ -30,13 +30,13 @@ interface ClickPagingAction extends IReduxAction {
     payload: ISlideshowState;
 }
 
-interface ClickPhotoAction extends IReduxAction {
+interface ClickThumbnailAction extends IReduxAction {
     type: typeof ReduxActionType.CLICK_THUMBNAIL;
-    payload: IPagesState;
+    payload: IMetaDataState;
 }
 
-export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
+export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickThumbnailAction;
 
 export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickSearchAction;
 
-export type PhotosActionTypes = ClickPhotoAction | ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
+export type PhotosActionTypes =  ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;

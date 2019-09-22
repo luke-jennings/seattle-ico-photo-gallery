@@ -16,6 +16,7 @@ import { IPhoto } from '../interfaces/IPhoto';
 import { Data } from '../services/Data';
 import { InitialState } from '../helpers/InitialState';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
+import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 
 class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     
@@ -158,7 +159,7 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
         let route: string = this.getRoute(pageIndex, photos);
 
-        this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route }, () => {
+        this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route, photosDisplayType: PhotosDisplayType.Slideshow }, () => {
             
             this.props.slideshowLoaded(this.state);
         });

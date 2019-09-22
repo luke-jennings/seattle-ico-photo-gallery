@@ -1,5 +1,5 @@
 import { RouteComponentProps } from 'react-router-dom';
-import { searchClicked, pagingClicked, filterChanged, galleryLoaded } from '../store/Actions';
+import { searchClicked, pagingClicked, filterChanged, galleryLoaded, thumbnailClicked } from '../store/Actions';
 import { TGalleryProps } from '../types/TGalleryProps';
 import { IMetaDataState } from './IMetaDataState';
 import { IFilterState } from './IFilterState';
@@ -11,6 +11,7 @@ export interface IGalleryProps extends RouteComponentProps<TGalleryProps> {
     filterChanged: typeof filterChanged;
     searchClicked: typeof searchClicked;
     pagingClicked: typeof pagingClicked;
+    thumbnailClicked: typeof thumbnailClicked;
 
     metaData: IMetaDataState;
     filter: IFilterState;

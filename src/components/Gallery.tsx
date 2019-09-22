@@ -17,7 +17,7 @@ import { IPhoto } from '../interfaces/IPhoto';
 import { AppState } from '../store/ConfigureStore';
 import { connect } from "react-redux";
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
-import { searchClicked, pagingClicked, filterChanged, galleryLoaded } from '../store/Actions';
+import { searchClicked, pagingClicked, filterChanged, galleryLoaded, thumbnailClicked } from '../store/Actions';
 import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
 import { InitialState } from '../helpers/InitialState';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
@@ -119,7 +119,6 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
 
-            //this.props.pagingClicked(this.state);
             this.props.pagingClicked(this.state);
         });
     }
@@ -137,7 +136,13 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         let path: string = `${(process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '')}${photo.id}/${photo.tripReportRoute}/${page}`;
 
-        this.props.history.push(path);
+        this.setState({ arePhotosLoading: true, route: path, photosDisplayType: PhotosDisplayType.Slideshow }, () => {
+            // Set state is asynchronous, so wait for state mutation to complete
+            // and use setState's callback function to update the redux store
+
+            this.props.thumbnailClicked(this.state);
+            this.props.history.push(path);
+        });
     }
 
     private async getPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {
@@ -322,7 +327,7 @@ const mapStateToProps = (state: AppState) => ({
     photos: state.pages
 });
 
-const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded }
+const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded, thumbnailClicked }
 
 export default connect (
     mapStateToProps,
