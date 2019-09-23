@@ -35,8 +35,10 @@ interface ClickThumbnailAction extends IReduxAction {
     payload: IMetaDataState;
 }
 
-export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickThumbnailAction;
+// IReduxAction is added to the action types for resons of testing so can test reducers for how they handle unexpcted types.
 
-export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickSearchAction;
+export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickThumbnailAction | IReduxAction;
 
-export type PhotosActionTypes =  ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction;
+export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickSearchAction | IReduxAction;
+
+export type PaginationActionTypes =  ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | IReduxAction;

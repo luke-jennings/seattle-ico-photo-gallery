@@ -1,4 +1,4 @@
-import { MetaDataActionTypes, FilterActionTypes, PhotosActionTypes } from './Types';
+import { MetaDataActionTypes, FilterActionTypes, PaginationActionTypes } from './Types';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IFilterState } from '../interfaces/IFilterState';
@@ -68,7 +68,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
     }
 }
 
-export function pagesReducer(state = InitialState.Pages(), action: PhotosActionTypes): IPagesState {
+export function pagesReducer(state = InitialState.Pages(), action: PaginationActionTypes): IPagesState {
 
     // Commented out to reduce number of messages being written to the console during tests.  Uncomment during development to see Reducers being called.
     //console.log("pagesReducer state & action", state, action);
@@ -126,7 +126,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PhotosActionT
  */
 function getFilterMessage(galleryState: IGalleryState){
 
-    let message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
+    const message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
 
     return message;
 }
