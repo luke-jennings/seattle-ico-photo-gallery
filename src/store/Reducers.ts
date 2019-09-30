@@ -3,8 +3,8 @@ import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IFilterState } from '../interfaces/IFilterState';
 import { IPagesState } from '../interfaces/IPagesState';
-import { IGalleryState } from '../interfaces/IGalleryState';
 import { InitialState } from '../helpers/InitialState';
+import { GalleryHelpers } from '../helpers/GalleryHelpers';
 
 export function metaDataReducer(state = InitialState.MetaData(), action: MetaDataActionTypes): IMetaDataState {
 
@@ -119,18 +119,6 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
     }
 }
 
-/**
- * The message to be displayed that summarizes the number of photos for the selected filter criteria.
- * 
- * @param galleryState The IGalleryState which will have the required properties of photos, tripType, and Team needed to generate the message.
- */
-function getFilterMessage(galleryState: IGalleryState){
-
-    const message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
-
-    return message;
-}
-
 export function filtersReducer(state = InitialState.Filters(), action: FilterActionTypes): IFilterState {
     
     // Commented out to reduce number of messages being written to the console during tests.  Uncomment during development to see Reducers being called.
@@ -146,7 +134,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
                 filterOptions: filterOptions,
                 tripType: tripType,
                 team: team,
-                message: getFilterMessage(action.payload)
+                message: GalleryHelpers.GetFilterMessage(action.payload)
             }
         }
 
@@ -160,7 +148,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
             
             return {
                 ...state,
-                message: getFilterMessage(action.payload)
+                message: GalleryHelpers.GetFilterMessage(action.payload)
             };
         }
 

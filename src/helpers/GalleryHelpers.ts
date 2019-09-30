@@ -1,3 +1,5 @@
+import { IGalleryState } from '../interfaces/IGalleryState';
+
 export class GalleryHelpers {
 
     /**
@@ -23,5 +25,17 @@ export class GalleryHelpers {
     public static CalculateTotalPages(numberOfPhotos: number, pageSize: number): number {
 
         return Math.ceil(numberOfPhotos/pageSize)
+    }
+
+    /**
+     * The message to be displayed that summarizes the number of photos for the selected filter criteria.
+     * 
+     * @param galleryState The IGalleryState which will have the required properties of photos, tripType, and Team needed to generate the message.
+     */
+    public static GetFilterMessage(galleryState: IGalleryState){
+
+        const message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
+
+        return message;
     }
 }

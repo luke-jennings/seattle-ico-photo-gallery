@@ -11,6 +11,7 @@ import { IPhoto } from '../interfaces/IPhoto';
 import { IFilterState } from '../interfaces/IFilterState';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
 import { ISelectOption } from '../interfaces/ISelectOption';
+import { GalleryHelpers } from '../helpers/GalleryHelpers';
 
 const reduxInitAction: string = '@@INIT';
 const expectedPhotos: IPhoto[] = [
@@ -281,12 +282,13 @@ describe("The Redux Reducer filtersReducer", () => {
     it('Action type LOAD_GALLERY_FROM_ROUTE returns expected state.', () => {
     
         const galleryState: IGalleryState = { ...InitialState.Gallery(), photos: expectedPhotos, filterOptions: expectedFilterOptions, tripType: expectedTripTypeSelection, team: expectedTeamSelection };
-        const expectedMessage: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
 
         // Arrange
         const payload: IFilterState = { ...galleryState };
 
         const action: FilterActionTypes = { type: ReduxActionType.LOAD_GALLERY_FROM_ROUTE, payload: payload };
+
+        const expectedMessage: string = GalleryHelpers.GetFilterMessage(action.payload);
 
         // Act
         const newPagesState: IFilterState = filtersReducer(undefined, action);
@@ -308,6 +310,23 @@ describe("The Redux Reducer filtersReducer", () => {
 
         // Assert
         expect(newPagesState).toEqual(InitialState.Filters());
+    });
+
+    it('Action type CLICK_SEARCH returns expected state.', () => {
+    
+        // Arrange
+        const payload: IFilterState = { ...InitialState.Gallery(), tripType: expectedTripTypeSelection, team: expectedTeamSelection };
+
+        const action: FilterActionTypes = { type: ReduxActionType.CLICK_SEARCH, payload: payload };
+
+        const expectedMessage: string = GalleryHelpers.GetFilterMessage(action.payload);
+
+        // Act
+        const newPagesState: IFilterState = filtersReducer(undefined, action);
+
+        // Assert
+        const expectedState: IFilterState = { ...InitialState.Filters(), message: expectedMessage };
+        expect(newPagesState).toEqual(expectedState);
     });
 
     it('Action type CHANGE_FILTER returns expected state.', () => {
