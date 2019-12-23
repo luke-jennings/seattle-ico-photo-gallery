@@ -215,6 +215,8 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
 
                         <PhotoSlide photo={this.state.photos[this.state.pageIndex]} />
 
+                        
+                        <p className="w-100 mt-2 text-right"><a href={process.env.REACT_APP_PROTOCOL_HOSTNAME + this.state.photos[this.state.pageIndex].tripSummaryRoute} className="back-link">Trip Summary {String.fromCharCode(62, 62)}</a></p>
                     </div>
 
                 </div>

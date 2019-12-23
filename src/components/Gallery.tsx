@@ -136,7 +136,7 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         let path: string = `${(process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '')}${photo.id}/${photo.tripReportRoute}/${page}`;
 
-        this.setState({ arePhotosLoading: true, route: path, photosDisplayType: PhotosDisplayType.Slideshow }, () => {
+        this.setState({ arePhotosLoading: true, photosDisplayType: PhotosDisplayType.Slideshow }, () => {
             // Set state is asynchronous, so wait for state mutation to complete
             // and use setState's callback function to update the redux store
 
