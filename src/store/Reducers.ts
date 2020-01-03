@@ -20,7 +20,8 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 isInvalidRoute: isInvalidRoute,
                 arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
-                route: route
+                route: route,
+                routeBackToGallery: null
             }
         }
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
@@ -55,12 +56,13 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
         }
         case ReduxActionType.CLICK_THUMBNAIL:
         {
-            const { arePhotosLoading, photosDisplayType, route } = action.payload;
+            const { arePhotosLoading, photosDisplayType, route, routeBackToGallery } = action.payload;
             return {
                 ...state,
                 arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
-                route: route
+                route: route,
+                routeBackToGallery: routeBackToGallery
             };
         }
         default:

@@ -12,7 +12,8 @@ export class InitialState {
         isInvalidRoute: false,
         arePhotosLoading: true,
         photosDisplayType: PhotosDisplayType.NotSet,
-        route: '/'
+        route: '/',
+        routeBackToGallery: ''
     };
 
     private static initialFilterState: IFilterState = {
@@ -56,10 +57,11 @@ export class InitialState {
     }
 
     public static Slideshow(): ISlideshowState {
-        
+
         let slideshowState: ISlideshowState = { ...this.initialMetaDataState, ...this.initialPagesState };
 
         slideshowState.pageSize = 1;
+        slideshowState.photosDisplayType = PhotosDisplayType.Slideshow;
 
         return slideshowState;
     }
