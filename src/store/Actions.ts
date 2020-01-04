@@ -4,6 +4,7 @@ import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOption
 import { IPagesState } from '../interfaces/IPagesState';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IReduxAction } from '../interfaces/IReduxAction';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
 
 export function galleryLoaded(galleryState: IGalleryState): IReduxAction {
     return {
@@ -44,5 +45,12 @@ export function slideshowLoaded(slideshowState: ISlideshowState): IReduxAction {
     return {
         type: ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE,
         payload: slideshowState
+    }
+}
+
+export function invalidRoute(metaDataState: IMetaDataState): IReduxAction {
+    return {
+        type: ReduxActionType.INVALID_ROUTE,
+        payload: metaDataState
     }
 }

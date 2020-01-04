@@ -13,7 +13,7 @@ export class InitialState {
         arePhotosLoading: true,
         photosDisplayType: PhotosDisplayType.NotSet,
         route: '/',
-        routeBackToGallery: ''
+        routeBackToGallery: null
     };
 
     private static initialFilterState: IFilterState = {

@@ -23,7 +23,7 @@ const App = () => {
     <Provider store={store}>
       <Router history={history}>
         <div className="App container mb-2">
-          <p className="text-uppercase">Prototype of Seattle ICO's photos page as a React + Typescript + Redux + Jest web app.</p>
+          <p className="text-uppercase">Beta release of Seattle ICO's photos page as a React + Typescript + Redux + Hooks + Jest web app.</p>
           <Switch>
             <Route path={process.env.REACT_APP_GALLERY_ROOT_PATH} exact component={Gallery} />
             <Route path={process.env.REACT_APP_GALLERY_ROOT_PATH + ":tripTypeName/:teamName/:pageNumber?"} component={Gallery} />

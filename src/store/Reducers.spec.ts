@@ -19,6 +19,7 @@ const expectedPhotos: IPhoto[] = [
     id: 1974,
     tripReportId: 900,
     tripReportRoute: 'south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900',
+    tripSummaryRoute: "/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking",
     destination: 'Deception Pass Bridge and Anacortes sea kayaking',
     team: 'South Shore',
     date: '2018-06-09T00:00:00',
@@ -33,6 +34,7 @@ const expectedPhotos: IPhoto[] = [
     id: 1975,
     tripReportId: 900,
     tripReportRoute: 'south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900',
+    tripSummaryRoute: "/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking",
     destination: 'Deception Pass Bridge and Anacortes sea kayaking',
     team: 'South Shore',
     date: '2018-06-09T00:00:00',
@@ -47,6 +49,7 @@ const expectedPhotos: IPhoto[] = [
     id: 1976,
     tripReportId: 900,
     tripReportRoute: 'south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900',
+    tripSummaryRoute: "/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking",
     destination: 'Deception Pass Bridge and Anacortes sea kayaking',
     team: 'South Shore',
     date: '2018-06-09T00:00:00',
@@ -63,7 +66,7 @@ describe("The Redux Reducer metaDataReducer", () => {
     const expectedRoute: string = '/some/test/route';
     const expectedArePhotosLoading: boolean = false;
     const expectedPhotosDisplayType: PhotosDisplayType = PhotosDisplayType.Thumbnails;
-    const expectedMetaData: IMetaDataState = { isInvalidRoute: true, arePhotosLoading: expectedArePhotosLoading, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute };
+    const expectedMetaData: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: expectedArePhotosLoading, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute };
 
     it(`Action type ${reduxInitAction} returns state with no change.`, () => {
         
@@ -146,6 +149,22 @@ describe("The Redux Reducer metaDataReducer", () => {
 
         // Assert
         const expectedState: IMetaDataState = { ...InitialState.MetaData(), arePhotosLoading: expectedArePhotosLoading, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute }
+        expect(newMetaDataState).toEqual(expectedState);
+    });
+
+    it('Action type INVALID_ROUTE for slideshow returns expected state.', () => {
+
+        // Arrange
+        const payload: IMetaDataState = { ...expectedMetaData };
+
+        const action: MetaDataActionTypes = { type: ReduxActionType.INVALID_ROUTE, payload: payload };
+
+        // Act
+        const newMetaDataState: IMetaDataState = metaDataReducer(undefined, action);
+
+        // Assert
+        const expectedState: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: false, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute }
+
         expect(newMetaDataState).toEqual(expectedState);
     });
 

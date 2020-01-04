@@ -1,4 +1,4 @@
-import { galleryLoaded, filterChanged, searchClicked, pagingClicked, thumbnailClicked, slideshowLoaded } from './Actions';
+import { galleryLoaded, filterChanged, searchClicked, pagingClicked, thumbnailClicked, slideshowLoaded, invalidRoute } from './Actions';
 import { IReduxAction } from '../interfaces/IReduxAction';
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
@@ -6,6 +6,8 @@ import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IPagesState } from '../interfaces/IPagesState';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { InitialState } from '../helpers/InitialState';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 
 describe("The Redux Actions", () => {
 
@@ -94,6 +96,24 @@ describe("The Redux Actions", () => {
 
         // Assert
         expect(result.type).toBe(ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE);
+        expect(result.payload).toBe(expectedState);
+        expect(result.error).toBeUndefined();
+        expect(result.meta).toBeUndefined();
+    });
+
+    it('invalidRoute returns expected type & payload.', () => {
+
+        // Arrange
+        const expectedPhotosDisplayType: PhotosDisplayType = PhotosDisplayType.Slideshow;
+        const expectedRoute: string = '/some/expected/invalid/route';
+
+        const expectedState: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: false, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute }
+
+        // Act
+        let result: IReduxAction = invalidRoute(expectedState);
+
+        // Assert
+        expect(result.type).toBe(ReduxActionType.INVALID_ROUTE);
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();

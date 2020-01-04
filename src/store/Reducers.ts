@@ -65,6 +65,17 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 routeBackToGallery: routeBackToGallery
             };
         }
+        case ReduxActionType.INVALID_ROUTE:
+        {
+            const { isInvalidRoute, arePhotosLoading, route, photosDisplayType } = action.payload;
+            return {
+                ...state,
+                isInvalidRoute: isInvalidRoute,
+                arePhotosLoading: arePhotosLoading,
+                route: route,
+                photosDisplayType: photosDisplayType
+            }
+        }
         default:
             return state;
     }

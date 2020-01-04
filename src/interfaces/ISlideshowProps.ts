@@ -1,5 +1,5 @@
 import { RouteComponentProps } from 'react-router-dom'
-import { slideshowLoaded, pagingClicked } from '../store/Actions';
+import { slideshowLoaded, pagingClicked, invalidRoute } from '../store/Actions';
 import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
 import { ISlideshowState } from './ISlideshowState';
 
@@ -8,4 +8,5 @@ export interface ISlideshowProps extends RouteComponentProps<TSlideshowRouteValu
     // Actions
     slideshowLoaded: typeof slideshowLoaded;
     pagingClicked: typeof pagingClicked;
+    invalidRoute: typeof invalidRoute;
 }

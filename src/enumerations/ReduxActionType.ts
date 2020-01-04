@@ -13,5 +13,7 @@ export enum ReduxActionType {
 
     CLICK_PAGING = "CLICK_PAGING", // The user clicked a paging number or arrow
 
-    CLICK_THUMBNAIL = "CLICK_THUMBNAIL" // The user clicked a photo thumbnail
+    CLICK_THUMBNAIL = "CLICK_THUMBNAIL", // The user clicked a photo thumbnail
+
+    INVALID_ROUTE = "INVALID_ROUTE"
 }
