@@ -26,16 +26,14 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
 
     let location = useLocation();
 
-    function updateRoute(pageIndex: number): string  {
-
-        let route: string = getRoute(pageIndex, props.photos);
-
-        history.push(route);
-
-        return route;
-    }
-
-    function getRoute(pageIndex: number, photos: IPhoto[]): string {
+    /**
+     * Cobble together the route from the root components.
+     *
+     * @param {number} pageIndex The paging page number.  This is a 0-based index, so will need to add one for use in the route.
+     * @param {IPhoto[]} photos The collection of photos being displayed in the slideshow.
+     * @returns {string} The root as a string.  Should look something like: '/what-we-do/photo/1976/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900/3'.
+     */
+    function assembleRoute(pageIndex: number, photos: IPhoto[]): string {
 
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         let rootPath: string = (process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '');
@@ -48,15 +46,27 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
         return route;
     }
 
+    /**
+     * Callback for handling the user clicking on the paging component.
+     *
+     * @param {{ selected: number; }} selectedItem The paging componet provided paramter that indicates what paging page to display next.
+     */
     function handlePageClick(selectedItem: { selected: number; }): void {
 
-        const route: string = updateRoute(selectedItem.selected);
+        const route: string = assembleRoute(selectedItem.selected, props.photos);
         const updatedSlideshowState: ISlideshowState = { ...props, pageIndex: selectedItem.selected, route: route };
 
-        // Update Redux
+        history.push(route);
+        // Update Redux store
         props.pagingClicked(updatedSlideshowState);
     }
 
+    /**
+     * Extract the photo id, trip report id, and paging page integer (numeric) values from the route values. 
+     *
+     * @param {TSlideshowRouteValues} slideshowRouteValues The route values as {string | undefined}.  These will be parsed to get their integer values.
+     * @returns {(ISlideshowValues | undefined)} If all the route values can be parsed to integers then return the values; otherwise return undefined.
+     */
     function getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
 
         let pageNumber: number = Number(slideshowRouteValues.pageNumber);
@@ -99,7 +109,7 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
 
     // Replaces componentDidMount
     // When the componet renders it will attempt to load the photos via an API call.
-    // Included an empty array as the second parameter to insure this useEffect will only run once.
+    // Included an empty array [] as the second parameter to insure this useEffect will only run once.
     React.useEffect(() => {
 
         const slideshowValuesFromRoute: ISlideshowValues | undefined = getSlideshowValuesFromRoute(props.match.params);
@@ -114,35 +124,50 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
             return;
         }
 
-        let data: Data = new Data();
-        let slideshowPhotos: IPhoto[] = [];
+        /**
+         * Get the photos for the slideshow and update the Redux store with the photos information.
+         * NOTE: declaring this function inside the useEffect hook is a work around for making async calls from an effect hook.
+         * For more information please see: https://www.robinwieruch.de/react-hooks-fetch-data
+         *
+         * @param {ISlideshowValues} routeValues Values needed to retrieve the photos that have been extracted from the route.
+         * @param {IMetaDataState} invalidState The version of the state to update the Redux store with.
+         * @param {string} errorMessage The error message to display to the users.
+         */
+        const getSlideshowPhotos = async (routeValues: ISlideshowValues, invalidState: IMetaDataState, errorMessage: string): Promise<void> => {
 
-        const getData = async () => {
-            
-            slideshowPhotos = await data.GetSlideshow(slideshowValuesFromRoute.tripReportId);
+            const data: Data = new Data();
+
+            const slideshowPhotos: IPhoto[] = await data.GetSlideshow(routeValues.tripReportId);
 
             const photosCount: number = slideshowPhotos.length;
 
-            if (slideshowValuesFromRoute.pageNumber > photosCount || slideshowValuesFromRoute.pageNumber < 1) {
+            if (routeValues.pageNumber > photosCount || routeValues.pageNumber < 1) {
                 
-                props.invalidRoute(invalidRouteState);
-                toastr.error(invalidRouteErrorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+                props.invalidRoute(invalidState);
+                toastr.error(errorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
                 return;
             }
 
-            let pageIndex: number = slideshowValuesFromRoute.pageNumber - 1;
-            let route: string = getRoute(pageIndex, slideshowPhotos);
+            const pageIndex: number = routeValues.pageNumber - 1;
+            const route: string = assembleRoute(pageIndex, slideshowPhotos);
             
             const updatedSlideshowState: ISlideshowState = { ...props, arePhotosLoading: false, photos: slideshowPhotos, pageCount: photosCount, pageIndex: pageIndex, route };
+
+            // Update Redux store
             props.slideshowLoaded(updatedSlideshowState);
         };
 
         try {
-            getData();
+
+            getSlideshowPhotos(slideshowValuesFromRoute, invalidRouteState, invalidRouteErrorMessage);
+
         } catch (error) {
+
             toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent());
+
             return;
         }
+
     }, []);
 
     if (props.isInvalidRoute === true) {
