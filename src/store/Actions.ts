@@ -1,7 +1,6 @@
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
-import { IPagesState } from '../interfaces/IPagesState';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IReduxAction } from '../interfaces/IReduxAction';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
@@ -11,6 +10,13 @@ export function galleryLoaded(galleryState: IGalleryState): IReduxAction {
         type: ReduxActionType.LOAD_GALLERY_FROM_ROUTE,
         payload: galleryState
     };
+}
+
+export function galleryPhotosLoaded(galleryState: IGalleryState): IReduxAction {
+    return {
+        type: ReduxActionType.LOAD_GALLERY_PHOTOS,
+        payload: galleryState
+    }
 }
 
 export function filterChanged(filterValues: IFilterSelectedOptionsState): IReduxAction {
@@ -34,10 +40,10 @@ export function pagingClicked(slideshowState: ISlideshowState): IReduxAction {
     };
 }
 
-export function thumbnailClicked(paginatedState: IPagesState): IReduxAction {
+export function thumbnailClicked(metaDataState: IMetaDataState): IReduxAction {
     return {
         type: ReduxActionType.CLICK_THUMBNAIL,
-        payload: paginatedState
+        payload: metaDataState
     };
 }
 

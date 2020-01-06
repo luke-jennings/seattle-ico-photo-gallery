@@ -1,6 +1,5 @@
-import { createStore, applyMiddleware, combineReducers, compose } from "redux";
+import { createStore, combineReducers, compose } from "redux";
 import { metaDataReducer, filtersReducer, pagesReducer } from './Reducers';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import { InitialState } from '../helpers/InitialState';
 
 const rootReducer = combineReducers({

@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent, MouseEvent } from 'react';
+import React, { MouseEvent } from 'react';
 
 import Filter from './Filter'
 import ThumbnailGrid from './ThumbnailGrid';
@@ -17,76 +17,25 @@ import { IPhoto } from '../interfaces/IPhoto';
 import { AppState } from '../store/ConfigureStore';
 import { connect } from "react-redux";
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
-import { searchClicked, pagingClicked, filterChanged, galleryLoaded, thumbnailClicked } from '../store/Actions';
+import { searchClicked, pagingClicked, filterChanged, galleryPhotosLoaded, galleryLoaded, thumbnailClicked, invalidRoute } from '../store/Actions';
 import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
 import { InitialState } from '../helpers/InitialState';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
+import { ISlideshowState } from '../interfaces/ISlideshowState';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
 
-class Gallery extends React.Component<IGalleryProps, IGalleryState> {
+const Gallery = (props: IGalleryProps): JSX.Element => {
 
-    public constructor(props: IGalleryProps) {
-        
-        super(props);
-
-        this.handleTripTypeChange = this.handleTripTypeChange.bind(this);
-        this.handleTeamChange = this.handleTeamChange.bind(this);
-        this.handleSearchClicked = this.handleSearchClicked.bind(this);
-        
-        this.state = InitialState.Gallery();
-    }
-
-    private handleTripTypeChange(event: ChangeEvent<HTMLSelectElement>) {
-
-        let tripTypeSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
-
-        this.setState({ tripType: tripTypeSelected }, () => {
-            
-            this.props.filterChanged({ team: this.state.team, tripType: this.state.tripType })
-        });
-    }
-    
-    private handleTeamChange(event: ChangeEvent<HTMLSelectElement>) {
-
-        let teamSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
-
-        this.setState({ team: teamSelected }, () => {
-
-            this.props.filterChanged({ team: this.state.team, tripType: this.state.tripType })
-        });
-    }
-
-    private async handleSearchClicked(event: FormEvent<HTMLFormElement>) {
-
-        event.preventDefault();
-
-        this.setState({ arePhotosLoading: true });
-        const photosFromFilter: IPhoto[] = await this.getPhotos(this.state.tripType.value, this.state.team.value);
-        if (photosFromFilter !== null && photosFromFilter.length < 1) {
-            let message: string = `Sorry, there are not any photos for your search for type <em>${this.state.tripType.text}</em> and team <em>${this.state.team.text}</em>.`;
-            toastr.warning(message, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
-        }
-        const totalPages = GalleryHelpers.CalculateTotalPages(photosFromFilter.length, this.state.pageSize);
-        let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, 0);
-        this.setState({ photos: photosFromFilter, pageCount: totalPages, pageIndex: 0, arePhotosLoading: false, route: route }, () => {
-            // Set state is asynchronous, so wait for state mutation to complete
-            // and use setState's callback function to update the redux store
-
-            this.props.searchClicked(this.state);
-        });
-    }
-
-    private updateGalleryRoute(tripTypeId: number, teamId: number, pageIndex: number): string {
-        const tripTypeRoute: string = this.state.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
-        const teamRoute: string = this.state.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
-        let route: string = GalleryHelpers.BuildPath(tripTypeRoute, teamRoute, pageIndex);
-        
-        this.props.history.push(route);
-        
-        return route;
-    }
-
-    private getFilterSelectedOptionsFromRoute(filterOptions: IFilterOptions, tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterSelectedOptionsState | undefined {
+    /**
+     * Determine the correct filter selections based on the values in the route.
+     *
+     * @param {IFilterOptions} filterOptions The collections of all trip types and teams.
+     * @param {(string | undefined)} tripTypeRouteName The url safe version of the trip type name from the route.
+     * @param {(string | undefined)} teamRouteName The url safe version of the team name from the route.
+     * @returns {(IFilterSelectedOptionsState | undefined)} The selected filter options parsed to an [[IFilterSelectedOptionsState]]; or if not able to parse the values return undefined.
+     */
+    const getFilterSelectedOptionsFromRoute = (filterOptions: IFilterOptions, tripTypeRouteName: string | undefined, teamRouteName: string | undefined): IFilterSelectedOptionsState | undefined => {
 
         if (tripTypeRouteName === undefined && teamRouteName === undefined) {
             return { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } };
@@ -111,223 +60,294 @@ class Gallery extends React.Component<IGalleryProps, IGalleryState> {
         return undefined;
     }
 
-    private handlePageClick = (data: { selected: number }) => {
+    /**
+     * When the user clicks the search button or clicks on paging, update the route and apply it to the history.
+     *
+     * @param {number} tripTypeId The id of the selected trip type option.
+     * @param {number} teamId The id of the selected team option.
+     * @param {number} pageIndex The index of the slected paging page. Note this is a zero-based index.
+     * @returns {string} The new route.  Should look something like: "/what-we-do/photos/horseback-riding/rainier-beach/1"
+     */
+    const updateGalleryRoute = (tripTypeId: number, teamId: number, pageIndex: number): string => {
+
+        const tripTypeRoute: string = props.filter.filterOptions.tripTypeOptions.filter(tto => tto.value == tripTypeId)[0].routeName;
+        const teamRoute: string = props.filter.filterOptions.teamOptions.filter(to => to.value == teamId)[0].routeName;
+        let route: string = GalleryHelpers.BuildPath(tripTypeRoute, teamRoute, pageIndex);
         
-        let route:string = this.updateGalleryRoute(this.state.tripType.value, this.state.team.value, data.selected);
-
-        this.setState({ pageIndex: data.selected, route: route }, () => {
-            // Set state is asynchronous, so wait for state mutation to complete
-            // and use setState's callback function to update the redux store
-
-            this.props.pagingClicked(this.state);
-        });
+        props.history.push(route);
+        
+        return route;
     }
 
-    private handleThumbnailClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    /**
+     * When the user changes the trip type filter selection update the redux store.
+     *
+     * @param {React.ChangeEvent<HTMLSelectElement>} event The event raised by chaning the select option.
+     */
+    const handleTripTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+
+        let tripTypeSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
+
+        props.filterChanged({ team: props.filter.team, tripType: tripTypeSelected });
+    }
+    
+    /**
+     * When the user changes the team filter selection update the redux store.
+     *
+     * @param {React.ChangeEvent<HTMLSelectElement>} event The event raised by chaning the select option.
+     */
+    const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+
+        let teamSelected: ISelectOption = { value: Number(event.target.value), text: event.target.options[event.target.selectedIndex].text }
+
+        props.filterChanged({ team: teamSelected, tripType: props.filter.tripType });
+    }
+
+    /**
+     * When the user clicks the search button update the route and update the photos loading state to true in the redux store.
+     *
+     * @param {React.FormEvent<HTMLFormElement>} event The event generated by the user clicking the Search button.
+     */
+    const handleSearchClicked = (event: React.FormEvent<HTMLFormElement>) => {
+        
+        event.preventDefault();
+
+        const updatedRoute: string = updateGalleryRoute(props.filter.tripType.value, props.filter.team.value, 0);
+
+        const updatedGalleryState: IGalleryState = { ...props.metaData, ...props.filter, ...props.pages, arePhotosLoading: true, route: updatedRoute }
+
+        props.searchClicked(updatedGalleryState);
+    }
+
+    /**
+     * When the user clicks on one of the paging links update the route and paging index in the redux store.
+     *
+     * @param {{ selected: number; }} selectedItem The index of the paging page from clicking on the [[ReactPaginate]] control.
+     */
+    const handlePageClick = (selectedItem: { selected: number; }): void => {
+        
+        const updatedRoute: string = updateGalleryRoute(props.filter.tripType.value, props.filter.team.value, selectedItem.selected);
+
+        const updatedState: ISlideshowState = { ...props.metaData, ...props.pages, pageIndex: selectedItem.selected, route: updatedRoute };
+
+        props.pagingClicked(updatedState);
+    }
+
+    /**
+     * When the user clicks on a thumbnail update the route so that the user will be shown the [[Slideshow]] control.
+     *
+     * @param {MouseEvent<HTMLAnchorElement>} event The event information generated by clicking on a thumbnail image.
+     */
+    const handleThumbnailClick = (event: MouseEvent<HTMLAnchorElement>): void => {
         
         const photoId: number = Number(event.currentTarget.id);
 
-        const photo: IPhoto = this.state.photos.filter(p => p.id === photoId)[0];
+        const photo: IPhoto = props.pages.photos.filter(p => p.id === photoId)[0];
         
-        const photos: IPhoto[] = this.state.photos.filter(p => p.tripReportId === photo.tripReportId);
+        const photos: IPhoto[] = props.pages.photos.filter(p => p.tripReportId === photo.tripReportId);
 
         const page: number = photos.indexOf(photo) + 1;
 
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         let path: string = `${(process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '')}${photo.id}/${photo.tripReportRoute}/${page}`;
 
-        this.setState({ arePhotosLoading: true, photosDisplayType: PhotosDisplayType.Slideshow, routeBackToGallery: this.props.location.pathname }, () => {
-            // Set state is asynchronous, so wait for state mutation to complete
-            // and use setState's callback function to update the redux store
-
-            this.props.thumbnailClicked(this.state);
-            this.props.history.push(path);
-        });
+        const updatedState: IMetaDataState = { ...props.metaData, arePhotosLoading: true, photosDisplayType: PhotosDisplayType.Slideshow, routeBackToGallery: props.location.pathname };
+        
+        props.thumbnailClicked(updatedState);
+        props.history.push(path);
     }
 
-    private async getPhotos(tripTypeId: number, teamId: number): Promise<IPhoto[]> {
+    // Load the photos
+    React.useEffect(() => {
 
-        let data = new Data();
-        let photos: IPhoto[] = await data.GetPhotos(tripTypeId, teamId);
+        const getPhotos = async (tripTypeId: number, teamId: number): Promise<void> => {
 
-        return photos;
-    }
+            let data = new Data();
+            let galleryPhotos: IPhoto[] = [];
 
-    /**
-     * When the user clicks the browser's back button, update the gallery page number in the state.
-     * 
-     * @param prevProps The Gallery props that have been extended with RouteComponentProps.
-     */
-    public componentDidUpdate(prevProps: IGalleryProps, prevState: IGalleryState) {
+            try {
 
-        const locationChanged: boolean = this.props.location !== prevProps.location;
-        const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
-        const pageValue = this.props.location.pathname.slice(lastSlashIndex);
-        const pageNumber = Number(pageValue);
+                galleryPhotos = await data.GetPhotos(tripTypeId, teamId);
 
-        if (locationChanged) {
+            } catch(error) {
 
-            if (this.props.location.pathname === process.env.REACT_APP_GALLERY_ROOT_PATH && pageValue.length == 0) {
-
-                this.setState({ pageIndex: 0 });
+                toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent());
+                return;
             }
-            else if (!Number.isNaN(pageNumber) && Number.isInteger(pageNumber)) {
 
-                const selectedPageFromUrl = Number(pageNumber) - 1;
+            const totalPages = GalleryHelpers.CalculateTotalPages(galleryPhotos.length, props.pages.pageSize);
+            const pageFromRouteValues: number = Number(props.match.params.pageNumber);
 
-                // Only update the state if there is a discrepency between the state & url page numbers.
-                if (this.state.pageIndex !== selectedPageFromUrl){
-                    this.setState({ pageIndex: selectedPageFromUrl })
+            let pageIndex: number = 0;
+
+            if (galleryPhotos !== null && galleryPhotos.length < 1) {
+
+                const message: string = `Sorry, there are not any photos for your search for type <em>${props.filter.tripType.text}</em> and team <em>${props.filter.team.text}</em>.`;
+                toastr.warning(message, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+            }
+            else {
+    
+                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname };
+                const invalidRouteErrorMessage: string = 'The route parameters are either of the wrong type or out of range.';
+
+                if (Number.isNaN(pageFromRouteValues)) {
+                    if (props.location.pathname === process.env.REACT_APP_GALLERY_ROOT_PATH) {
+                        pageIndex = 0;
+                    } else {
+                        props.invalidRoute(invalidRouteState);
+                        toastr.error(invalidRouteErrorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+                        return;
+                    }
+                }
+                else if (pageFromRouteValues > totalPages || pageFromRouteValues < 1) {
+                    props.invalidRoute(invalidRouteState);
+                    toastr.error(invalidRouteErrorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+                    return;
+                }
+                else {
+                    pageIndex = pageFromRouteValues - 1;
                 }
             }
+
+            const updatedGalleryState: IGalleryState = { ...props.metaData, ...props.filter, ...props.pages, photos: galleryPhotos, pageCount: totalPages, pageIndex: pageIndex, arePhotosLoading: false };
+
+            props.galleryPhotosLoaded(updatedGalleryState);
         }
-    }
-    
-    public async componentDidMount() {
+
+        if (props.metaData.arePhotosLoading && props.filter.filterOptions.tripTypeOptions.length > 0 && props.filter.filterOptions.teamOptions.length > 0) {
+
+            getPhotos(props.filter.tripType.value, props.filter.team.value);
+        }
+
+    }, [props.filter.tripType.value, props.filter.team.value, props.metaData.arePhotosLoading]);
+
+    // Replaces componentDidMount
+    // Get the filter options and update the redux store with the filter options and route.
+    // Included an empty array [] as the second parameter to insure this useEffect will only run once.
+    React.useEffect(() => {
         
-        this.setState({ arePhotosLoading: true, isInvalidRoute: false });
+        const getFilterOptions = async () => {
 
-        let filterOptions: IFilterOptions | null = null;
+            let filterOptions: IFilterOptions | null = null;
 
-        let data = new Data();
-        try {
-            filterOptions = await data.GetFilterOptions();
-        }
-        catch(error) {
-            toastr.error('Sorry, there was an error retrieving the filter options.', '', ErrorHelpers.GetToastrOptionsForPersistent());
-        }
+            if (props.filter.filterOptions.tripTypeOptions.length > 0 || props.filter.filterOptions.teamOptions.length > 0) {
 
-        let { tripType, team } = InitialState.Filters();
-        let filterSelectedOptionsFromRoute: IFilterSelectedOptionsState | undefined = { tripType, team };
+                filterOptions = props.filter.filterOptions;
 
-        if (filterOptions !== null && typeof filterOptions !== 'undefined') {
-
-            filterSelectedOptionsFromRoute = this.getFilterSelectedOptionsFromRoute(filterOptions, this.props.match.params.tripTypeName, this.props.match.params.teamName);
-
-            if (filterSelectedOptionsFromRoute === undefined) {
-                this.setState({ isInvalidRoute: true })
-                return;
-            }
-
-            this.setState({ filterOptions: filterOptions, tripType: (filterSelectedOptionsFromRoute.tripType), team: filterSelectedOptionsFromRoute.team });
-        } else {
-            toastr.error('Sorry, can\'t request photos without the filter options.', '', ErrorHelpers.GetToastrOptionsForPersistent());
-            return;
-        }
-
-        let photosFromRouteValues: IPhoto[] = InitialState.Pages().photos;
-        try {
-            photosFromRouteValues = await this.getPhotos(filterSelectedOptionsFromRoute.tripType.value, filterSelectedOptionsFromRoute.team.value);
-        } catch(error) {
-            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent());
-            return;
-        }
-        
-        const totalPages = GalleryHelpers.CalculateTotalPages(photosFromRouteValues.length, this.state.pageSize);
-
-        const pageFromRouteValues: number = Number(this.props.match.params.pageNumber);
-
-        let pageIndex: number;
-
-        if (Number.isNaN(pageFromRouteValues)) {
-            if (this.props.location.pathname === process.env.REACT_APP_GALLERY_ROOT_PATH) {
-                pageIndex = 0;
             } else {
-                this.setState({ isInvalidRoute: true })
+
+                try {
+                    
+                    const data = new Data();
+
+                    filterOptions = await data.GetFilterOptions();
+                }
+                catch(error) {
+
+                    toastr.error('Sorry, there was an error retrieving the filter options.', '', ErrorHelpers.GetToastrOptionsForPersistent());
+                }
+            }
+
+            if (filterOptions !== null && typeof filterOptions !== 'undefined') {
+    
+                let filterSelectedOptionsFromRoute: IFilterSelectedOptionsState | undefined = getFilterSelectedOptionsFromRoute(filterOptions, props.match.params.tripTypeName, props.match.params.teamName);
+    
+                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname, photosDisplayType: PhotosDisplayType.Thumbnails }
+                const invalidRouteErrorMessage: string = 'The route parameters are either of the wrong type or out of range.';
+    
+                if (filterSelectedOptionsFromRoute === undefined) {
+                    props.invalidRoute(invalidRouteState);
+                    toastr.error(invalidRouteErrorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+                    return;
+                }
+    
+                const galleryInitialState: IGalleryState = { ...InitialState.Gallery(), route: props.location.pathname, filterOptions: filterOptions, tripType: filterSelectedOptionsFromRoute.tripType, team: filterSelectedOptionsFromRoute.team };
+
+                props.galleryLoaded(galleryInitialState);
+    
+            } else {
+
+                toastr.error('Sorry, can\'t request photos without the filter options.', '', ErrorHelpers.GetToastrOptionsForPersistent());
+
                 return;
             }
-        }
-        else if (pageFromRouteValues > totalPages || pageFromRouteValues < 1) {
-            this.setState({ isInvalidRoute: true })
-            return;
-        }
-        else {
-            pageIndex = pageFromRouteValues - 1;
-        }
-        
-        let route:string = this.updateGalleryRoute(filterSelectedOptionsFromRoute.tripType.value, filterSelectedOptionsFromRoute.team.value, pageIndex);
 
-        this.setState({ arePhotosLoading: false, pageCount: totalPages, pageIndex: pageIndex, photos: photosFromRouteValues, photosDisplayType: PhotosDisplayType.Thumbnails, route: route }, () => {
-            // Set state is asynchronous, so wait for state mutation to complete
-            // and use setState's callback function to update the redux store
+        };
 
-            this.props.galleryLoaded(this.state);
-        });
-    }
+        getFilterOptions();
 
-    render() {
-        
-        if (this.state.isInvalidRoute === true) {
+    }, []);
 
-            return (
-                <div className="App container mb-2">
-                    <div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>
-                </div>);
+    if (props.metaData.isInvalidRoute) {
 
-        } else {
+        return (
+            <div className="App container mb-2">
+                <div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>
+            </div>);
 
-            return (
-                <div className="App container mb-2">
+    } else {
 
-                    <div className="row w-100">
-                        <Filter
-                            values={{ tripType: this.state.tripType, team: this.state.team}}
-                            options = {this.state.filterOptions}
-                            onTripTypeChange={this.handleTripTypeChange}
-                            onTeamChange={this.handleTeamChange}
-                            onSubmit={this.handleSearchClicked}
-                            />
-                    </div>
+        return (
+            <div className="App container mb-2">
 
-                    <div className="container">
-
-                        {this.state.arePhotosLoading ? 
-                        (<h2 className="mx-auto">Loading Photos...</h2>) :
-                        (<div>
-                                <p className="w-100 text-center mb-3">{ this.props.filter.message }</p>
-
-                                <ReactPaginate
-                                    pageCount={this.state.pageCount}
-                                    pageRangeDisplayed={5}
-                                    marginPagesDisplayed={3}
-                                    previousLabel={'<<'}
-                                    nextLabel={'>>'}
-                                    breakLabel={'...'}
-                                    breakClassName={'page-item'}
-                                    breakLinkClassName={'page-link'}
-                                    pageClassName={'page-item'}
-                                    pageLinkClassName={'page-link'}
-                                    previousClassName={'page-item'}
-                                    previousLinkClassName={'page-link rounded-left'}
-                                    nextClassName={'page-item rounded-right'}
-                                    nextLinkClassName={'page-link'}
-                                    disabledClassName={'disabled'}
-                                    onPageChange={this.handlePageClick}
-                                    disableInitialCallback={true}
-                                    initialPage={0}
-                                    containerClassName={'pagination pagination-sm justify-content-center mb-4'}
-                                    activeClassName={'active'}
-                                    forcePage={this.state.pageIndex}
-                                />
-
-                                <ThumbnailGrid page={this.state.pageIndex} pageSize={this.state.pageSize} photos={this.state.photos} onPageChange={this.handleThumbnailClick} />
-                        </div>)}
-                    </div>
-
+                <div className="row w-100">
+                    <Filter
+                        values={{ tripType: props.filter.tripType, team: props.filter.team}}
+                        options = {props.filter.filterOptions}
+                        onTripTypeChange={handleTripTypeChange}
+                        onTeamChange={handleTeamChange}
+                        onSubmit={handleSearchClicked}
+                        />
                 </div>
-            );
 
-        }
+                <div className="container">
+
+                    { props.metaData.arePhotosLoading ? 
+                    (<h2 className="mx-auto">Loading Photos...</h2>) :
+                    (<div>
+                            <p className="w-100 text-center mb-3">{ props.filter.message }</p>
+
+                            <ReactPaginate
+                                pageCount={ props.pages.pageCount }
+                                pageRangeDisplayed={5}
+                                marginPagesDisplayed={3}
+                                previousLabel={'<<'}
+                                nextLabel={'>>'}
+                                breakLabel={'...'}
+                                breakClassName={'page-item'}
+                                breakLinkClassName={'page-link'}
+                                pageClassName={'page-item'}
+                                pageLinkClassName={'page-link'}
+                                previousClassName={'page-item'}
+                                previousLinkClassName={'page-link rounded-left'}
+                                nextClassName={'page-item rounded-right'}
+                                nextLinkClassName={'page-link'}
+                                disabledClassName={'disabled'}
+                                onPageChange={ handlePageClick }
+                                disableInitialCallback={true}
+                                initialPage={0}
+                                containerClassName={'pagination pagination-sm justify-content-center mb-4'}
+                                activeClassName={'active'}
+                                forcePage={ props.pages.pageIndex }
+                            />
+
+                            <ThumbnailGrid page={ props.pages.pageIndex } pageSize={ props.pages.pageSize } photos={ props.pages.photos } onPageChange={ handleThumbnailClick } />
+                    </div>)}
+                </div>
+
+            </div>
+        );
+
     }
 }
 
 const mapStateToProps = (state: AppState) => ({
     metaData: state.metaData,
     filter: state.filter,
-    photos: state.pages
+    pages: state.pages
 });
 
-const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryLoaded, thumbnailClicked }
+const mapDispatchToProps = { searchClicked, pagingClicked, filterChanged, galleryPhotosLoaded, galleryLoaded, thumbnailClicked, invalidRoute }
 
 export default connect (
     mapStateToProps,

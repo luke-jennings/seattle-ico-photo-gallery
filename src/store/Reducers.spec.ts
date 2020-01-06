@@ -66,7 +66,7 @@ describe("The Redux Reducer metaDataReducer", () => {
     const expectedRoute: string = '/some/test/route';
     const expectedArePhotosLoading: boolean = false;
     const expectedPhotosDisplayType: PhotosDisplayType = PhotosDisplayType.Thumbnails;
-    const expectedMetaData: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: expectedArePhotosLoading, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute };
+    const expectedMetaData: IMetaDataState = { ...InitialState.MetaData(), arePhotosLoading: expectedArePhotosLoading, isInvalidRoute: true, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute };
 
     it(`Action type ${reduxInitAction} returns state with no change.`, () => {
         
@@ -111,15 +111,18 @@ describe("The Redux Reducer metaDataReducer", () => {
     it('Action type CLICK_SEARCH returns expected state.', () => {
         
         // Arrange
-        const payload: IGalleryState = { ...InitialState.Gallery(), ...expectedMetaData  };
+        const payload: IGalleryState = { ...InitialState.Gallery(), ...expectedMetaData, isInvalidRoute: false  };
 
         const action: MetaDataActionTypes = { type: ReduxActionType.CLICK_SEARCH, payload: payload };
 
         // Act
         const newMetaDataState: IMetaDataState = metaDataReducer(undefined, action);
 
+        const { arePhotosLoading, route } = newMetaDataState;
+
         // Assert
-        expect(newMetaDataState).toEqual(expectedMetaData);
+        expect(arePhotosLoading).toEqual(expectedMetaData.arePhotosLoading);
+        expect(route).toEqual(expectedMetaData.route);
     });
 
     it('Action type CLICK_PAGING returns expected state.', () => {
@@ -174,6 +177,7 @@ describe("The Redux Reducer pagesReducer", () => {
 
     const expectedPageCount: number = 2;
     const expectedPageIndex: number = 1;
+    const expectedPageSize: number = 12;
 
     const expectedPagingState: IPagesState = { pageSize: 1, pageCount: expectedPageCount, pageIndex: expectedPageIndex, photos: expectedPhotos };
 
@@ -192,7 +196,7 @@ describe("The Redux Reducer pagesReducer", () => {
     it('Action type LOAD_GALLERY_FROM_ROUTE returns expected state.', () => {
         
         // Arrange
-        const payload: IPagesState = { ...InitialState.Gallery(), ...expectedPagingState };
+        const payload: IPagesState = { ...InitialState.Gallery(), pageSize: expectedPageSize };
 
         const action: PaginationActionTypes = { type: ReduxActionType.LOAD_GALLERY_FROM_ROUTE, payload: payload };
 
@@ -200,13 +204,13 @@ describe("The Redux Reducer pagesReducer", () => {
         const newPagesState: IPagesState = pagesReducer(undefined, action);
 
         // Assert
-        expect(newPagesState).toEqual(expectedPagingState);
+        expect(newPagesState).toEqual({ ...InitialState.Pages(), pageSize: expectedPageSize });
     });
 
     it('Action type LOAD_SLIDESHOW_FROM_ROUTE returns expected state.', () => {
         
         // Arrange
-        const payload: IPagesState = { ...InitialState.Slideshow(), ...expectedPagingState };
+        const payload: IPagesState = { ...InitialState.Slideshow(), pageSize: expectedPagingState.pageSize };
 
         const action: PaginationActionTypes = { type: ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE, payload: payload };
 
@@ -214,22 +218,7 @@ describe("The Redux Reducer pagesReducer", () => {
         const newPagesState: IPagesState = pagesReducer(undefined, action);
 
         // Assert
-        expect(newPagesState).toEqual(expectedPagingState);
-    });
-
-    it('Action type CLICK_SEARCH returns expected state.', () => {
-        
-        // Arrange
-        const payload: IPagesState = { ...InitialState.Gallery(), pageCount: expectedPageCount, pageIndex: expectedPageIndex, photos: expectedPhotos };
-
-        const action: PaginationActionTypes = { type: ReduxActionType.CLICK_SEARCH, payload: payload };
-
-        // Act
-        const newPagesState: IPagesState = pagesReducer(undefined, action);
-
-        // Assert
-        const expectedState: IPagesState = { ...InitialState.Pages(), pageCount: expectedPageCount, pageIndex: expectedPageIndex, photos: expectedPhotos };
-        expect(newPagesState).toEqual(expectedState);
+        expect(newPagesState).toEqual({ ...InitialState.Pages(), pageSize: expectedPagingState.pageSize });
     });
 
     it('Action type CLICK_PAGING returns expected state.', () => {
@@ -307,7 +296,7 @@ describe("The Redux Reducer filtersReducer", () => {
 
         const action: FilterActionTypes = { type: ReduxActionType.LOAD_GALLERY_FROM_ROUTE, payload: payload };
 
-        const expectedMessage: string = GalleryHelpers.GetFilterMessage(action.payload);
+        const expectedMessage: string = ''
 
         // Act
         const newPagesState: IFilterState = filtersReducer(undefined, action);

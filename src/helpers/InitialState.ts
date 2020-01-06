@@ -52,6 +52,7 @@ export class InitialState {
         let galleryState: IGalleryState = { ...this.initialMetaDataState, ...this.initialFilterState, ...this.initialPagesState }
 
         galleryState.pageSize = pageSize;
+        galleryState.photosDisplayType = PhotosDisplayType.Thumbnails;
 
         return galleryState;
     }

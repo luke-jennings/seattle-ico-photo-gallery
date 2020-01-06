@@ -10,6 +10,11 @@ interface LoadGalleryFromRouteAction extends IReduxAction {
     payload: IGalleryState;
 }
 
+interface LoadGalleryPhotosAction extends IReduxAction {
+    type: typeof ReduxActionType.LOAD_GALLERY_PHOTOS;
+    payload: IGalleryState;
+}
+
 interface LoadSlideshowFromRouteAction extends IReduxAction {
     type: typeof ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE;
     payload: ISlideshowState;
@@ -42,8 +47,8 @@ interface ClickThumbnailAction extends IReduxAction {
 
 // IReduxAction is added to the action types for resons of testing so can test reducers for how they handle unexpcted types.
 
-export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickThumbnailAction | InvalidRoute | IReduxAction;
+export type MetaDataActionTypes = ClickSearchAction | ClickPagingAction | LoadGalleryFromRouteAction | LoadGalleryPhotosAction | LoadSlideshowFromRouteAction | ClickThumbnailAction | InvalidRoute | IReduxAction;
 
-export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | ClickSearchAction | IReduxAction;
+export type FilterActionTypes = ChangeFilterAction | LoadGalleryFromRouteAction | LoadGalleryPhotosAction | LoadSlideshowFromRouteAction | ClickSearchAction | IReduxAction;
 
-export type PaginationActionTypes =  ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadSlideshowFromRouteAction | IReduxAction;
+export type PaginationActionTypes =  ClickPagingAction | ClickSearchAction | LoadGalleryFromRouteAction | LoadGalleryPhotosAction | LoadSlideshowFromRouteAction | IReduxAction;
