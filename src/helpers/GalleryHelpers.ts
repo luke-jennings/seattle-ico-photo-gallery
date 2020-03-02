@@ -32,7 +32,7 @@ export class GalleryHelpers {
      * 
      * @param galleryState The IGalleryState which will have the required properties of photos, tripType, and Team needed to generate the message.
      */
-    public static GetFilterMessage(galleryState: IGalleryState){
+    public static GetFilterMessage(galleryState: IGalleryState) {
 
         const message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
 

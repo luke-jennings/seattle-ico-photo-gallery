@@ -1,6 +1,6 @@
 import React from 'react';
 import Filter from '../components/Filter';
-import { render, fireEvent } from 'react-testing-library'
+import { render, fireEvent } from '@testing-library/react'
 import { IFilterProps } from '../interfaces/IFilterProps';
 
 describe("The photos filter", () => {
@@ -19,17 +19,20 @@ describe("The photos filter", () => {
         onTeamChange: onTeamsChangeHandler 
     }
 
-    const { getByText, getByLabelText } = render(
-                                    <Filter
-                                    values={ filterProps.values }
-                                    options={ filterProps.options }
-                                    onSubmit={ filterProps.onSubmit }
-                                    onTripTypeChange={ filterProps.onTripTypeChange}
-                                    onTeamChange={filterProps.onTeamChange}
-                                    />
-                                );
+    // NOTE: Moved render to inside the test scope per this issue: https://github.com/testing-library/react-testing-library/issues/497
 
     it("When changed, the trip types select component should call the onTripTypeChange handler.", () => {
+
+        // Arrange
+        const { getByText, getByLabelText } = render(
+            <Filter
+            values={ filterProps.values }
+            options={ filterProps.options }
+            onSubmit={ filterProps.onSubmit }
+            onTripTypeChange={ filterProps.onTripTypeChange}
+            onTeamChange={filterProps.onTeamChange}
+            />
+        );
 
         // Act
         fireEvent.change(getByLabelText('Trip Type'))
@@ -39,6 +42,17 @@ describe("The photos filter", () => {
     });
 
     it("When changed, the teams select component should call the onTeamChange handler.", () => {
+
+        // Arrange
+        const { getByText, getByLabelText } = render(
+            <Filter
+            values={ filterProps.values }
+            options={ filterProps.options }
+            onSubmit={ filterProps.onSubmit }
+            onTripTypeChange={ filterProps.onTripTypeChange}
+            onTeamChange={filterProps.onTeamChange}
+            />
+        );
 
         // Act
         fireEvent.change(getByLabelText('Teams'))
@@ -58,6 +72,16 @@ describe("The photos filter", () => {
     it("When clicked, the filter submit button should call the onSubmit onSubmit handler.", () => {
 
         // Arrange
+        const { getByText, getByLabelText } = render(
+            <Filter
+            values={ filterProps.values }
+            options={ filterProps.options }
+            onSubmit={ filterProps.onSubmit }
+            onTripTypeChange={ filterProps.onTripTypeChange}
+            onTeamChange={filterProps.onTeamChange}
+            />
+        );
+
         let originalConsoleError = console.error;
         console.error = jest.fn();
 

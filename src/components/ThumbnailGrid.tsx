@@ -1,69 +1,67 @@
-import React from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import Thumbnail from './Thumbnail';
 
 import { IThumbnailGridProps } from '../interfaces/IThumbnailGridProps';
 import { IThumbnailGridState } from '../interfaces/IThumbnailGridState';
 import { IPhoto } from '../interfaces/IPhoto';
 
-class ThumbnailGrid extends React.Component<IThumbnailGridProps, IThumbnailGridState> {
+/**
+ * @description For the given paging page generate the photos as a grid of thumbnail images.
+ * 
+ * @param {IThumbnailGridProps} {page, pageSize, photos, onPageChange}
+ * @returns {JSX.Element}
+ */
+const ThumbnailGrid: FunctionComponent<IThumbnailGridProps> = ({page, pageSize, photos, onPageChange}): JSX.Element => {
 
-    readonly columns: number = 4;
+    const columns: number = 4;
 
-    public constructor(props: IThumbnailGridProps) {
-        super(props);
-        this.state = { page: props.page, photoGrid: [] };
-    }
+    const initialState: IThumbnailGridState = { page: page, photoGrid: [] };
 
-    private getPageOfPhotos(pageNumber: number) {
+    const [state, setState] = useState(initialState);
 
-        const startIndex = pageNumber * this.props.pageSize;
+    function getPageOfPhotos(pageNumber: number): void {
+
+        const startIndex = pageNumber * pageSize;
         let pageOfPhotos: IPhoto[] = [];
 
-        for(let i=startIndex; i < this.props.photos.length && i - startIndex < this.props.pageSize; i++) {
-            pageOfPhotos.push(this.props.photos[i]);
+        for(let i=startIndex; i < photos.length && i - startIndex < pageSize; i++) {
+            pageOfPhotos.push(photos[i]);
         }
 
-        let rows: number = Math.ceil((pageOfPhotos.length / this.columns));
+        let rows: number = Math.ceil((pageOfPhotos.length / columns));
         let row;
         let grid: number[][] = [];
         for (let i=0; i < rows; i++) {
           row=[];
-          for (let j=0; j < this.columns; j++){
-            let index = this.columns * i + j + (pageNumber * this.props.pageSize);
+          for (let j=0; j < columns; j++){
+            let index = columns * i + j + (pageNumber * pageSize);
             row.push(index)
           }
           grid.push(row);
         }
         
-        this.setState({ photoGrid: grid });
+        setState({ ...state, photoGrid: grid });
     }
 
-    public componentDidUpdate(prevProps: IThumbnailGridProps) {
-        if ( prevProps.page !== this.props.page ){
-            this.getPageOfPhotos(this.props.page);
-        }
-    }
+    // When the paging page # updates, update the grid of photos.
+    useEffect(() => {
+        getPageOfPhotos(page);
+    }, [page]);
 
-    public async componentDidMount() {
-        this.getPageOfPhotos(this.props.page);
-    }
-
-    public render() {
-        if (this.state.photoGrid.length > 0) {
-            return (
-                <>
-                    {
-                        this.state.photoGrid.map((row, index) => (
-                            <div key={`row${row[0]}`} className="row justify-content-center mb-4">
-                                {row.map((photoIndex) => photoIndex < this.props.photos.length ? <Thumbnail photo={this.props.photos[photoIndex]} key={photoIndex} onClick={this.props.onPageChange} /> : <div key={photoIndex} className="col-6 col-sm-6 col-md-3 col-lg-2 mb-3">&#160;</div>)}
-                            </div>
-                        ))
-                    }
-                </>
-            );
-        } else {
-            return (<div className="row"><h5 className="mx-auto">No photos</h5></div>);
-        }
+    if (state.photoGrid.length > 0) {
+        return (
+            <React.Fragment>
+                {
+                    state.photoGrid.map((row, index) => (
+                        <div key={`row${row[0]}`} className="row justify-content-center mb-4">
+                            {row.map((photoIndex) => photoIndex < photos.length ? <Thumbnail photo={photos[photoIndex]} key={photoIndex} onClick={onPageChange} /> : <div key={photoIndex} className="col-6 col-sm-6 col-md-3 col-lg-2 mb-3">&#160;</div>)}
+                        </div>
+                    ))
+                }
+            </React.Fragment>
+        );
+    } else {
+        return (<div className="row"><h5 className="mx-auto">No photos</h5></div>);
     }
 }
 

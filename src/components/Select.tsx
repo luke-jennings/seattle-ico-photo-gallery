@@ -2,24 +2,18 @@ import React from 'react';
 
 import { ISelectProps } from '../interfaces/ISelectProps';
 
-class Select extends React.Component<ISelectProps> {
+const Select = (props: ISelectProps) => {
 
-    public constructor(props: ISelectProps) {
-      super(props);
-    }
-
-    public render() {
-        return (
-            <>
-                <label htmlFor={this.props.selectName} className="small mb-1">{this.props.labelText}</label>
-                <select id={this.props.selectName} name={this.props.selectName} className="form-control" value={this.props.selectedValue} onChange={this.props.onChange}>
-                    {this.props.options.map(o => (
-                        <option key={o.value} value={o.value}>{o.text}</option>
-                    ))}
-                </select>
-            </>
-        );
-    }
+    return (
+        <React.Fragment>
+            <label htmlFor={props.selectName} className="small mb-1">{props.labelText}</label>
+            <select id={props.selectName} name={props.selectName} className="form-control" value={props.selectedValue} onChange={props.onChange}>
+                {props.options.map(o => (
+                    <option key={o.value} value={o.value}>{o.text}</option>
+                ))}
+            </select>
+        </React.Fragment>
+    );
 }
 
 export default Select;

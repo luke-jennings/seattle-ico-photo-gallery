@@ -10,8 +10,9 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
 
     // Commented out to reduce number of messages being written to the console during tests.  Uncomment during development to see Reducers being called.
     //console.log("metaDataReducer state & action", state, action);
-
+    
     switch (action.type) {
+
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
             const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
@@ -20,9 +21,21 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 isInvalidRoute: isInvalidRoute,
                 arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
-                route: route
+                route: route,
+                routeBackToGallery: null
             }
         }
+
+        case ReduxActionType.LOAD_GALLERY_PHOTOS:
+        {
+            const { arePhotosLoading } = action.payload;
+
+            return {
+                ...state,
+                arePhotosLoading: arePhotosLoading
+            };
+        }
+
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
             const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
@@ -34,17 +47,17 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 route: route
             }
         }
+
         case ReduxActionType.CLICK_SEARCH:
         {
-            const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
+            const { arePhotosLoading, route } = action.payload;
             return {
                 ...state,
-                isInvalidRoute: isInvalidRoute,
                 arePhotosLoading: arePhotosLoading,
-                photosDisplayType: photosDisplayType,
                 route: route
             };
         }
+
         case ReduxActionType.CLICK_PAGING:
         {
             const { route } = action.payload;
@@ -53,16 +66,31 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 route: route
             };
         }
+
         case ReduxActionType.CLICK_THUMBNAIL:
         {
-            const { arePhotosLoading, photosDisplayType, route } = action.payload;
+            const { arePhotosLoading, photosDisplayType, route, routeBackToGallery } = action.payload;
             return {
                 ...state,
                 arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
-                route: route
+                route: route,
+                routeBackToGallery: routeBackToGallery
             };
         }
+
+        case ReduxActionType.INVALID_ROUTE:
+        {
+            const { isInvalidRoute, arePhotosLoading, route, photosDisplayType } = action.payload;
+            return {
+                ...state,
+                isInvalidRoute: isInvalidRoute,
+                arePhotosLoading: arePhotosLoading,
+                route: route,
+                photosDisplayType: photosDisplayType
+            }
+        }
+
         default:
             return state;
     }
@@ -74,17 +102,30 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
     //console.log("pagesReducer state & action", state, action);
 
     switch (action.type) {
+
         case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
         {
-            const { pageSize, pageCount, pageIndex, photos } = action.payload;
+            const { pageSize, pageIndex } = action.payload;
+
             return {
                 ...state,
                 pageSize: pageSize,
+                pageIndex: pageIndex
+            }
+        }
+
+        case ReduxActionType.LOAD_GALLERY_PHOTOS:
+        {
+            const { pageCount, pageIndex, photos } = action.payload;
+
+            return {
+                ...state,
                 pageCount: pageCount,
                 pageIndex: pageIndex,
                 photos: photos
-            }
+            };
         }
+
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
             const { pageSize, pageCount, pageIndex, photos } = action.payload;
@@ -96,16 +137,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
                 photos: photos
             }
         }
-        case ReduxActionType.CLICK_SEARCH:
-        {
-            const { pageCount, pageIndex, photos } = action.payload;
-            return {
-                ...state,
-                pageCount: pageCount,
-                pageIndex: pageIndex,
-                photos: photos
-            };
-        }
+
         case ReduxActionType.CLICK_PAGING:
         {
             const { pageIndex } = action.payload;
@@ -114,6 +146,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
                 pageIndex: pageIndex
             };
         }
+
         default:
             return state;
     }
@@ -133,19 +166,32 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
                 ...state,
                 filterOptions: filterOptions,
                 tripType: tripType,
-                team: team,
-                message: GalleryHelpers.GetFilterMessage(action.payload)
+                team: team
             }
+        }
+
+        case ReduxActionType.LOAD_GALLERY_PHOTOS:
+        {
+            return {
+                ...state,
+                message: GalleryHelpers.GetFilterMessage(action.payload)
+            };
         }
 
         case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
         {
-            return InitialState.Filters();
+            const { tripType, team, message } = InitialState.Filters();
+
+            return {
+                ...state,
+                tripType: tripType,
+                team: team,
+                message: message
+            };
         }
 
         case ReduxActionType.CLICK_SEARCH:
         {
-            
             return {
                 ...state,
                 message: GalleryHelpers.GetFilterMessage(action.payload)

@@ -12,7 +12,8 @@ export class InitialState {
         isInvalidRoute: false,
         arePhotosLoading: true,
         photosDisplayType: PhotosDisplayType.NotSet,
-        route: '/'
+        route: '/',
+        routeBackToGallery: null
     };
 
     private static initialFilterState: IFilterState = {
@@ -51,15 +52,17 @@ export class InitialState {
         let galleryState: IGalleryState = { ...this.initialMetaDataState, ...this.initialFilterState, ...this.initialPagesState }
 
         galleryState.pageSize = pageSize;
+        galleryState.photosDisplayType = PhotosDisplayType.Thumbnails;
 
         return galleryState;
     }
 
     public static Slideshow(): ISlideshowState {
-        
+
         let slideshowState: ISlideshowState = { ...this.initialMetaDataState, ...this.initialPagesState };
 
         slideshowState.pageSize = 1;
+        slideshowState.photosDisplayType = PhotosDisplayType.Slideshow;
 
         return slideshowState;
     }

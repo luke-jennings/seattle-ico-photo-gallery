@@ -2,47 +2,38 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 import moment from 'moment';
 import * as toastr from 'toastr';
+import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import PhotoSlide from './PhotoSlide';
 
 import { connect } from "react-redux";
 import { AppState } from '../store/ConfigureStore';
-import { slideshowLoaded, pagingClicked } from '../store/Actions';
+import { slideshowLoaded, pagingClicked, invalidRoute } from '../store/Actions';
 import { ISlideshowProps } from '../interfaces/ISlideshowProps';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
 import { ISlideshowValues } from '../interfaces/ISlideshowValues';
 import { IPhoto } from '../interfaces/IPhoto';
 import { Data } from '../services/Data';
-import { InitialState } from '../helpers/InitialState';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 
-class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
-    
-    private backLinkHref: string | undefined;
+const Slideshow = (props: ISlideshowProps): JSX.Element => {
 
-    constructor(props: ISlideshowProps) {
-      super(props);
+    let history = useHistory();
 
-      this.updateRoute = this.updateRoute.bind(this);
-      this.handlePageClick = this.handlePageClick.bind(this);
-      this.getSlideshowValuesFromRoute = this.getSlideshowValuesFromRoute.bind(this);
-      this.getRoute = this.getRoute.bind(this);
+    let location = useLocation();
 
-      this.state = InitialState.Slideshow();
-    }
-
-    private updateRoute(pageIndex: number): string  {
-
-        let route: string = this.getRoute(pageIndex, this.state.photos);
-
-        this.props.history.push(route);
-
-        return route;
-    }
-
-    private getRoute(pageIndex: number, photos: IPhoto[]): string {
+    /**
+     * Cobble together the route from the root components.
+     *
+     * @param {number} pageIndex The paging page number.  This is a 0-based index, so will need to add one for use in the route.
+     * @param {IPhoto[]} photos The collection of photos being displayed in the slideshow.
+     * @returns {string} The root as a string.  Should look something like: '/what-we-do/photo/1976/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900/3'.
+     */
+    function assembleRoute(pageIndex: number, photos: IPhoto[]): string {
 
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         let rootPath: string = (process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '');
@@ -55,16 +46,28 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
         return route;
     }
 
-    private handlePageClick = (data: { selected: number }) => {
-        
-        let route: string = this.updateRoute(data.selected);
-        this.setState({ pageIndex: data.selected, route: route }, () => {
+    /**
+     * Callback for handling the user clicking on the paging component.
+     *
+     * @param {{ selected: number; }} selectedItem The paging componet provided paramter that indicates what paging page to display next.
+     */
+    function handlePageClick(selectedItem: { selected: number; }): void {
 
-            this.props.pagingClicked(this.state);
-        });
+        const route: string = assembleRoute(selectedItem.selected, props.photos);
+        const updatedSlideshowState: ISlideshowState = { ...props, pageIndex: selectedItem.selected, route: route };
+
+        history.push(route);
+        // Update Redux store
+        props.pagingClicked(updatedSlideshowState);
     }
 
-    private getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
+    /**
+     * Extract the photo id, trip report id, and paging page integer (numeric) values from the route values. 
+     *
+     * @param {TSlideshowRouteValues} slideshowRouteValues The route values as {string | undefined}.  These will be parsed to get their integer values.
+     * @returns {(ISlideshowValues | undefined)} If all the route values can be parsed to integers then return the values; otherwise return undefined.
+     */
+    function getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
 
         let pageNumber: number = Number(slideshowRouteValues.pageNumber);
 
@@ -89,147 +92,152 @@ class Slideshow extends React.Component<ISlideshowProps, ISlideshowState> {
     }
 
     /**
-     * When the user clicks the browser's back button, update the slideshow page number in the state.
-     * 
-     * @param prevProps The Slideshow props that have been extended with RouteComponentProps.
+     * When the user clicks the "<< Back" link update the history so the route will be updated back to 
+     * the gallery thumbnail view that the user had previously clicked on to get to the slideshow.
+     *
+     * @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event The click event, used to prevent the anchor tag click action.
      */
-    public componentDidUpdate(prevProps: ISlideshowProps) {
+    function handleBackToGalleryClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+
+        event.preventDefault();
         
-        const locationChanged: boolean = this.props.location !== prevProps.location;
-        const lastSlashIndex = this.props.location.pathname.lastIndexOf('/') + 1;
-        const pageValue = this.props.location.pathname.slice(lastSlashIndex);
-        const pageNumber = Number(pageValue);
+        if (props.routeBackToGallery !== null) {
 
-        if (locationChanged) {
-
-            if (!Number.isNaN(pageNumber) && pageValue.length > 0 && Number.isInteger(pageNumber)) {
-
-                const selectedPageFromUrl = Number(pageNumber) - 1;
-
-                // Only update the state if there is a discrepency between the state & url page numbers.
-                if (this.state.pageIndex !== selectedPageFromUrl) {
-                    this.setState({ pageIndex: selectedPageFromUrl })
-                }
-            }
+            history.push(props.routeBackToGallery);
         }
     }
 
-    public async componentDidMount() {
-        
-        // Capture the route from the Gallery before it gets changed to a Slideshow route
-        // So can use this for the back link.  If the user browsed here directly without
-        // linking from the Gallery this will be the initial state.
-        if (this.props.route !== InitialState.MetaData().route) {
-            this.backLinkHref = this.props.route;
-            
-            // NOTE: If using HashRouter, then uncomment these three line and comment the line above.
-            // let indexOfHash: number = window.location.href.indexOf('#');
-            // let url: string = window.location.href.slice(0, indexOfHash + 1);
-            // this.backLinkHref = url + this.props.route;
-        }
+    // Replaces componentDidMount
+    // When the componet renders it will attempt to load the photos via an API call.
+    // Included an empty array [] as the second parameter to insure this useEffect will only run once.
+    React.useEffect(() => {
 
-        this.setState({ arePhotosLoading: true, isInvalidRoute: false });
+        const slideshowValuesFromRoute: ISlideshowValues | undefined = getSlideshowValuesFromRoute(props.match.params);
 
-        const slideshowValuesFromRoute: ISlideshowValues | undefined = this.getSlideshowValuesFromRoute(this.props.match.params);
+        const invalidRouteState: IMetaDataState = { ...props, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname, photosDisplayType: PhotosDisplayType.Slideshow }
+        const invalidRouteErrorMessage: string = 'The route parameters are either of the wrong type or out of range.';
 
         if (slideshowValuesFromRoute === undefined) {
-            this.setState({ isInvalidRoute: true })
-            return;
-        }
-
-        let data = new Data();
-        let photos: IPhoto[];
-        try {
-            photos = await data.GetSlideshow(slideshowValuesFromRoute.tripReportId);
-        } catch (error) {
-            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent())
-            return;
-        }
-
-        const photosCount: number = photos.length;
-        let pageIndex: number;
-
-        if (slideshowValuesFromRoute.pageNumber > photosCount || slideshowValuesFromRoute.pageNumber < 1) {
-            this.setState({ isInvalidRoute: true })
-            return;
-        }
-        else {
-            pageIndex = slideshowValuesFromRoute.pageNumber - 1;
-        }
-
-        let route: string = this.getRoute(pageIndex, photos);
-
-        this.setState({ arePhotosLoading: false, pageCount: photosCount, pageIndex: pageIndex, photos, isInvalidRoute: false, route, photosDisplayType: PhotosDisplayType.Slideshow }, () => {
             
-            this.props.slideshowLoaded(this.state);
-        });
+            props.invalidRoute(invalidRouteState);
+            toastr.error(invalidRouteErrorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+            return;
+        }
+
+        /**
+         * Get the photos for the slideshow and update the Redux store with the photos information.
+         * NOTE: declaring this function inside the useEffect hook is a work around for making async calls from an effect hook.
+         * For more information please see: https://www.robinwieruch.de/react-hooks-fetch-data
+         *
+         * @param {ISlideshowValues} routeValues Values needed to retrieve the photos that have been extracted from the route.
+         * @param {IMetaDataState} invalidState The version of the state to update the Redux store with.
+         * @param {string} errorMessage The error message to display to the users.
+         */
+        const getSlideshowPhotos = async (routeValues: ISlideshowValues, invalidState: IMetaDataState, errorMessage: string): Promise<void> => {
+
+            const data: Data = new Data();
+
+            const slideshowPhotos: IPhoto[] = await data.GetSlideshow(routeValues.tripReportId);
+
+            const photosCount: number = slideshowPhotos.length;
+
+            if (routeValues.pageNumber > photosCount || routeValues.pageNumber < 1) {
+                
+                props.invalidRoute(invalidState);
+                toastr.error(errorMessage, '', ErrorHelpers.GetToastrOptionsForLongerTimeout());
+                return;
+            }
+
+            const pageIndex: number = routeValues.pageNumber - 1;
+            const route: string = assembleRoute(pageIndex, slideshowPhotos);
+            
+            const updatedSlideshowState: ISlideshowState = { ...props, arePhotosLoading: false, photos: slideshowPhotos, pageCount: photosCount, pageIndex: pageIndex, route };
+
+            // Update Redux store
+            props.slideshowLoaded(updatedSlideshowState);
+        };
+
+        try {
+
+            getSlideshowPhotos(slideshowValuesFromRoute, invalidRouteState, invalidRouteErrorMessage);
+
+        } catch (error) {
+
+            toastr.error('Sorry, there was an error retrieving the photos.', '', ErrorHelpers.GetToastrOptionsForPersistent());
+
+            return;
+        }
+
+    }, []);
+
+    if (props.isInvalidRoute === true) {
+        return (<div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>);
     }
 
-    public render() {
+    if (props.arePhotosLoading) {
+        return (<div className="row"><h2 className="mx-auto">Loading...</h2></div>);
+    } else {
         
-        if (this.state.isInvalidRoute === true) {
-            return (<div className="row"><h2 className="mx-auto">Sorry, that is not a valid page.</h2></div>);
-        }
+        return (
+            <div className="row">
 
-        if (this.state.arePhotosLoading) {
-            return (<div className="row"><h2 className="mx-auto">Loading...</h2></div>);
-        } else {
-            return (
+                <div className="mx-auto px-2 col-12 col-lg-9 px-lg-5 col-xl-8">
 
-                <div className="row">
+                    <h3 className="mb-3">{props.photos[props.pageIndex].team}'s Outing to {props.photos[props.pageIndex].destination}</h3>
 
-                    <div className="mx-auto px-2 col-12 col-lg-9 px-lg-5 col-xl-8">
+                    <p className="w-100 mb-1 text-left">{ moment(props.photos[props.pageIndex].date).format('dddd, MMMM D, YYYY') }</p>
+                    <p className="w-100 mb-1 text-left">Photo { props.pageIndex + 1 } of { props.photos.length }</p>
+                    <p className="w-100 mb-2 text-left">{ props.photos[props.pageIndex].caption }</p>
+                    {props.routeBackToGallery !== null ? (<p className="w-100 mb-2 text-left"><a onClick={handleBackToGalleryClick} href="#" className="back-link">&lt;&lt; Back</a></p>) : null }
 
-                        <h3 className="mb-3">{this.state.photos[this.state.pageIndex].team}'s Outing to {this.state.photos[this.state.pageIndex].destination}</h3>
+                    <br />
 
-                        <p className="w-100 mb-1 text-left">{ moment(this.state.photos[this.state.pageIndex].date).format('dddd, MMMM D, YYYY') }</p>
-                        <p className="w-100 mb-1 text-left">Photo { this.state.pageIndex + 1 } of { this.state.photos.length }</p>
-                        <p className="w-100 mb-2 text-left">{ this.state.photos[this.state.pageIndex].caption }</p>
-                        {(this.backLinkHref !== undefined) ? (<p className="w-100 mb-2 text-left"><a href={this.backLinkHref} className="back-link">&lt;&lt; Back</a></p>) : null }
+                    <ReactPaginate
+                        pageCount={props.pageCount}
+                        pageRangeDisplayed={5}
+                        marginPagesDisplayed={3}
+                        previousLabel={'<<'}
+                        nextLabel={'>>'}
+                        breakLabel={'...'}
+                        breakClassName={'page-item'}
+                        breakLinkClassName={'page-link'}
+                        pageClassName={'page-item'}
+                        pageLinkClassName={'page-link'}
+                        previousClassName={'page-item'}
+                        previousLinkClassName={'page-link rounded-left'}
+                        nextClassName={'page-item rounded-right'}
+                        nextLinkClassName={'page-link'}
+                        disabledClassName={'disabled'}
+                        onPageChange={handlePageClick}
+                        disableInitialCallback={true}
+                        initialPage={0}
+                        containerClassName={'pagination pagination-sm justify-content-center mb-4'}
+                        activeClassName={'active'}
+                        forcePage={props.pageIndex}
+                    />
 
-                        <br />
+                    <PhotoSlide photo={props.photos[props.pageIndex]} />
 
-                        <ReactPaginate
-                            pageCount={this.state.pageCount}
-                            pageRangeDisplayed={5}
-                            marginPagesDisplayed={3}
-                            previousLabel={'<<'}
-                            nextLabel={'>>'}
-                            breakLabel={'...'}
-                            breakClassName={'page-item'}
-                            breakLinkClassName={'page-link'}
-                            pageClassName={'page-item'}
-                            pageLinkClassName={'page-link'}
-                            previousClassName={'page-item'}
-                            previousLinkClassName={'page-link rounded-left'}
-                            nextClassName={'page-item rounded-right'}
-                            nextLinkClassName={'page-link'}
-                            disabledClassName={'disabled'}
-                            onPageChange={this.handlePageClick}
-                            disableInitialCallback={true}
-                            initialPage={0}
-                            containerClassName={'pagination pagination-sm justify-content-center mb-4'}
-                            activeClassName={'active'}
-                            forcePage={this.state.pageIndex}
-                        />
-
-                        <PhotoSlide photo={this.state.photos[this.state.pageIndex]} />
-
-                        
-                        <p className="w-100 mt-2 text-right"><a href={process.env.REACT_APP_PROTOCOL_HOSTNAME + this.state.photos[this.state.pageIndex].tripSummaryRoute} className="back-link">Trip Summary {String.fromCharCode(62, 62)}</a></p>
-                    </div>
-
+                    <p className="w-100 mt-2 text-right"><a href={process.env.REACT_APP_PROTOCOL_HOSTNAME + props.photos[props.pageIndex].tripSummaryRoute} className="back-link" target="_blank">Trip Summary {String.fromCharCode(62, 62)}</a></p>
                 </div>
-            );
-        }
+
+            </div>
+        );
     }
 }
 
-const mapStateToProps = (state: AppState) => ({
-    route: state.metaData.route
-});
+const mapStateToProps = (state: AppState) => {
+    return {
+        isInvalidRoute: state.metaData.isInvalidRoute,
+        arePhotosLoading: state.metaData.arePhotosLoading,
+        routeBackToGallery: state.metaData.routeBackToGallery,
+        photos: state.pages.photos,
+        pageIndex: state.pages.pageIndex,
+        pageCount: state.pages.pageCount
+    }
+};
 
-const mapDispatchToProps = { slideshowLoaded, pagingClicked }
+const mapDispatchToProps = { slideshowLoaded, pagingClicked, invalidRoute }
 
 export default connect (
     mapStateToProps,

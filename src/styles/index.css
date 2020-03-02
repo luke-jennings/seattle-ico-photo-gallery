@@ -49,6 +49,10 @@ div.photo-thumbnail a {
   cursor: pointer;
 }
 
+div.photo-thumbnail img {
+  display: block;
+}
+
 div.photo-thumbnail img, img.photo-slide {
   border: 1px solid #7e7e7e;
 }

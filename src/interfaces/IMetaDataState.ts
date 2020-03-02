@@ -5,4 +5,5 @@ export interface IMetaDataState {
     arePhotosLoading: boolean;
     photosDisplayType: PhotosDisplayType;
     route: string;
+    routeBackToGallery: string | null;
 }
