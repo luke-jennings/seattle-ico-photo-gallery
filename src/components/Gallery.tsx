@@ -187,7 +187,7 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
             }
             else {
     
-                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname };
+                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: window.location.pathname };
                 const invalidRouteErrorMessage: string = 'The route parameters are either of the wrong type or out of range.';
 
                 if (Number.isNaN(pageFromRouteValues)) {
@@ -252,7 +252,7 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
     
                 let filterSelectedOptionsFromRoute: IFilterSelectedOptionsState | undefined = getFilterSelectedOptionsFromRoute(filterOptions, props.match.params.tripTypeName, props.match.params.teamName);
     
-                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname, photosDisplayType: PhotosDisplayType.Thumbnails }
+                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: window.location.pathname, photosDisplayType: PhotosDisplayType.Thumbnails }
                 const invalidRouteErrorMessage: string = 'The route parameters are either of the wrong type or out of range.';
     
                 if (filterSelectedOptionsFromRoute === undefined) {
