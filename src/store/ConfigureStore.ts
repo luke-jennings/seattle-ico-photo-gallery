@@ -1,4 +1,4 @@
-import { createStore, combineReducers, compose } from "redux";
+import { createStore, combineReducers, compose } from 'redux';
 import { metaDataReducer, filtersReducer, pagesReducer } from './Reducers';
 import { InitialState } from '../helpers/InitialState';
 

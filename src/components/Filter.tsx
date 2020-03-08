@@ -4,7 +4,7 @@ import { IFilterProps } from '../interfaces/IFilterProps';
 
 import Select from './Select';
 
-const Filter = (props: IFilterProps) => {
+const Filter = (props: IFilterProps): JSX.Element => {
 
   if (props.options.tripTypeOptions.length > 0 && props.options.teamOptions.length > 0) {
 
@@ -38,6 +38,6 @@ const Filter = (props: IFilterProps) => {
     );
 
   }
-}
+};
 
 export default Filter;

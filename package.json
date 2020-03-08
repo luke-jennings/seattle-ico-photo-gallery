@@ -2,7 +2,7 @@
   "name": "seattle-ico-photo-gallery",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://localhost.seattleico.org:56789/react/photos",
+  "homepage": ".",
   "dependencies": {
     "axios": "^0.19.2",
     "axios-mock-adapter": "^1.17.0",

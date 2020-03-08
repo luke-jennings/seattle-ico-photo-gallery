@@ -1,9 +1,9 @@
 import React from 'react';
 import Filter from '../components/Filter';
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react';
 import { IFilterProps } from '../interfaces/IFilterProps';
 
-describe("The photos filter", () => {
+describe('The photos filter', () => {
 
     // Arrange
     const onTripTypeChangeHandler = jest.fn();
@@ -13,15 +13,15 @@ describe("The photos filter", () => {
     const filterProps: IFilterProps = {
         values: { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } },
         // Need to include at least one option for both trip types and teams or eles the tests will fail because only the loading message will be rendered.
-        options: { tripTypeOptions: [ {"text":"All","value":0,"routeName":"trip-types-all"} ], teamOptions: [ {"text":"All","value":0,"routeName":"teams-all"} ] },
+        options: { tripTypeOptions: [ {'text':'All','value':0,'routeName':'trip-types-all'} ], teamOptions: [ {'text':'All','value':0,'routeName':'teams-all'} ] },
         onSubmit: onSubmitHandler,
         onTripTypeChange: onTripTypeChangeHandler,
         onTeamChange: onTeamsChangeHandler 
-    }
+    };
 
     // NOTE: Moved render to inside the test scope per this issue: https://github.com/testing-library/react-testing-library/issues/497
 
-    it("When changed, the trip types select component should call the onTripTypeChange handler.", () => {
+    it('When changed, the trip types select component should call the onTripTypeChange handler.', () => {
 
         // Arrange
         const { getByText, getByLabelText } = render(
@@ -35,13 +35,13 @@ describe("The photos filter", () => {
         );
 
         // Act
-        fireEvent.change(getByLabelText('Trip Type'))
+        fireEvent.change(getByLabelText('Trip Type'));
 
         // Assert
         expect(onTripTypeChangeHandler).toHaveBeenCalledTimes(1);
     });
 
-    it("When changed, the teams select component should call the onTeamChange handler.", () => {
+    it('When changed, the teams select component should call the onTeamChange handler.', () => {
 
         // Arrange
         const { getByText, getByLabelText } = render(
@@ -55,7 +55,7 @@ describe("The photos filter", () => {
         );
 
         // Act
-        fireEvent.change(getByLabelText('Teams'))
+        fireEvent.change(getByLabelText('Teams'));
 
         // Assert
         expect(onTeamsChangeHandler).toHaveBeenCalledTimes(1);
@@ -69,7 +69,7 @@ describe("The photos filter", () => {
      * To supress this error being written to the console during the test can mock it temporarily:
      * https://stackoverflow.com/questions/44596915/jest-mocking-console-error-tests-fails/49392163#49392163
      */
-    it("When clicked, the filter submit button should call the onSubmit onSubmit handler.", () => {
+    it('When clicked, the filter submit button should call the onSubmit onSubmit handler.', () => {
 
         // Arrange
         const { getByText, getByLabelText } = render(
@@ -82,11 +82,11 @@ describe("The photos filter", () => {
             />
         );
 
-        let originalConsoleError = console.error;
+        const originalConsoleError = console.error;
         console.error = jest.fn();
 
         // Act
-        fireEvent.click(getByText('Search'))
+        fireEvent.click(getByText('Search'));
 
         // Assert
         expect(onSubmitHandler).toHaveBeenCalledTimes(1);
@@ -96,6 +96,7 @@ describe("The photos filter", () => {
         // console.log('log still works');
         // console.error('you cant see me');
         console.error = originalConsoleError;
+        // Then if you comment out the line above:
         // console.error('now you can');
     });
 

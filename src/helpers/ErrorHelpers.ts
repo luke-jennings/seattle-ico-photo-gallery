@@ -5,7 +5,7 @@ export class ErrorHelpers {
      */
     public static GetToastrOptionsForPersistent(): ToastrOptions {
         // Setting timeOut and extendedTimeOut to 0 to make the toast notification sticky.
-        return { extendedTimeOut: 0, timeOut: 0, closeButton: true  }
+        return { extendedTimeOut: 0, timeOut: 0, closeButton: true  };
     }
 
     /**
@@ -13,6 +13,6 @@ export class ErrorHelpers {
      */
     public static GetToastrOptionsForLongerTimeout(): ToastrOptions {
         
-        return { timeOut: 8000, closeButton: true  }
+        return { timeOut: 8000, closeButton: true  };
     }
 }

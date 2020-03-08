@@ -1,7 +1,8 @@
 # Seattle ICO Photo Gallery
-A single-page app version of the [Seattle ICO photos page](https://volunteers.seattleico.org/what-we-do/photos), using with the [React](https://reactjs.org) library, written with [Typescript](https://www.typescriptlang.org/), using [Redux](https://react-redux.js.org/) for state management, and tested with [Jest](https://jestjs.io/).
 
-It is still a work-in-progress, but you can see it live at: https://volunteers.seattleico.org/what-we-do/photos-beta.
+A single-page app version of the [Seattle ICO photos page](https://volunteers.seattleico.org/what-we-do/photos), using the [React](https://reactjs.org) library, written with the [Typescript](https://www.typescriptlang.org/) language, using [Redux](https://react-redux.js.org/) for state management, and tested with [Jest](https://jestjs.io/).
+
+This is still a work-in-progress, but you can see it live at: [https://volunteers.seattleico.org/what-we-do/photos-beta](https://volunteers.seattleico.org/what-we-do/photos-beta).
 
 ## Create React App
 
@@ -13,23 +14,23 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
+Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
+The page will reload if you make edits.
 You will also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
+Launches the test runner in the interactive watch mode.
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
+Builds the app for production to the `build` folder.
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
+The build is minified and the filenames include the hashes.
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
