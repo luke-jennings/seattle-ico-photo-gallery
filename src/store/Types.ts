@@ -1,4 +1,3 @@
-import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
@@ -6,42 +5,42 @@ import { IReduxAction } from '../interfaces/IReduxAction';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 
 interface LoadGalleryFromRouteAction extends IReduxAction {
-    type: typeof ReduxActionType.LOAD_GALLERY_FROM_ROUTE;
+    type: 'LOAD_GALLERY_FROM_ROUTE';
     payload: IGalleryState;
 }
 
 interface LoadGalleryPhotosAction extends IReduxAction {
-    type: typeof ReduxActionType.LOAD_GALLERY_PHOTOS;
+    type: 'LOAD_GALLERY_PHOTOS';
     payload: IGalleryState;
 }
 
 interface LoadSlideshowFromRouteAction extends IReduxAction {
-    type: typeof ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE;
+    type: 'LOAD_SLIDESHOW_FROM_ROUTE';
     payload: ISlideshowState;
 }
 
 interface InvalidRoute extends IReduxAction {
-    type: typeof ReduxActionType.INVALID_ROUTE;
+    type: 'INVALID_ROUTE';
     payload: IMetaDataState;
 }
 
 interface ChangeFilterAction extends IReduxAction {
-    type: typeof ReduxActionType.CHANGE_FILTER;
+    type: 'CHANGE_FILTER';
     payload: IFilterSelectedOptionsState;
 }
 
 interface ClickSearchAction extends IReduxAction {
-    type: typeof ReduxActionType.CLICK_SEARCH;
+    type: 'CLICK_SEARCH';
     payload: IGalleryState;
 }
 
 interface ClickPagingAction extends IReduxAction {
-    type: typeof ReduxActionType.CLICK_PAGING;
+    type: 'CLICK_PAGING';
     payload: ISlideshowState;
 }
 
 interface ClickThumbnailAction extends IReduxAction {
-    type: typeof ReduxActionType.CLICK_THUMBNAIL;
+    type: 'CLICK_THUMBNAIL';
     payload: IMetaDataState;
 }
 

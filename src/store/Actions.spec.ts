@@ -1,12 +1,11 @@
 import { galleryLoaded, filterChanged, searchClicked, pagingClicked, thumbnailClicked, slideshowLoaded, invalidRoute } from './Actions';
-import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { InitialState } from '../helpers/InitialState';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
 import { IGalleryState } from '../interfaces/IGalleryState';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IReduxAction } from '../interfaces/IReduxAction';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
-import TPhotosDisplayType from '../types/TPhotosDisplayType';
+import TPhotosDisplay from '../types/TPhotosDisplay';
 
 describe('The Redux Actions', () => {
 
@@ -19,7 +18,7 @@ describe('The Redux Actions', () => {
         const result: IReduxAction = galleryLoaded(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.LOAD_GALLERY_FROM_ROUTE);
+        expect(result.type).toBe('LOAD_GALLERY_FROM_ROUTE');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();
@@ -34,7 +33,7 @@ describe('The Redux Actions', () => {
         const result: IReduxAction = filterChanged(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.CHANGE_FILTER);
+        expect(result.type).toBe('CHANGE_FILTER');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();
@@ -49,7 +48,7 @@ describe('The Redux Actions', () => {
         const result: IReduxAction = searchClicked(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.CLICK_SEARCH);
+        expect(result.type).toBe('CLICK_SEARCH');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();
@@ -64,7 +63,7 @@ describe('The Redux Actions', () => {
         const result: IReduxAction = pagingClicked(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.CLICK_PAGING);
+        expect(result.type).toBe('CLICK_PAGING');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();
@@ -79,7 +78,7 @@ describe('The Redux Actions', () => {
         const result: IReduxAction = thumbnailClicked(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.CLICK_THUMBNAIL);
+        expect(result.type).toBe('CLICK_THUMBNAIL');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();
@@ -94,7 +93,7 @@ describe('The Redux Actions', () => {
         const result: IReduxAction = slideshowLoaded(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE);
+        expect(result.type).toBe('LOAD_SLIDESHOW_FROM_ROUTE');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();
@@ -103,16 +102,16 @@ describe('The Redux Actions', () => {
     it('invalidRoute returns expected type & payload.', () => {
 
         // Arrange
-        const expectedPhotosDisplayType: TPhotosDisplayType = 'Slideshow';
+        const expectedPhotosDisplayType: TPhotosDisplay = 'Slideshow';
         const expectedRoute = '/some/expected/invalid/route';
 
-        const expectedState: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: false, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute }
+        const expectedState: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: false, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute };
 
         // Act
         const result: IReduxAction = invalidRoute(expectedState);
 
         // Assert
-        expect(result.type).toBe(ReduxActionType.INVALID_ROUTE);
+        expect(result.type).toBe('INVALID_ROUTE');
         expect(result.payload).toBe(expectedState);
         expect(result.error).toBeUndefined();
         expect(result.meta).toBeUndefined();

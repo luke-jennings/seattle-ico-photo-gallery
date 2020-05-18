@@ -1,3 +1,5 @@
+import TReduxAction from '../types/TReduxAction';
+
 /**
  * Standardize the Redux Action return type with a "best practices" interface.
  * 
@@ -10,7 +12,7 @@ export interface IReduxAction {
    * The `type` of an action identifies to the consumer the nature of the action that has occurred.
    * Two actions with the same `type` MUST be strictly equivalent (using `===`)
    */
-  type: string;
+  type: TReduxAction;
   /**
    * The optional `payload` property MAY be any type of value.
    * It represents the payload of the action.

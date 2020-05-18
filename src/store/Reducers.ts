@@ -1,5 +1,4 @@
 import { MetaDataActionTypes, FilterActionTypes, PaginationActionTypes } from './Types';
-import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
 import { InitialState } from '../helpers/InitialState';
 import { IFilterState } from '../interfaces/IFilterState';
@@ -13,7 +12,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
     
     switch (action.type) {
 
-        case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
+        case 'LOAD_GALLERY_FROM_ROUTE':
         {
             const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
             return {
@@ -26,7 +25,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
             };
         }
 
-        case ReduxActionType.LOAD_GALLERY_PHOTOS:
+        case 'LOAD_GALLERY_PHOTOS':
         {
             const { arePhotosLoading } = action.payload;
 
@@ -36,7 +35,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
             };
         }
 
-        case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
+        case 'LOAD_SLIDESHOW_FROM_ROUTE':
         {
             const { isInvalidRoute, arePhotosLoading, photosDisplayType, route } = action.payload;
             return {
@@ -48,7 +47,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
             };
         }
 
-        case ReduxActionType.CLICK_SEARCH:
+        case 'CLICK_SEARCH':
         {
             const { arePhotosLoading, route } = action.payload;
             return {
@@ -58,7 +57,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
             };
         }
 
-        case ReduxActionType.CLICK_PAGING:
+        case 'CLICK_PAGING':
         {
             const { route } = action.payload;
             return {
@@ -67,7 +66,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
             };
         }
 
-        case ReduxActionType.CLICK_THUMBNAIL:
+        case 'CLICK_THUMBNAIL':
         {
             const { arePhotosLoading, photosDisplayType, route, routeBackToGallery } = action.payload;
             return {
@@ -79,7 +78,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
             };
         }
 
-        case ReduxActionType.INVALID_ROUTE:
+        case 'INVALID_ROUTE':
         {
             const { isInvalidRoute, arePhotosLoading, route, photosDisplayType } = action.payload;
             return {
@@ -103,7 +102,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
 
     switch (action.type) {
 
-        case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
+        case 'LOAD_GALLERY_FROM_ROUTE':
         {
             const { pageSize, pageIndex } = action.payload;
 
@@ -114,7 +113,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
             };
         }
 
-        case ReduxActionType.LOAD_GALLERY_PHOTOS:
+        case 'LOAD_GALLERY_PHOTOS':
         {
             const { pageCount, pageIndex, photos } = action.payload;
 
@@ -126,7 +125,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
             };
         }
 
-        case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
+        case 'LOAD_SLIDESHOW_FROM_ROUTE':
         {
             const { pageSize, pageCount, pageIndex, photos } = action.payload;
             return {
@@ -138,7 +137,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
             };
         }
 
-        case ReduxActionType.CLICK_PAGING:
+        case 'CLICK_PAGING':
         {
             const { pageIndex } = action.payload;
             return {
@@ -159,7 +158,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
     
     switch (action.type) {
 
-        case ReduxActionType.LOAD_GALLERY_FROM_ROUTE:
+        case 'LOAD_GALLERY_FROM_ROUTE':
         {
             const { filterOptions, tripType, team } = action.payload;
             return {
@@ -170,7 +169,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
             };
         }
 
-        case ReduxActionType.LOAD_GALLERY_PHOTOS:
+        case 'LOAD_GALLERY_PHOTOS':
         {
             return {
                 ...state,
@@ -178,7 +177,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
             };
         }
 
-        case ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE:
+        case 'LOAD_SLIDESHOW_FROM_ROUTE':
         {
             const { tripType, team, message } = InitialState.Filters();
 
@@ -190,7 +189,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
             };
         }
 
-        case ReduxActionType.CLICK_SEARCH:
+        case 'CLICK_SEARCH':
         {
             return {
                 ...state,
@@ -198,7 +197,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
             };
         }
 
-        case ReduxActionType.CHANGE_FILTER:
+        case 'CHANGE_FILTER':
         {
             const { tripType, team } = action.payload;
             return {
