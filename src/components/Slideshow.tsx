@@ -1,30 +1,27 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import * as toastr from 'toastr';
-import { useHistory } from 'react-router-dom';
-import { useLocation } from 'react-router';
-
-import PhotoSlide from './PhotoSlide';
-
-import { connect } from "react-redux";
-import { AppState } from '../store/ConfigureStore';
-import { slideshowLoaded, pagingClicked, invalidRoute } from '../store/Actions';
-import { ISlideshowProps } from '../interfaces/ISlideshowProps';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
-import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
-import { ISlideshowValues } from '../interfaces/ISlideshowValues';
-import { IPhoto } from '../interfaces/IPhoto';
-import { Data } from '../services/Data';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
+import { IPhoto } from '../interfaces/IPhoto';
+import { ISlideshowProps } from '../interfaces/ISlideshowProps';
+import { ISlideshowState } from '../interfaces/ISlideshowState';
+import { ISlideshowValues } from '../interfaces/ISlideshowValues';
+import { Data } from '../services/Data';
+import { slideshowLoaded, pagingClicked, invalidRoute } from '../store/Actions';
+import { AppState } from '../store/ConfigureStore';
+import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
+import PhotoSlide from './PhotoSlide';
 
 const Slideshow = (props: ISlideshowProps): JSX.Element => {
 
-    let history = useHistory();
+    const history = useHistory();
 
-    let location = useLocation();
+    const location = useLocation();
 
     /**
      * Cobble together the route from the root components.
@@ -36,12 +33,12 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
     function assembleRoute(pageIndex: number, photos: IPhoto[]): string {
 
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
-        let rootPath: string = (process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '');
-        let photoId: number = photos[pageIndex].id;
-        let seoTrRoute: string = photos[pageIndex].tripReportRoute;
-        let pageNumber: number = pageIndex + 1;
+        const rootPath: string = (process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '');
+        const photoId: number = photos[pageIndex].id;
+        const seoTrRoute: string = photos[pageIndex].tripReportRoute;
+        const pageNumber: number = pageIndex + 1;
 
-        let route: string = `${rootPath}${photoId}/${seoTrRoute}/${pageNumber}`;
+        const route = `${rootPath}${photoId}/${seoTrRoute}/${pageNumber}`;
 
         return route;
     }
@@ -51,7 +48,7 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
      *
      * @param {{ selected: number; }} selectedItem The paging componet provided paramter that indicates what paging page to display next.
      */
-    function handlePageClick(selectedItem: { selected: number; }): void {
+    function handlePageClick(selectedItem: { selected: number }): void {
 
         const route: string = assembleRoute(selectedItem.selected, props.photos);
         const updatedSlideshowState: ISlideshowState = { ...props, pageIndex: selectedItem.selected, route: route };
@@ -69,7 +66,7 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
      */
     function getSlideshowValuesFromRoute(slideshowRouteValues: TSlideshowRouteValues): ISlideshowValues | undefined {
 
-        let pageNumber: number = Number(slideshowRouteValues.pageNumber);
+        const pageNumber = Number(slideshowRouteValues.pageNumber);
 
         if (slideshowRouteValues.photoId === undefined
             || slideshowRouteValues.tripReportDescription === undefined
@@ -77,12 +74,12 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
             return undefined;
         }
 
-        const photoId: number = Number(slideshowRouteValues.photoId);
+        const photoId = Number(slideshowRouteValues.photoId);
 
         const index: number = slideshowRouteValues.tripReportDescription.lastIndexOf('-');
         const tripReportIdFromRoute: string = slideshowRouteValues.tripReportDescription.substring(index + 1);
 
-        const tripReportId: number = Number(tripReportIdFromRoute);
+        const tripReportId = Number(tripReportIdFromRoute);
 
         if (Number.isNaN(photoId) || Number.isNaN(tripReportId)) {
             return undefined;
@@ -97,7 +94,7 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
      *
      * @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event The click event, used to prevent the anchor tag click action.
      */
-    function handleBackToGalleryClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    function handleBackToGalleryClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void {
 
         event.preventDefault();
         
@@ -114,8 +111,8 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
 
         const slideshowValuesFromRoute: ISlideshowValues | undefined = getSlideshowValuesFromRoute(props.match.params);
 
-        const invalidRouteState: IMetaDataState = { ...props, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname, photosDisplayType: PhotosDisplayType.Slideshow }
-        const invalidRouteErrorMessage: string = 'The route parameters are either of the wrong type or out of range.';
+        const invalidRouteState: IMetaDataState = { ...props, isInvalidRoute: true, arePhotosLoading: false, route: location.pathname, photosDisplayType: 'Slideshow' };
+        const invalidRouteErrorMessage = 'The route parameters are either of the wrong type or out of range.';
 
         if (slideshowValuesFromRoute === undefined) {
             
@@ -216,9 +213,9 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
                         forcePage={props.pageIndex}
                     />
 
-                    <PhotoSlide photo={props.photos[props.pageIndex]} />
+                    <PhotoSlide {...props.photos[props.pageIndex]} />
 
-                    <p className="w-100 mt-2 text-right"><a href={process.env.REACT_APP_PROTOCOL_HOSTNAME + props.photos[props.pageIndex].tripSummaryRoute} className="back-link" target="_blank">Trip Summary {String.fromCharCode(62, 62)}</a></p>
+                    <p className="w-100 mt-2 text-right"><a href={process.env.REACT_APP_PROTOCOL_HOSTNAME + props.photos[props.pageIndex].tripSummaryRoute} className="back-link" rel="noopener noreferrer" target="_blank">Trip Summary {String.fromCharCode(62, 62)}</a></p>
                 </div>
 
             </div>

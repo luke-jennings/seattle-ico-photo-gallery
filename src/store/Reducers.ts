@@ -1,10 +1,10 @@
 import { MetaDataActionTypes, FilterActionTypes, PaginationActionTypes } from './Types';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IFilterState } from '../interfaces/IFilterState';
-import { IPagesState } from '../interfaces/IPagesState';
-import { InitialState } from '../helpers/InitialState';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
+import { InitialState } from '../helpers/InitialState';
+import { IFilterState } from '../interfaces/IFilterState';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { IPagesState } from '../interfaces/IPagesState';
 
 export function metaDataReducer(state = InitialState.MetaData(), action: MetaDataActionTypes): IMetaDataState {
 
@@ -23,7 +23,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 photosDisplayType: photosDisplayType,
                 route: route,
                 routeBackToGallery: null
-            }
+            };
         }
 
         case ReduxActionType.LOAD_GALLERY_PHOTOS:
@@ -45,7 +45,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 arePhotosLoading: arePhotosLoading,
                 photosDisplayType: photosDisplayType,
                 route: route
-            }
+            };
         }
 
         case ReduxActionType.CLICK_SEARCH:
@@ -88,7 +88,7 @@ export function metaDataReducer(state = InitialState.MetaData(), action: MetaDat
                 arePhotosLoading: arePhotosLoading,
                 route: route,
                 photosDisplayType: photosDisplayType
-            }
+            };
         }
 
         default:
@@ -111,7 +111,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
                 ...state,
                 pageSize: pageSize,
                 pageIndex: pageIndex
-            }
+            };
         }
 
         case ReduxActionType.LOAD_GALLERY_PHOTOS:
@@ -135,7 +135,7 @@ export function pagesReducer(state = InitialState.Pages(), action: PaginationAct
                 pageCount: pageCount,
                 pageIndex: pageIndex,
                 photos: photos
-            }
+            };
         }
 
         case ReduxActionType.CLICK_PAGING:
@@ -167,7 +167,7 @@ export function filtersReducer(state = InitialState.Filters(), action: FilterAct
                 filterOptions: filterOptions,
                 tripType: tripType,
                 team: team
-            }
+            };
         }
 
         case ReduxActionType.LOAD_GALLERY_PHOTOS:

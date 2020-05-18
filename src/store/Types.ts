@@ -1,9 +1,9 @@
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { IGalleryState } from '../interfaces/IGalleryState';
-import { IReduxAction } from '../interfaces/IReduxAction';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { IReduxAction } from '../interfaces/IReduxAction';
+import { ISlideshowState } from '../interfaces/ISlideshowState';
 
 interface LoadGalleryFromRouteAction extends IReduxAction {
     type: typeof ReduxActionType.LOAD_GALLERY_FROM_ROUTE;

@@ -11,9 +11,7 @@ export class GalleryHelpers {
      */
     public static BuildPath(tripTypeRoute: string, teamRoute: string, pageIndex: number): string {
 
-        let path: string = `${process.env.REACT_APP_GALLERY_ROOT_PATH}${tripTypeRoute}/${teamRoute}/${(pageIndex + 1)}`;
-
-        return path;
+        return `${process.env.REACT_APP_GALLERY_ROOT_PATH}${tripTypeRoute}/${teamRoute}/${(pageIndex + 1)}`;
     }
 
     /**
@@ -32,10 +30,8 @@ export class GalleryHelpers {
      * 
      * @param galleryState The IGalleryState which will have the required properties of photos, tripType, and Team needed to generate the message.
      */
-    public static GetFilterMessage(galleryState: IGalleryState) {
+    public static GetFilterMessage(galleryState: IGalleryState): string {
 
-        const message: string = `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
-
-        return message;
+        return `${ galleryState.photos.length } photos of type ${ galleryState.tripType.text } and team ${ galleryState.team.text }.`;
     }
 }

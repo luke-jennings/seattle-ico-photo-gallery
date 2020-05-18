@@ -1,9 +1,8 @@
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IFilterState } from "../interfaces/IFilterState";
-import { IPagesState } from '../interfaces/IPagesState';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
-import { ISelectOption } from '../interfaces/ISelectOption';
+import { IFilterState } from '../interfaces/IFilterState';
 import { IGalleryState } from '../interfaces/IGalleryState';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { IPagesState } from '../interfaces/IPagesState';
+import { ISelectOption } from '../interfaces/ISelectOption';
 import { ISlideshowState } from '../interfaces/ISlideshowState';
 
 export class InitialState {
@@ -11,7 +10,7 @@ export class InitialState {
     private static initialMetaDataState: IMetaDataState = {
         isInvalidRoute: false,
         arePhotosLoading: true,
-        photosDisplayType: PhotosDisplayType.NotSet,
+        photosDisplayType: 'NotSet',
         route: '/',
         routeBackToGallery: null
     };
@@ -35,7 +34,7 @@ export class InitialState {
         return this.initialMetaDataState;
     }
 
-    public static Filters() : IFilterState {
+    public static Filters(): IFilterState {
 
         return this.initialFilterState;
     }
@@ -47,22 +46,22 @@ export class InitialState {
 
     public static Gallery(): IGalleryState {
         
-        let pageSize: number = Number(process.env.REACT_APP_GALLERY_PAGE_SIZE);
+        const pageSize = Number(process.env.REACT_APP_GALLERY_PAGE_SIZE);
 
-        let galleryState: IGalleryState = { ...this.initialMetaDataState, ...this.initialFilterState, ...this.initialPagesState }
+        const galleryState: IGalleryState = { ...this.initialMetaDataState, ...this.initialFilterState, ...this.initialPagesState };
 
         galleryState.pageSize = pageSize;
-        galleryState.photosDisplayType = PhotosDisplayType.Thumbnails;
+        galleryState.photosDisplayType = 'Thumbnails';
 
         return galleryState;
     }
 
     public static Slideshow(): ISlideshowState {
 
-        let slideshowState: ISlideshowState = { ...this.initialMetaDataState, ...this.initialPagesState };
+        const slideshowState: ISlideshowState = { ...this.initialMetaDataState, ...this.initialPagesState };
 
         slideshowState.pageSize = 1;
-        slideshowState.photosDisplayType = PhotosDisplayType.Slideshow;
+        slideshowState.photosDisplayType = 'Slideshow';
 
         return slideshowState;
     }

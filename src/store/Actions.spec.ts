@@ -1,15 +1,14 @@
 import { galleryLoaded, filterChanged, searchClicked, pagingClicked, thumbnailClicked, slideshowLoaded, invalidRoute } from './Actions';
-import { IReduxAction } from '../interfaces/IReduxAction';
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
-import { IPagesState } from '../interfaces/IPagesState';
 import { ReduxActionType } from '../enumerations/ReduxActionType';
 import { InitialState } from '../helpers/InitialState';
+import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
+import { IGalleryState } from '../interfaces/IGalleryState';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
+import { IReduxAction } from '../interfaces/IReduxAction';
+import { ISlideshowState } from '../interfaces/ISlideshowState';
+import TPhotosDisplayType from '../types/TPhotosDisplayType';
 
-describe("The Redux Actions", () => {
+describe('The Redux Actions', () => {
 
     it('galleryLoaded returns expected type & payload.', () => {
 
@@ -17,7 +16,7 @@ describe("The Redux Actions", () => {
         const expectedState: IGalleryState = InitialState.Gallery();
 
         // Act
-        let result: IReduxAction = galleryLoaded(expectedState);
+        const result: IReduxAction = galleryLoaded(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.LOAD_GALLERY_FROM_ROUTE);
@@ -32,7 +31,7 @@ describe("The Redux Actions", () => {
         const expectedState: IFilterSelectedOptionsState = InitialState.Filters();
 
         // Act
-        let result: IReduxAction = filterChanged(expectedState);
+        const result: IReduxAction = filterChanged(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.CHANGE_FILTER);
@@ -47,7 +46,7 @@ describe("The Redux Actions", () => {
         const expectedState: IGalleryState = InitialState.Gallery();
 
         // Act
-        let result: IReduxAction = searchClicked(expectedState);
+        const result: IReduxAction = searchClicked(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.CLICK_SEARCH);
@@ -62,7 +61,7 @@ describe("The Redux Actions", () => {
         const expectedState: ISlideshowState = InitialState.Slideshow();
 
         // Act
-        let result: IReduxAction = pagingClicked(expectedState);
+        const result: IReduxAction = pagingClicked(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.CLICK_PAGING);
@@ -74,10 +73,10 @@ describe("The Redux Actions", () => {
     it('thumbnailClicked returns expected type & payload.', () => {
 
         // Arrange
-        const expectedState: IPagesState = InitialState.Pages();
+        const expectedState: IMetaDataState = InitialState.MetaData();
 
         // Act
-        let result: IReduxAction = thumbnailClicked(expectedState);
+        const result: IReduxAction = thumbnailClicked(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.CLICK_THUMBNAIL);
@@ -92,7 +91,7 @@ describe("The Redux Actions", () => {
         const expectedState: ISlideshowState = InitialState.Slideshow();
 
         // Act
-        let result: IReduxAction = slideshowLoaded(expectedState);
+        const result: IReduxAction = slideshowLoaded(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.LOAD_SLIDESHOW_FROM_ROUTE);
@@ -104,13 +103,13 @@ describe("The Redux Actions", () => {
     it('invalidRoute returns expected type & payload.', () => {
 
         // Arrange
-        const expectedPhotosDisplayType: PhotosDisplayType = PhotosDisplayType.Slideshow;
-        const expectedRoute: string = '/some/expected/invalid/route';
+        const expectedPhotosDisplayType: TPhotosDisplayType = 'Slideshow';
+        const expectedRoute = '/some/expected/invalid/route';
 
         const expectedState: IMetaDataState = { ...InitialState.MetaData(), isInvalidRoute: true, arePhotosLoading: false, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute }
 
         // Act
-        let result: IReduxAction = invalidRoute(expectedState);
+        const result: IReduxAction = invalidRoute(expectedState);
 
         // Assert
         expect(result.type).toBe(ReduxActionType.INVALID_ROUTE);

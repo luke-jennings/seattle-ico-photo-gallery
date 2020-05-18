@@ -2,16 +2,13 @@ import React, { MouseEvent } from 'react';
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 import * as toastr from 'toastr';
-import Filter from './Filter';
-import ThumbnailGrid from './ThumbnailGrid';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
+import { GalleryHelpers } from '../helpers/GalleryHelpers';
+import { InitialState } from '../helpers/InitialState';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
 import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
 import { IGalleryProps } from '../interfaces/IGalleryProps';
 import { IGalleryState } from '../interfaces/IGalleryState';
-import { GalleryHelpers } from '../helpers/GalleryHelpers';
-import { InitialState } from '../helpers/InitialState';
 import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { IPhoto } from '../interfaces/IPhoto';
 import { ISelectOption } from '../interfaces/ISelectOption';
@@ -20,6 +17,8 @@ import { ISlideshowState } from '../interfaces/ISlideshowState';
 import { Data } from '../services/Data';
 import { searchClicked, pagingClicked, filterChanged, galleryPhotosLoaded, galleryLoaded, thumbnailClicked, invalidRoute } from '../store/Actions';
 import { AppState } from '../store/ConfigureStore';
+import Filter from './Filter';
+import ThumbnailGrid from './ThumbnailGrid';
 
 const Gallery = (props: IGalleryProps): JSX.Element => {
 
@@ -147,7 +146,7 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
         // Adding the || '' is to make the compiler happy, otherwise it complains that the environment variable could be undefined.
         const path = `${(process.env.REACT_APP_SLIDESHOW_ROOT_PATH || '')}${photo.id}/${photo.tripReportRoute}/${page}`;
 
-        const updatedState: IMetaDataState = { ...props.metaData, arePhotosLoading: true, photosDisplayType: PhotosDisplayType.Slideshow, routeBackToGallery: props.location.pathname };
+        const updatedState: IMetaDataState = { ...props.metaData, arePhotosLoading: true, photosDisplayType: 'Slideshow', routeBackToGallery: props.location.pathname };
         
         props.thumbnailClicked(updatedState);
         props.history.push(path);
@@ -248,7 +247,7 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
     
                 const filterSelectedOptionsFromRoute: IFilterSelectedOptionsState | undefined = getFilterSelectedOptionsFromRoute(filterOptions, props.match.params.tripTypeName, props.match.params.teamName);
     
-                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: window.location.pathname, photosDisplayType: PhotosDisplayType.Thumbnails };
+                const invalidRouteState: IMetaDataState = { ...props.metaData, isInvalidRoute: true, arePhotosLoading: false, route: window.location.pathname, photosDisplayType: 'Thumbnails' };
                 const invalidRouteErrorMessage = 'The route parameters are either of the wrong type or out of range.';
     
                 if (filterSelectedOptionsFromRoute === undefined) {
@@ -288,7 +287,7 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
 
                 <div className="row w-100">
                     <Filter
-                        values={{ tripType: props.filter.tripType, team: props.filter.team}}
+                        values={{ tripType: props.filter.tripType, team: props.filter.team }}
                         options = {props.filter.filterOptions}
                         onTripTypeChange={handleTripTypeChange}
                         onTeamChange={handleTeamChange}

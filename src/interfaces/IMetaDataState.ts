@@ -1,9 +1,9 @@
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
+import TPhotosDisplayType from '../types/TPhotosDisplayType';
 
 export interface IMetaDataState {
     isInvalidRoute: boolean;
     arePhotosLoading: boolean;
-    photosDisplayType: PhotosDisplayType;
+    photosDisplayType: TPhotosDisplayType;
     route: string;
     routeBackToGallery: string | null;
 }

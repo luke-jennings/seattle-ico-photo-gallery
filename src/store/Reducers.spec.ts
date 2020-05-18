@@ -1,25 +1,25 @@
 import { metaDataReducer, pagesReducer, filtersReducer } from './Reducers';
-import { InitialState } from '../helpers/InitialState';
-import { ReduxActionType } from '../enumerations/ReduxActionType';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
 import { MetaDataActionTypes, PaginationActionTypes, FilterActionTypes } from './Types';
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { PhotosDisplayType } from '../enumerations/PhotosDisplayType';
-import { IPagesState } from '../interfaces/IPagesState';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
-import { IPhoto } from '../interfaces/IPhoto';
+import { ReduxActionType } from '../enumerations/ReduxActionType';
+import { GalleryHelpers } from '../helpers/GalleryHelpers';
+import { InitialState } from '../helpers/InitialState';
 import { IFilterState } from '../interfaces/IFilterState';
 import { IFilterOptions } from '../interfaces/IFilterOptions';
+import { IGalleryState } from '../interfaces/IGalleryState';
+import { IMetaDataState } from '../interfaces/IMetaDataState';
+import { IPagesState } from '../interfaces/IPagesState';
+import { IPhoto } from '../interfaces/IPhoto';
 import { ISelectOption } from '../interfaces/ISelectOption';
-import { GalleryHelpers } from '../helpers/GalleryHelpers';
+import { ISlideshowState } from '../interfaces/ISlideshowState';
+import TPhotosDisplayType from '../types/TPhotosDisplayType';
 
-const reduxInitAction: string = '@@INIT';
+const reduxInitAction = '@@INIT';
 const expectedPhotos: IPhoto[] = [
 {
     id: 1974,
     tripReportId: 900,
     tripReportRoute: 'south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900',
-    tripSummaryRoute: "/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking",
+    tripSummaryRoute: '/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking',
     destination: 'Deception Pass Bridge and Anacortes sea kayaking',
     team: 'South Shore',
     date: '2018-06-09T00:00:00',
@@ -34,7 +34,7 @@ const expectedPhotos: IPhoto[] = [
     id: 1975,
     tripReportId: 900,
     tripReportRoute: 'south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900',
-    tripSummaryRoute: "/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking",
+    tripSummaryRoute: '/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking',
     destination: 'Deception Pass Bridge and Anacortes sea kayaking',
     team: 'South Shore',
     date: '2018-06-09T00:00:00',
@@ -49,7 +49,7 @@ const expectedPhotos: IPhoto[] = [
     id: 1976,
     tripReportId: 900,
     tripReportRoute: 'south-shore-deception-pass-bridge-and-anacortes-sea-kayaking-900',
-    tripSummaryRoute: "/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking",
+    tripSummaryRoute: '/what-we-do/trip-report/900/south-shore-deception-pass-bridge-and-anacortes-sea-kayaking',
     destination: 'Deception Pass Bridge and Anacortes sea kayaking',
     team: 'South Shore',
     date: '2018-06-09T00:00:00',
@@ -61,11 +61,11 @@ const expectedPhotos: IPhoto[] = [
     caption: 'Always worth a stop, the views from the Deception Pass bridge are really good.'
 }];
 
-describe("The Redux Reducer metaDataReducer", () => {
+describe('The Redux Reducer metaDataReducer', () => {
 
-    const expectedRoute: string = '/some/test/route';
-    const expectedArePhotosLoading: boolean = false;
-    const expectedPhotosDisplayType: PhotosDisplayType = PhotosDisplayType.Thumbnails;
+    const expectedRoute = '/some/test/route';
+    const expectedArePhotosLoading = false;
+    const expectedPhotosDisplayType: TPhotosDisplayType = 'Thumbnails';
     const expectedMetaData: IMetaDataState = { ...InitialState.MetaData(), arePhotosLoading: expectedArePhotosLoading, isInvalidRoute: true, photosDisplayType: expectedPhotosDisplayType, route: expectedRoute };
 
     it(`Action type ${reduxInitAction} returns state with no change.`, () => {
@@ -173,11 +173,11 @@ describe("The Redux Reducer metaDataReducer", () => {
 
 });
 
-describe("The Redux Reducer pagesReducer", () => {
+describe('The Redux Reducer pagesReducer', () => {
 
-    const expectedPageCount: number = 2;
-    const expectedPageIndex: number = 1;
-    const expectedPageSize: number = 12;
+    const expectedPageCount = 2;
+    const expectedPageIndex = 1;
+    const expectedPageSize = 12;
 
     const expectedPagingState: IPagesState = { pageSize: 1, pageCount: expectedPageCount, pageIndex: expectedPageIndex, photos: expectedPhotos };
 
@@ -296,7 +296,7 @@ describe("The Redux Reducer filtersReducer", () => {
 
         const action: FilterActionTypes = { type: ReduxActionType.LOAD_GALLERY_FROM_ROUTE, payload: payload };
 
-        const expectedMessage: string = ''
+        const expectedMessage = '';
 
         // Act
         const newPagesState: IFilterState = filtersReducer(undefined, action);
