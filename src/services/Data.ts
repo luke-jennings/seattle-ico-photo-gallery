@@ -1,5 +1,5 @@
-import { IFilterOptions } from '../interfaces/IFilterOptions';
-import { IPhoto } from '../interfaces/IPhoto';
+import IFilterOptions from '../interfaces/IFilterOptions';
+import IPhoto from '../interfaces/IPhoto';
 import axios from 'axios';
 
 export class Data {
@@ -13,7 +13,7 @@ export class Data {
 			filterOptions = response.data;
 		})
 		.catch(error => {
-			const errorMessage: string = 'GetFilterOptions returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
+			const errorMessage: string = 'GetFilterOptions returned error "' + error.response.status + ' ' + error.response.statusText + '".';
 			console.log(errorMessage);
 			return null;
 		});
@@ -30,7 +30,7 @@ export class Data {
 			photos = response.data;
 		})
 		.catch(error => {
-			const errorMessage: string = 'GetPhotos returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
+			const errorMessage: string = 'GetPhotos returned error "' + error.response.status + ' ' + error.response.statusText + '".';
 			console.log(errorMessage);
 			return null;
 		});
@@ -47,7 +47,7 @@ export class Data {
 			photos = response.data;
 		})
 		.catch(error => {
-			const errorMessage: string = 'GetSlideshow returned error \"' + error.response.status + ' ' + error.response.statusText + '\".';
+			const errorMessage: string = 'GetSlideshow returned error "' + error.response.status + ' ' + error.response.statusText + '".';
 			console.log(errorMessage);
 			return null;
 		});

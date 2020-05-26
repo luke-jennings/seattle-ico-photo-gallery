@@ -7,7 +7,7 @@ import TReduxAction from '../types/TReduxAction';
  * https://github.com/redux-utilities/flux-standard-action
  * 
 */
-export interface IReduxAction {
+interface IReduxAction {
     /**
    * The `type` of an action identifies to the consumer the nature of the action that has occurred.
    * Two actions with the same `type` MUST be strictly equivalent (using `===`)
@@ -34,3 +34,5 @@ export interface IReduxAction {
    */
   meta?: any;
 }
+
+export default IReduxAction;

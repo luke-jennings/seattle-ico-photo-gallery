@@ -2,32 +2,32 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Data } from './Data';
 import { tripTypesOptionsTestData, teamsOptionsTestData, photosTestData } from '../helpers/TestData';
-import { IFilterOptions } from '../interfaces/IFilterOptions';
+import IFilterOptions from '../interfaces/IFilterOptions';
 
 const filterOptions: IFilterOptions = { tripTypeOptions: tripTypesOptionsTestData, teamOptions: teamsOptionsTestData };
 
-let originalConsoleLog = console.log;
+const originalConsoleLog = console.log;
 
 beforeEach(() => {
 
 	// Supress console.log messages from being written to the test output.
 	console.log = jest.fn();
-	//console.log("Should NOT write to console.");
+	// The console.log("Should NOT write to console.");
 });
 
 afterEach(() => {
 
 	// Restore console.log method
 	console.log = originalConsoleLog;
-	//console.log("Should write to console");
+	// The console.log("Should write to console");
 });
 
 
-describe("The Data service class", () => {
+describe('The Data service class', () => {
 
-    it("When GetFilterOptions is called it should return all filter options.", async () => {
+    it('When GetFilterOptions is called it should return all filter options.', async () => {
 
-			let axiosMockAdapter = new MockAdapter(axios);
+			const axiosMockAdapter = new MockAdapter(axios);
 			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photosfilteroptions`).reply(200, filterOptions);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
@@ -39,11 +39,11 @@ describe("The Data service class", () => {
 			expect(result).toEqual(filterOptions);
     });
 
-    it("When GetFilterOptions is called and there is a server error it should it should log error to console and return filter options with empty arrays.", async () => {
+    it('When GetFilterOptions is called and there is a server error it should it should log error to console and return filter options with empty arrays.', async () => {
 
 			const expectedFilterOptions: IFilterOptions = { teamOptions: [], tripTypeOptions: [] };
 
-			let axiosMockAdapter = new MockAdapter(axios);
+			const axiosMockAdapter = new MockAdapter(axios);
 			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photosfilteroptions`).reply(500);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
@@ -58,9 +58,9 @@ describe("The Data service class", () => {
 			expect(result).toEqual(expectedFilterOptions);
     });
 
-    it("When Photos is called with trip type Whitewater Rafting (17) and team South Shore (24) selected it should return 39 photos.", async () => {
+    it('When Photos is called with trip type Whitewater Rafting (17) and team South Shore (24) selected it should return 39 photos.', async () => {
 
-			let axiosMockAdapter = new MockAdapter(axios);
+			const axiosMockAdapter = new MockAdapter(axios);
 			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photos?tripTypeId=17&teamId=24`).reply(200, photosTestData);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
@@ -73,9 +73,9 @@ describe("The Data service class", () => {
 			expect(result.length).toBe(39);
 		});
 
-    it("When Photos is called with trip type Geocache (18) and team All (0) selected it should log error to console and return 0 photos.", async () => {
+    it('When Photos is called with trip type Geocache (18) and team All (0) selected it should log error to console and return 0 photos.', async () => {
 
-			let axiosMockAdapter = new MockAdapter(axios);
+			const axiosMockAdapter = new MockAdapter(axios);
 			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/photos?tripTypeId=18&teamId=0`).reply(404);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
@@ -90,9 +90,9 @@ describe("The Data service class", () => {
 			expect(result).toEqual([]);
 		});
 
-    it("When get slideshow photos is called with South Shore's Whitewater rafting trip report id 857 it should return 39 photos.", async () => {
+    it('When get slideshow photos is called with South Shore\'s Whitewater rafting trip report id 857 it should return 39 photos.', async () => {
 
-			let axiosMockAdapter = new MockAdapter(axios);
+			const axiosMockAdapter = new MockAdapter(axios);
 			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/tripReportSlides/857`).reply(200, photosTestData);
 
 			const axiosSpy = jest.spyOn(axios, 'get');
@@ -105,9 +105,9 @@ describe("The Data service class", () => {
 			expect(result.length).toBe(39);
 		});
 
-    it("When get slideshow photos is called with trip id 0 it should log error to console and return 0 photos.", async () => {
+    it('When get slideshow photos is called with trip id 0 it should log error to console and return 0 photos.', async () => {
 
-			let axiosMockAdapter = new MockAdapter(axios);
+			const axiosMockAdapter = new MockAdapter(axios);
 			axiosMockAdapter.onGet(`${process.env.REACT_APP_PROTOCOL_HOSTNAME}/api/tripReportSlides/0`).reply(404);
 
 			const axiosSpy = jest.spyOn(axios, 'get');

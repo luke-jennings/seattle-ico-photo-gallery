@@ -1,5 +1,8 @@
-import { ISelectOption } from './ISelectOption';
+import ISelectOption from './ISelectOption';
 
-export interface ISelectOptionRoute extends ISelectOption {
+interface ISelectOptionRoute extends ISelectOption {
+
     routeName: string;
 }
+
+export default ISelectOptionRoute;

@@ -1,9 +1,9 @@
-import { IFilterState } from '../interfaces/IFilterState';
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IPagesState } from '../interfaces/IPagesState';
-import { ISelectOption } from '../interfaces/ISelectOption';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
+import IFilterState from '../interfaces/IFilterState';
+import IGalleryState from '../interfaces/IGalleryState';
+import IMetaDataState from '../interfaces/IMetaDataState';
+import IPagesState from '../interfaces/IPagesState';
+import ISelectOption from '../interfaces/ISelectOption';
+import ISlideshowState from '../interfaces/ISlideshowState';
 
 export class InitialState {
 

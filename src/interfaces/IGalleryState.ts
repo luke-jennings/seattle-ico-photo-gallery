@@ -1,5 +1,7 @@
-import { ISlideshowState } from './ISlideshowState';
-import { IFilterState } from './IFilterState';
+import ISlideshowState from './ISlideshowState';
+import IFilterState from './IFilterState';
 
-export interface IGalleryState extends IFilterState, ISlideshowState {
+interface IGalleryState extends IFilterState, ISlideshowState {
 }
+
+export default IGalleryState;

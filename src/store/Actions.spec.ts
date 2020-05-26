@@ -1,10 +1,10 @@
 import { galleryLoaded, filterChanged, searchClicked, pagingClicked, thumbnailClicked, slideshowLoaded, invalidRoute } from './Actions';
 import { InitialState } from '../helpers/InitialState';
-import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IReduxAction } from '../interfaces/IReduxAction';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
+import IFilterSelectedOptionsState from '../interfaces/IFilterSelectedOptionsState';
+import IGalleryState from '../interfaces/IGalleryState';
+import IMetaDataState from '../interfaces/IMetaDataState';
+import IReduxAction from '../interfaces/IReduxAction';
+import ISlideshowState from '../interfaces/ISlideshowState';
 import TPhotosDisplay from '../types/TPhotosDisplay';
 
 describe('The Redux Actions', () => {

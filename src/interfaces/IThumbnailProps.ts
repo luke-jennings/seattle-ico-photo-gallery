@@ -1,9 +1,11 @@
 import { MouseEvent } from 'react';
-import { IPhoto } from './IPhoto';
+import IPhoto from './IPhoto';
 
-export interface IThumbnailProps {
+interface IThumbnailProps {
 
     photo: IPhoto;
     
     onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
+
+export default IThumbnailProps;

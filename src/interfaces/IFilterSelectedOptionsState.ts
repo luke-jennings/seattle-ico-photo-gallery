@@ -1,8 +1,10 @@
-import { ISelectOption } from './ISelectOption';
+import ISelectOption from './ISelectOption';
 
-export interface IFilterSelectedOptionsState {
+interface IFilterSelectedOptionsState {
 
     tripType: ISelectOption;
     
     team: ISelectOption;
 }
+
+export default IFilterSelectedOptionsState;

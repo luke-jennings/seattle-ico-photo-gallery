@@ -1,9 +1,15 @@
 import { MouseEvent } from 'react';
-import { IPhoto } from './IPhoto';
+import IPhoto from './IPhoto';
 
-export interface IThumbnailGridProps {
+interface IThumbnailGridProps {
+
     page: number;
+
     pageSize: number;
+
     photos: IPhoto[];
-    onPageChange: (event: MouseEvent<HTMLAnchorElement>) => void
+
+    onPageChange: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
+
+export default IThumbnailGridProps;

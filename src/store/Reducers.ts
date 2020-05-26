@@ -1,9 +1,9 @@
 import { MetaDataActionTypes, FilterActionTypes, PaginationActionTypes } from './Types';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
 import { InitialState } from '../helpers/InitialState';
-import { IFilterState } from '../interfaces/IFilterState';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IPagesState } from '../interfaces/IPagesState';
+import IFilterState from '../interfaces/IFilterState';
+import IMetaDataState from '../interfaces/IMetaDataState';
+import IPagesState from '../interfaces/IPagesState';
 
 export function metaDataReducer(state = InitialState.MetaData(), action: MetaDataActionTypes): IMetaDataState {
 

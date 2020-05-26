@@ -1,6 +1,10 @@
-import { ISelectOptionRoute } from './ISelectOptionRoute';
+import ISelectOptionRoute from './ISelectOptionRoute';
 
-export interface IFilterOptions {
+interface IFilterOptions {
+
     tripTypeOptions: ISelectOptionRoute[];
+
     teamOptions: ISelectOptionRoute[];
 }
+
+export default IFilterOptions;

@@ -1,12 +1,11 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-import { Provider } from 'react-redux';
 import configureStore from '../store/ConfigureStore';
-
 import Gallery from './Gallery';
-import Slideshow from './Slideshow';
 import NotFound from './NotFound';
+import Slideshow from './Slideshow';
 
 import '../styles/App.css';
 

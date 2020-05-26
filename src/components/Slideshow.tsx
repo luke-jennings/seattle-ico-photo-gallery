@@ -6,15 +6,15 @@ import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import * as toastr from 'toastr';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IPhoto } from '../interfaces/IPhoto';
-import { ISlideshowProps } from '../interfaces/ISlideshowProps';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
-import { ISlideshowValues } from '../interfaces/ISlideshowValues';
+import IMetaDataState from '../interfaces/IMetaDataState';
+import IPhoto from '../interfaces/IPhoto';
+import ISlideshowProps from '../interfaces/ISlideshowProps';
+import ISlideshowState from '../interfaces/ISlideshowState';
+import ISlideshowValues from '../interfaces/ISlideshowValues';
 import { Data } from '../services/Data';
 import { slideshowLoaded, pagingClicked, invalidRoute } from '../store/Actions';
 import { AppState } from '../store/ConfigureStore';
-import { TSlideshowRouteValues } from '../types/TSlideshowRouteValues';
+import TSlideshowRouteValues from '../types/TSlideshowRouteValues';
 import PhotoSlide from './PhotoSlide';
 
 const Slideshow = (props: ISlideshowProps): JSX.Element => {
@@ -180,7 +180,7 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
 
                 <div className="mx-auto px-2 col-12 col-lg-9 px-lg-5 col-xl-8">
 
-                    <h3 className="mb-3">{props.photos[props.pageIndex].team}'s Outing to {props.photos[props.pageIndex].destination}</h3>
+                    <h3 className="mb-3">{props.photos[props.pageIndex].team}&#039;s Outing to {props.photos[props.pageIndex].destination}</h3>
 
                     <p className="w-100 mb-1 text-left">{ moment(props.photos[props.pageIndex].date).format('dddd, MMMM D, YYYY') }</p>
                     <p className="w-100 mb-1 text-left">Photo { props.pageIndex + 1 } of { props.photos.length }</p>
@@ -221,7 +221,7 @@ const Slideshow = (props: ISlideshowProps): JSX.Element => {
             </div>
         );
     }
-}
+};
 
 const mapStateToProps = (state: AppState) => {
     return {
@@ -231,10 +231,10 @@ const mapStateToProps = (state: AppState) => {
         photos: state.pages.photos,
         pageIndex: state.pages.pageIndex,
         pageCount: state.pages.pageCount
-    }
+    };
 };
 
-const mapDispatchToProps = { slideshowLoaded, pagingClicked, invalidRoute }
+const mapDispatchToProps = { slideshowLoaded, pagingClicked, invalidRoute };
 
 export default connect (
     mapStateToProps,

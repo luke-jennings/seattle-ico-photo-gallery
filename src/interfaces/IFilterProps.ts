@@ -1,8 +1,8 @@
 import { FormEvent, ChangeEvent } from 'react';
-import { IFilterOptions } from './IFilterOptions';
-import { IFilterSelectedOptionsState } from './IFilterSelectedOptionsState';
+import IFilterOptions from './IFilterOptions';
+import IFilterSelectedOptionsState from './IFilterSelectedOptionsState';
 
-export interface IFilterProps {
+interface IFilterProps {
 
     values: IFilterSelectedOptionsState;
 
@@ -14,3 +14,5 @@ export interface IFilterProps {
     
     onTeamChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
+
+export default IFilterProps;

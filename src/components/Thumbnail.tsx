@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { IThumbnailProps } from '../interfaces/IThumbnailProps';
+import IThumbnailProps from '../interfaces/IThumbnailProps';
 
 /**
  * @description Return a single thumbnail image.

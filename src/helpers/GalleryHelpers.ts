@@ -1,4 +1,4 @@
-import { IGalleryState } from '../interfaces/IGalleryState';
+import IGalleryState from '../interfaces/IGalleryState';
 
 export class GalleryHelpers {
 
@@ -22,7 +22,7 @@ export class GalleryHelpers {
      */
     public static CalculateTotalPages(numberOfPhotos: number, pageSize: number): number {
 
-        return Math.ceil(numberOfPhotos/pageSize)
+        return Math.ceil(numberOfPhotos/pageSize);
     }
 
     /**

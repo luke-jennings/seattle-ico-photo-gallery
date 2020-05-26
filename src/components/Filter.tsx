@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IFilterProps } from '../interfaces/IFilterProps';
+import IFilterProps from '../interfaces/IFilterProps';
 
 import Select from './Select';
 

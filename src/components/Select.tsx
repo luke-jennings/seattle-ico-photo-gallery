@@ -1,5 +1,5 @@
 import React from 'react';
-import { ISelectProps } from '../interfaces/ISelectProps';
+import ISelectProps from '../interfaces/ISelectProps';
 
 const Select = (props: ISelectProps): JSX.Element => {
 

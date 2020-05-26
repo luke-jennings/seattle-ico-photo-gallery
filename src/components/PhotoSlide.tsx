@@ -1,5 +1,5 @@
 import React from 'react';
-import { IPhoto } from '../interfaces/IPhoto';
+import IPhoto from '../interfaces/IPhoto';
 
 const PhotoSlide = (photo: IPhoto): JSX.Element => {
 

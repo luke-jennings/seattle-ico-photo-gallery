@@ -1,11 +1,11 @@
 import { RouteComponentProps } from 'react-router-dom';
 import { searchClicked, pagingClicked, filterChanged, galleryLoaded, galleryPhotosLoaded, thumbnailClicked, invalidRoute } from '../store/Actions';
-import { TGalleryProps } from '../types/TGalleryProps';
-import { IMetaDataState } from './IMetaDataState';
-import { IFilterState } from './IFilterState';
-import { IPagesState } from './IPagesState';
+import TGalleryProps from '../types/TGalleryProps';
+import IMetaDataState from './IMetaDataState';
+import IFilterState from './IFilterState';
+import IPagesState from './IPagesState';
 
-export interface IGalleryProps extends RouteComponentProps<TGalleryProps> {
+interface IGalleryProps extends RouteComponentProps<TGalleryProps> {
     
     galleryLoaded: typeof galleryLoaded;
     galleryPhotosLoaded: typeof galleryPhotosLoaded;
@@ -19,3 +19,5 @@ export interface IGalleryProps extends RouteComponentProps<TGalleryProps> {
     filter: IFilterState;
     pages: IPagesState;
 }
+
+export default IGalleryProps;

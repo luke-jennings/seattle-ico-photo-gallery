@@ -1,7 +1,7 @@
 import React from 'react';
 import Filter from '../components/Filter';
 import { render, fireEvent } from '@testing-library/react';
-import { IFilterProps } from '../interfaces/IFilterProps';
+import IFilterProps from '../interfaces/IFilterProps';
 
 describe('The photos filter', () => {
 
@@ -13,7 +13,7 @@ describe('The photos filter', () => {
     const filterProps: IFilterProps = {
         values: { tripType: { value: 0, text: 'All' }, team: { value: 0, text: 'All' } },
         // Need to include at least one option for both trip types and teams or eles the tests will fail because only the loading message will be rendered.
-        options: { tripTypeOptions: [ {'text':'All','value':0,'routeName':'trip-types-all'} ], teamOptions: [ {'text':'All','value':0,'routeName':'teams-all'} ] },
+        options: { tripTypeOptions: [ { 'text':'All','value':0,'routeName':'trip-types-all' } ], teamOptions: [ { 'text':'All','value':0,'routeName':'teams-all' } ] },
         onSubmit: onSubmitHandler,
         onTripTypeChange: onTripTypeChangeHandler,
         onTeamChange: onTeamsChangeHandler 
@@ -24,7 +24,7 @@ describe('The photos filter', () => {
     it('When changed, the trip types select component should call the onTripTypeChange handler.', () => {
 
         // Arrange
-        const { getByText, getByLabelText } = render(
+        const { getByLabelText } = render(
             <Filter
             values={ filterProps.values }
             options={ filterProps.options }
@@ -44,7 +44,7 @@ describe('The photos filter', () => {
     it('When changed, the teams select component should call the onTeamChange handler.', () => {
 
         // Arrange
-        const { getByText, getByLabelText } = render(
+        const { getByLabelText } = render(
             <Filter
             values={ filterProps.values }
             options={ filterProps.options }
@@ -72,7 +72,7 @@ describe('The photos filter', () => {
     it('When clicked, the filter submit button should call the onSubmit onSubmit handler.', () => {
 
         // Arrange
-        const { getByText, getByLabelText } = render(
+        const { getByText } = render(
             <Filter
             values={ filterProps.values }
             options={ filterProps.options }

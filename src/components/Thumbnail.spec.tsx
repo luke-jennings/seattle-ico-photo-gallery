@@ -3,7 +3,7 @@ import moment from 'moment';
 import { render, fireEvent, cleanup } from '@testing-library/react';
 // The jest-dom/extend-expect adds special assertions like toHaveTextContent
 import '@testing-library/jest-dom/extend-expect';
-import { IPhoto } from '../interfaces/IPhoto';
+import IPhoto from '../interfaces/IPhoto';
 import Thumbnail from './Thumbnail';
 
 afterEach(cleanup);

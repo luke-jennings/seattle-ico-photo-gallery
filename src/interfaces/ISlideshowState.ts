@@ -1,5 +1,7 @@
-import { IMetaDataState } from './IMetaDataState';
-import { IPagesState } from './IPagesState';
+import IMetaDataState from './IMetaDataState';
+import IPagesState from './IPagesState';
 
-export interface ISlideshowState extends IMetaDataState, IPagesState {
+interface ISlideshowState extends IMetaDataState, IPagesState {
 }
+
+export default ISlideshowState;

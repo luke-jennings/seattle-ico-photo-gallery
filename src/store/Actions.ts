@@ -1,8 +1,8 @@
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
-import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
-import { IReduxAction } from '../interfaces/IReduxAction';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
+import IGalleryState from '../interfaces/IGalleryState';
+import ISlideshowState from '../interfaces/ISlideshowState';
+import IFilterSelectedOptionsState from '../interfaces/IFilterSelectedOptionsState';
+import IReduxAction from '../interfaces/IReduxAction';
+import IMetaDataState from '../interfaces/IMetaDataState';
 
 export function galleryLoaded(galleryState: IGalleryState): IReduxAction {
     return {

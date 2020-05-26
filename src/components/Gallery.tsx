@@ -1,19 +1,19 @@
 import React, { MouseEvent } from 'react';
-import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
+import { connect } from 'react-redux';
 import * as toastr from 'toastr';
 import { ErrorHelpers } from '../helpers/ErrorHelpers';
 import { GalleryHelpers } from '../helpers/GalleryHelpers';
 import { InitialState } from '../helpers/InitialState';
-import { IFilterOptions } from '../interfaces/IFilterOptions';
-import { IFilterSelectedOptionsState } from '../interfaces/IFilterSelectedOptionsState';
-import { IGalleryProps } from '../interfaces/IGalleryProps';
-import { IGalleryState } from '../interfaces/IGalleryState';
-import { IMetaDataState } from '../interfaces/IMetaDataState';
-import { IPhoto } from '../interfaces/IPhoto';
-import { ISelectOption } from '../interfaces/ISelectOption';
-import { ISelectOptionRoute } from '../interfaces/ISelectOptionRoute';
-import { ISlideshowState } from '../interfaces/ISlideshowState';
+import IFilterOptions from '../interfaces/IFilterOptions';
+import IFilterSelectedOptionsState from '../interfaces/IFilterSelectedOptionsState';
+import IGalleryProps from '../interfaces/IGalleryProps';
+import IGalleryState from '../interfaces/IGalleryState';
+import IMetaDataState from '../interfaces/IMetaDataState';
+import IPhoto from '../interfaces/IPhoto';
+import ISelectOption from '../interfaces/ISelectOption';
+import ISelectOptionRoute from '../interfaces/ISelectOptionRoute';
+import ISlideshowState from '../interfaces/ISlideshowState';
 import { Data } from '../services/Data';
 import { searchClicked, pagingClicked, filterChanged, galleryPhotosLoaded, galleryLoaded, thumbnailClicked, invalidRoute } from '../store/Actions';
 import { AppState } from '../store/ConfigureStore';
@@ -41,7 +41,7 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
         }
 
         const tripTypeSelectOptionRoute: ISelectOptionRoute = filterOptions.tripTypeOptions.filter(tto => { return tto.routeName.toLowerCase() === tripTypeRouteName.toLowerCase(); })[0];
-        const teamSelectOptionRoute: ISelectOptionRoute = filterOptions.teamOptions.filter(to => { return to.routeName.toLowerCase() == teamRouteName.toLowerCase(); })[0];
+        const teamSelectOptionRoute: ISelectOptionRoute = filterOptions.teamOptions.filter(to => { return to.routeName.toLowerCase() === teamRouteName.toLowerCase(); })[0];
 
         // Destructure the tripTypeSelectOptionRoute to remove the routeName.
         const { routeName, ...tripTypeSelectOption } = tripTypeSelectOptionRoute;
@@ -65,8 +65,8 @@ const Gallery = (props: IGalleryProps): JSX.Element => {
      */
     const updateGalleryRoute = (tripTypeId: number, teamId: number, pageIndex: number): string => {
 
-        const tripTypeRoute: string = props.filter.filterOptions.tripTypeOptions.filter(tto => { return tto.value == tripTypeId; })[0].routeName;
-        const teamRoute: string = props.filter.filterOptions.teamOptions.filter(to => { return to.value == teamId; })[0].routeName;
+        const tripTypeRoute: string = props.filter.filterOptions.tripTypeOptions.filter(tto => { return tto.value === tripTypeId; })[0].routeName;
+        const teamRoute: string = props.filter.filterOptions.teamOptions.filter(to => { return to.value === teamId; })[0].routeName;
         const route: string = GalleryHelpers.BuildPath(tripTypeRoute, teamRoute, pageIndex);
         
         props.history.push(route);

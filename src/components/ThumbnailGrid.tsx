@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { IPhoto } from '../interfaces/IPhoto';
-import { IThumbnailGridProps } from '../interfaces/IThumbnailGridProps';
-import { IThumbnailGridState } from '../interfaces/IThumbnailGridState';
+import IPhoto from '../interfaces/IPhoto';
+import IThumbnailGridProps from '../interfaces/IThumbnailGridProps';
+import IThumbnailGridState from '../interfaces/IThumbnailGridState';
 import Thumbnail from './Thumbnail';
 
 /**

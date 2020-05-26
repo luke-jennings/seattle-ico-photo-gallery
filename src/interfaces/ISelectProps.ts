@@ -1,10 +1,17 @@
 import { ChangeEvent } from 'react';
-import { ISelectOption } from './ISelectOption';
+import ISelectOption from './ISelectOption';
 
-export interface ISelectProps {
+interface ISelectProps {
+
     labelText: string;
+
     selectName: string;
+
     options: ISelectOption[];
+
     selectedValue: number;
+    
     onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
+
+export default ISelectProps;
